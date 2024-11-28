@@ -1,0 +1,18 @@
+﻿@using Kidemy.Application.ViewModels.Page;
+@model ClientSidePageViewModel
+
+@{
+    ViewData["Title"] = Model?.Title;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card p-lg-5">
+            <div class="card-body">
+                <div class="row">
+                    @Html.Raw(Model?.Body)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

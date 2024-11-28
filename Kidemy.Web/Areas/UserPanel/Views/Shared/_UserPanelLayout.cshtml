@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <title>@Localizer["Kidemy"] -  @ViewData["Title"]</title>
+
+    <partial name="_MetaTages" />
+    <partial name="_DarkModeScript" />
+    <partial name="_UserPanelHeaderReferences" />
+
+    @await RenderSectionAsync("HeaderReferences", false)
+
+</head>
+
+<body>
+
+    <header class="navbar-light navbar-sticky">
+        <partial name="_Navbar" />
+    </header>
+    <main>
+
+        <section class="pt-0">
+            <partial name="_UserPanelBanner" />
+        </section>
+        <section class="pt-0">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-3">
+                        @*<partial name="_UserPanelSideBar" />*@
+                        @await Component.InvokeAsync("UserPanelSideBar")
+                    </div>
+                    <div class="col-xl-9">
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    <partial name="_UserPanelFooter" />
+    <div class="back-top"><i class="bi bi-arrow-up-short position-absolute top-50 start-50 translate-middle"></i></div>
+
+    <partial name="_ModalsPartialView" />
+    <partial name="_UserPanelFooterReferences" />
+    <partial name="_Notification" />
+
+    @await RenderSectionAsync("FooterReferences", false)
+</body>
+</html>

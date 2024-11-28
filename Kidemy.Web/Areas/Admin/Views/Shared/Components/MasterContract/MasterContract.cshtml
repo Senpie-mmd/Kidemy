@@ -1,0 +1,53 @@
+﻿@using Kidemy.Application.ViewModels.UploadedMasterContract;
+@using Kidemy.Domain.Statics
+@using Kidemy.Domain.Enums.Master
+@model List<AdminSideMasterContractsPendingConfirmationDetailViewModel> ;
+
+<div class="col-md-12 accordion mb-3">
+    <div class="card accordion-item">
+        <div class="card-header accordion-header">
+            <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#masterContract" aria-expanded="false" aria-controls="masterContract">
+                <h5>@Localizer["MasterContracts"]</h5>
+            </button>
+        </div>
+        <div class="accordion-collapse collapse  mb-4 text-nowrap " id="masterContract">
+            <form typeof="post" asp-controller="MasterContract" asp-action="UpdateMasterContractsPendingConfirmation">
+
+                @if (Model != null && Model != null && Model.Any())
+                {
+                    var index = 0;
+                    @foreach (var item in Model)
+                    {
+                        <input type="hidden" asp-for="@item.UploadedMasterContractId" name="[@index].UploadedMasterContractId" />
+
+                        <div class="row m-4">
+                            <div class="col-md-12 mb-3">
+                                <div class="row mt-4">
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-group">
+                                            <span>@Localizer["Title"] : </span>
+                                            @item.Title   
+                                        </div>
+                                        <a class="btn btn-info mt-2" asp-area="Admin" asp-controller="MasterContract" asp-action="DownloadMasterContract" asp-route-fileMasterContractName="@item.FileName">
+                                            @Localizer["Download"]
+                                        </a>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <span>@Localizer["Status"] :</span>
+                                        @item.Status.GetEnumName()
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        index++;
+                    }
+                }
+                else
+                {
+                    <partial name="_NotFoundPartial" />
+                }
+            </form>
+        </div>
+    </div>
+</div>

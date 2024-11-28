@@ -1,0 +1,13 @@
+﻿@using Kidemy.Application.ViewModels.Course.ClientSideCourse.CourseQuestionAnswer
+@model ClientSideUpsertCourseQuestionAnswerViewModel
+
+<form class="w-100  mb-3 flex-column" asp-area="" asp-controller="Courses" asp-action="CreateQuestionAnswer" method="post">
+
+    <input type="hidden" asp-for="QuestionId" />
+
+    <textarea asp-for=Answer class="one  mb-2 form-control pe-4 bg-light" id="autoheighttextarea" rows="auto" placeholder="@Localizer["AnswerDescription"] ..."></textarea>
+
+    <button class="btn btn-primary ms-2 mb-0" type="submit">@Localizer["Submit"]</button>
+
+</form>
+

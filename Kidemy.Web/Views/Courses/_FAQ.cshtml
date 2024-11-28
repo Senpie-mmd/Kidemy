@@ -1,0 +1,35 @@
+﻿@using Kidemy.Application.ViewModels.FAQ;
+@using Kidemy.Domain.Shared;
+@model List<ClientSideFAQViewModel>
+
+@if (Model.Count() is not 0)
+{
+    <h5 class="mb-3">@Localizer["FAQ"]</h5>
+
+    <div class="accordion accordion-flush" id="accordionExample">
+        @{
+            int counter = 0;
+            foreach (var item in Model)
+            {
+                counter++;
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingFive--@counter">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive--@counter" aria-expanded="false" aria-controls="collapseFive--@counter">
+                            <span class="text-secondary fw-bold me-3">@counter.ToString("00")</span>
+                            <span class="h6 mb-0">@item.Title</span>
+                        </button>
+                    </h2>
+                    <div id="collapseFive--@counter" class="accordion-collapse collapse" aria-labelledby="headingFive--@counter" data-bs-parent="#accordionExample">
+                        <div class="accordion-body pt-0">
+                            @item.Answer
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}
+else
+{
+    <p class="alert alert-info">@Localizer[ErrorMessages.ItemNotFoundError]</p>
+}

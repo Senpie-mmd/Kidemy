@@ -1,0 +1,35 @@
+﻿@using Kidemy.Domain.Enums.Banner;
+@{
+    ViewData["Title"] = Localizer["HomePage"];
+    var favouriteCourses = ViewBag.FavouriteCourses as List<int>;
+
+}
+
+<main>
+
+    @await Component.InvokeAsync("MainBanner")
+
+    @await Component.InvokeAsync("Counter")
+
+    @await Component.InvokeAsync("PopularCourse")
+
+    @await Component.InvokeAsync("HomePageLastCourses")
+
+    @await Component.InvokeAsync("Banner")
+
+    @await Component.InvokeAsync("SuggestionCourses")
+
+    @await Component.InvokeAsync("HomePageBlogs")
+
+    <script asp-append-version="true">
+
+        var courseIdList = @Html.Raw(Json.Serialize(favouriteCourses));
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            checkFavorite(courseIdList);
+
+        })
+
+    </script>
+</main>

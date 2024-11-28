@@ -1,0 +1,82 @@
+﻿@using Kidemy.Application.ViewModels.Wallet;
+@using Kidemy.Domain.Enums.Wallet;
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Kidemy.Application.Convertors
+@model FilterWalletTransactionViewModel
+
+<div class="col-md-12 accordion mb-3">
+    <div class="card accordion-item">
+        <div class="card-header accordion-header">
+            <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#walletTransactions" aria-expanded="false" aria-controls="walletTransactions">
+                <h5>لیست تراکنش های کاربر</h5>
+            </button>
+        </div>
+        <div class="accordion-collapse collapse table-responsive mb-4 text-nowrap text-center" id="walletTransactions">
+            @if (Model?.Entities?.Any() ?? false)
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>شماره تراکنش</th>
+                            <th>مقدار</th>
+                            <th>وضعیت</th>
+                            <th>کد پیگیری</th>
+                            <th>نوع تراکنش</th>
+                            <th>حالت تراکنش</th>
+                            <th>شیوه تراکنش</th>
+                            <th>توضیحات</th>
+                            <th>تاریخ</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        @foreach (var item in Model.Entities)
+                        {
+                            var description = item.Description;
+                            if (item.TransactionCase != WalletTransactionCase.AdminActivity)
+                            {
+                                switch (item.TransactionType, item.TransactionCase)
+                                {
+                                    case (WalletTransactionType.Deposit, WalletTransactionCase.PayOrder):
+                                        description = string.Format("شارژ برای پرداخت سفارش", item.OrderId);
+                                        break;
+                                    case (WalletTransactionType.Withdraw, WalletTransactionCase.PayOrder):
+                                        description = string.Format("برداشت برای پرداخت سفارش", item.OrderId);
+                                        break;
+                                    case (WalletTransactionType.Deposit, WalletTransactionCase.ChargeWallet):
+                                        description = "شارژ کیف پول";
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.Amount.ToString("#,0") تومان</td>
+                                <td>
+                                    <span class="badge @(!item.IsSuccess ? "bg-label-danger" : "bg-label-success")">
+                                        @(item.IsSuccess ? "موفق" : "ناموفق")
+                                    </span>
+                                </td>
+                                <td>@item.RefId.RemoveFristZerosTheRefId()</td>
+                               @*  <td>@item.TransactionType.GetEnumName()</td> *@
+                                <td>
+                                    <span class="badge @(item.TransactionType==WalletTransactionType.Withdraw ? "bg-label-danger" : "bg-label-success")">
+                                        @item.TransactionType.GetEnumName()
+                                    </span>
+                                </td>
+                                <td>@item.TransactionCase.GetEnumName()</td>
+                                <td>@item.TransactionWay.GetEnumName()</td>
+                                <td>@description</td>
+                                <td dir="ltr">@item.CreatedDateOnUtc.ToUserShortDateTime()</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+</div>

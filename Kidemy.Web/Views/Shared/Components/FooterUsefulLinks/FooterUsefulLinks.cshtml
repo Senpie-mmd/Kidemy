@@ -1,0 +1,18 @@
+﻿@using Kidemy.Application.ViewModels.Link;
+@model List<ClientSideLinkViewModel> ;
+
+
+@if (Model is not null && Model.Any())
+{
+    <div class="col-12 col-md-3">
+        <h5 class="mb-2 mb-md-4">@Localizer["FunctionalLinks"]</h5>
+        <ul class="nav flex-column">
+            @foreach (var item in Model)
+            {
+                <li class="nav-item">
+                    <a class="nav-link" href="@item.Address"> @item.Title</a>
+                </li>
+            }
+        </ul>
+    </div>
+}

@@ -1,0 +1,115 @@
+﻿@using Kidemy.Application.ViewModels.Master;
+@model ClientSideUpdateMasterViewModel
+@using Kidemy.Domain.Enums.Master
+
+@{
+    ViewData["Title"] = Localizer["MasterInformation"];
+
+    string GetStatusColor(MasterStatus status)
+    {
+        var statusColorMapping = new Dictionary<MasterStatus, string>();
+        statusColorMapping.Add(MasterStatus.Confirmed, "success");
+        statusColorMapping.Add(MasterStatus.Pending, "warning");
+        statusColorMapping.Add(MasterStatus.NonConfirmed, "danger");
+
+        statusColorMapping.TryGetValue(status, out string result);
+        return result;
+    }
+}
+
+<form method="post" asp-action="EditMaster" asp-controller="Master" asp-area="UserPanel" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="IdentificationFileName" value="@Model.IdentificationFileName"/>
+    <div class="card bg-transparent border rounded-3">
+        <div class="row card-header bg-transparent border-bottom">
+            <div class="col-12 col-lg-6"><h3 class="card-header-title mb-0 ff-vb fs-5">@Localizer["MasterInformation"]</h3></div>
+            @if (!string.IsNullOrWhiteSpace(Model.NationalIDNumber))
+            {
+                <div class="col-12 col-lg-6">
+                    <label>@Localizer["Status"] :</label>
+                    <strong class="badge bg-@(GetStatusColor(Model.Status))">@Model.Status.GetEnumName()</strong>
+                </div>
+            }
+           
+        </div>
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <div class="mb-4">
+                        <label asp-for="FatherName"></label>
+                        <input type="text" asp-for="FatherName" class="form-control " />
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="mb-4">
+                        <label asp-for="NationalIDNumber"></label>
+                        <input asp-for="NationalIDNumber" class="form-control number" />
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="mb-4">
+                        <label asp-for="IdentificationNumber"></label>
+                        <input type="text" asp-for="IdentificationNumber" class="form-control " />
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="mb-4">
+                        <label asp-for="PlaceOfIssuance"></label>
+                        <input type="text" asp-for="PlaceOfIssuance" class="form-control " />
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="mb-4">
+                        <label asp-for="PostalCode"></label>
+                        <input asp-for="PostalCode" class="form-control number" />
+                    </div>
+                </div>
+                <div class="col-12 col-lg-12">
+                    <div class="mb-4">
+                        <label asp-for="Address"></label>
+                        <textarea type="text" asp-for="Address" class="form-control "></textarea>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-12">
+                    <div class="mb-4">
+                        <label asp-for="Bio"></label>
+                        <textarea type="text" rows="6" asp-for="Bio" class="form-control "></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="mt-4">
+                        <img src="@SiteTools.MasterImagePath@Model.IdentificationFileName" class="w-25 rounded-2 mb-3" ImageFile="1" />
+                        @if (Model.Status != MasterStatus.Confirmed)
+                        {
+                        <label for="uploadImage" class=" w-100">
+                            <button type="button" class="btn btn-info mt-2" id="uploadBtn">@Localizer["UploadImageForIdentificationFile"]</button>
+                        </label>
+
+                        }
+                        
+                        <input class="d-none" type="file" id="uploadImage" ImageInput="1" accept="image/png, image/jpeg" asp-for="IdentificationFile" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="d-sm-flex justify-content-end">
+                    @if (Model.Status == MasterStatus.Confirmed)
+                    {
+                        <span class="text-warning">@Localizer["ItIsNotPossibleToEditTheInformation"]</span>
+
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-primary mb-0 loading-support">@Localizer["RegisterForm"]</button>
+                    }
+                </div>
+            </div>
+
+        </div>
+        <div class="card-footer">
+            <div class="text-danger" asp-validation-summary="All"></div>
+        </div>
+    </div>
+</form>

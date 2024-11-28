@@ -1,0 +1,277 @@
+.dashboard-card {
+    min-height: 182px;
+}
+
+.swiper {
+    width: 90% !important;
+    height: 100%;
+}
+
+.personalNumber {
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+}
+
+    .personalNumber:hover {
+        background-color: rgb(169, 169, 169) !important;
+        color: white !important;
+    }
+
+.navbar-title {
+    font-size: 13px;
+}
+
+.card-ticket,
+.card-notification {
+    max-height: 305px !important;
+    overflow-y: auto !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: transparent transparent !important;
+}
+
+/* .card-ticket::-webkit-scrollbar {
+    color: red !important;
+    width:2px !important;
+} */
+
+
+@media screen and (min-width: 750px) {
+    .card-hotels {
+        height: 150px !important;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .view-btn {
+        display: flex;
+        justify-content: center;
+    }
+
+        .view-btn button {
+            width: 75%;
+        }
+}
+
+.room-count-in-user-dashboard {
+    padding-right: 8% !important;
+}
+
+.user-notifications {
+    width: 300px;
+}
+
+.user-tickets {
+    width: 200px;
+}
+
+.truncate-td {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 1px;
+}
+
+.hotel-info-in-user-dashboard li {
+    margin: 4px 0;
+}
+
+.add-residence-page {
+    margin-bottom: 10px;
+}
+
+/* ---------------MR Rahimi---------------------- */
+body {
+    font-family: 'irsans' !important;
+}
+
+.text-justify {
+    text-align: justify !important;
+}
+
+.discount {
+    width: 100%;
+    height: 27px;
+}
+
+.rooms-img {
+    height: 201px !important;
+}
+
+.hotels-img {
+    height: 150px !important;
+}
+
+.hotels-img-dashboard {
+    width: 100px;
+    height: 80px;
+}
+
+.description-section .text-desc {
+    line-height: 28px;
+    text-align: justify;
+}
+
+.left-slider .slick-list .slick-track .slick-slide .sidebar-image {
+    height: 160px;
+}
+
+.left-slider .slick-list .slick-track .slick-slide video,
+.left-slider .slick-list .slick-track .slick-slide img {
+    height: 100%;
+    object-fit: cover;
+    -webkit-filter: grayscale(20%) blur(1px);
+    filter: grayscale(20%) blur(1px);
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.left-slider .slick-list .slick-track .slick-slide + .slick-slide {
+    margin-top: 15px;
+}
+
+.left-slider .slick-list .slick-track .slick-slide.slick-current video,
+.left-slider .slick-list .slick-track .slick-slide.slick-current img {
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    -webkit-filter: grayscale(0) blur(0);
+    filter: grayscale(0) blur(0);
+    opacity: 1;
+    -webkit-box-shadow: 0 0 8px rgba(34, 34, 34, 0.16);
+    box-shadow: 0 0 8px rgba(34, 34, 34, 0.16);
+}
+
+.left-slider-image {
+    height: 700px;
+    overflow: hidden;
+}
+
+.gallery-main .slider-image {
+    height: 700px;
+}
+
+    .gallery-main .slider-image img {
+        width: 100%;
+    }
+
+    .gallery-main .slider-image video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.sidebar-image video {
+    height: 100%;
+    width: 100%;
+}
+
+.slider-image {
+    position: relative;
+}
+
+
+@media (max-width: 1200px) {
+    .gallery-main .slider-image {
+        height: 500px;
+    }
+
+    .left-slider-image {
+        height: 500px;
+    }
+
+    .left-slider .slick-list .slick-track .slick-slide .sidebar-image {
+        height: 110px;
+    }
+}
+
+@media (max-width: 992px) {
+    .left-slider .slick-list .slick-track .slick-slide .sidebar-image {
+        height: 170px;
+        width: 230px;
+    }
+
+    .left-slider .slick-list .slick-track .slick-slide + .slick-slide {
+        margin: 0;
+        margin-top: 15px;
+    }
+
+    .left-slider .slick-list .slick-track .slick-slide img {
+        width: 100%;
+    }
+
+    .left-slider-image {
+        height: 100%;
+        width: 100%;
+    }
+}
+
+@media (max-width: 991px) {
+    .left-slider .slick-list .slick-track .slick-slide .sidebar-image {
+        height: 110px;
+        width: 165px;
+    }
+
+    .left-slider .slick-list .slick-track .slick-slide + .slick-slide {
+        margin: 0;
+        margin-right: 15px;
+    }
+
+    .left-slider .slick-list .slick-track .slick-slide img {
+        width: 100%;
+    }
+
+    .gallery-main .slider-image {
+        height: 400px;
+    }
+}
+
+@media (max-width: 576px) {
+    .left-slider .slick-list .slick-track .slick-slide .sidebar-image {
+        height: 80px;
+        width: 130px;
+    }
+
+    .left-slider .slick-list .slick-track .slick-slide + .slick-slide {
+        margin: 0;
+        margin-top: 15px;
+    }
+
+    .left-slider .slick-list .slick-track .slick-slide img {
+        width: 100%;
+    }
+
+    .gallery-main .slider-image {
+        height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .left-slider .slick-list .slick-track .slick-slide .sidebar-image {
+        height: 80px;
+        width: 110px;
+    }
+}
+
+
+.gallery-section .left-slider-image .sidebar-image {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.left-slider-image .slick-vertical .slick-slide {
+    margin-bottom: 20px;
+}
+
+[dir="rtl"] .slick-slider {
+    direction: ltr;
+}
+
+[dir="rtl"] .slick-slide {
+    float: left;
+}
+
+.order-xxl-1 {
+    order: 1 !important;
+}

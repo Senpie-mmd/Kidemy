@@ -1,0 +1,24 @@
+﻿@using Barnamenevisan.Localizing.Shared;
+@model PagingViewModel
+
+
+@if (Model.PageCount > 1)
+{
+    <div class="text-center mt-4 mt-sm-3">
+        <nav class="d-flex justify-content-center mb-0" aria-label="navigation">
+            <ul class="pagination pagination-sm pagination-primary-soft d-inline-block d-md-flex rounded mb-0">
+                @for (int i = Model.StartPage; i <= Model.EndPage; i++)
+                {
+                    if (Model.Page == i)
+                    {
+                        <li class="page-item mb-0 active"><a class="page-link cursor-text" data-page="0" >@i</a></li>
+                    }
+                    else
+                    {
+                        <li class="page-item mb-0"><a class="page-link " data-page="@i" href="javascript:void(0);" onclick="FillPageId(@i)">@i</a></li>
+                    }
+                }
+            </ul>
+        </nav>
+    </div>
+}

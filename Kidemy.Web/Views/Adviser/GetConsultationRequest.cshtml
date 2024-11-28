@@ -1,0 +1,131 @@
+﻿@using Kidemy.Application.ViewModels.Consultation.ConsultationRequest;
+
+@model ClientSideConsultaionRequestViewModel
+
+@{
+    ViewData["Title"] = Localizer["ConsultationRequest"];
+   var balance = (decimal)ViewData["Balance"];
+}
+
+<section class="pt-5">
+    <div class="container">
+        <div class="row g-4 g-sm-5">
+            <div class="col-lg-8 mb-4 mb-sm-0">
+                <div class="card card-body p-4 shadow">
+                    <div class="table-responsive border-0 rounded-3">
+                        <table class="table align-middle p-4 mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="border-0">@Localizer["AdviserName"]</th>
+                                    <th scope="col" class="border-0">@Localizer["Time"]</th>
+                                    <th scope="col" class="border-0">@Localizer["Type"]</th>
+                                </tr>
+                            </thead>
+                            <tbody class="border-top-0">
+                                <tr>
+                                    <td class="text-center">
+                                        <h5>@Model.AdviserUserName</h5>
+                                    </td>
+                                    <td class="text-center">
+                                        <h5>
+                                            @if (Model.DayOfWeek == DayOfWeek.Friday)
+                                            {
+                                                @Localizer["Friday"]
+                                            }
+                                            else if (Model.DayOfWeek == DayOfWeek.Saturday)
+                                            {
+                                                @Localizer["Saturday"]
+                                            }
+                                            else if (Model.DayOfWeek == DayOfWeek.Sunday)
+                                            {
+                                                @Localizer["Sunday"]
+                                            }
+                                            else if (Model.DayOfWeek == DayOfWeek.Monday)
+                                            {
+                                                @Localizer["Monday"]
+                                            }
+                                            else if (Model.DayOfWeek == DayOfWeek.Tuesday)
+                                            {
+                                                @Localizer["Tuesday"]
+                                            }
+                                            else if (Model.DayOfWeek == DayOfWeek.Wednesday)
+                                            {
+                                                @Localizer["Wednesday"]
+                                            }
+                                            else if (Model.DayOfWeek == DayOfWeek.Thursday)
+                                            {
+                                                @Localizer["Thursday"]
+                                            } - @Localizer["From"] @Model.StartTime.Value.ToString("hh\\:mm")  @Localizer["To"] @Model.EndTime.Value.ToString("hh\\:mm")
+                                        </h5>
+                                    </td>
+                                    <td class="text-center">
+                                        <h5>@Model.TypeTitle </h5>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <form  asp-action="BuyConsultationRequest" asp-controller="Adviser" asp-area="" method="post">
+                    <input type="hidden" name="ConsultationRequestId" value="@Model.Id" />
+                    <div class="card card-body p-4 shadow">
+                        <ul class="list-group list-group-borderless mb-2">
+                            <li class="list-group-item px-0 d-flex justify-content-between">
+                                <span class="h6 fw-light mb-0">@Localizer["TotalAmount"]</span>
+                                <span class="h6 fw-light mb-0 fw-bold">@((decimal.Parse(Model.TypePrice.ToString())).ToString("#,0")) @Localizer["Toman"]</span>
+                            </li>
+                            <li class="list-group-item px-0 d-flex justify-content-between">
+                                <span class="h6 fw-light mb-0">@Localizer["WalletBalance"]</span>
+                                <span class="h6 fw-light mb-0 fw-bold">@((decimal.Parse(balance.ToString())).ToString("#,0")) @Localizer["Toman"]</span>
+                            </li>
+                           
+                          
+                            <li class="list-group-item px-0 d-flex justify-content-between mt-4">
+                                <div class="form-check form-switch form-check-md" id="UseFromWalletBalnaceDivId">
+                                    <input class="form-check-input" id="UseFromWalletBalnace" name="UseFromWalletBalnace" type="checkbox" value="true">
+                                    <label class="form-check-label" for="UseFromWalletBalnace">@Localizer["UseFromWalletBalance"]</label>
+                                </div>
+                            </li>
+
+                            <li class="list-group-item px-0 d-flex justify-content-between">
+                                <span class="h5 mb-0">@Localizer["FinalAmount"]</span>
+                                <span class="h5 mb-0"><span id="final-amount">@((decimal.Parse(Model.TypePrice.ToString())).ToString("#,0"))</span> @Localizer["Toman"]</span>
+                            </li>
+                        </ul>
+
+                       
+
+                        <div class="d-grid mt-3">
+                            <button type="submit" class="btn btn-lg btn-primary">@Localizer["Continue"]</button>
+                        </div>
+                        <p class="small mb-0 mt-2 text-center">@ViewData["VipInvoiceText"]</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var walletBalnace = @((int)(balance));
+    var finalAmount = @((int)(Model.TypePrice));
+
+    window.addEventListener('load', () => {
+        document.getElementById("UseFromWalletBalnace").addEventListener("change", (e) => {
+            if (e.target.checked) {
+                var newFinalAmount = finalAmount - walletBalnace;
+
+                if (newFinalAmount < 0) {
+                    newFinalAmount = 0;
+                }
+
+                document.getElementById("final-amount").innerHTML = addCommas(newFinalAmount);
+            }
+            else {
+                document.getElementById("final-amount").innerHTML = addCommas(finalAmount);
+            }
+        })
+    });
+</script>

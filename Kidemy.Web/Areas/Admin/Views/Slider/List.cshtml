@@ -1,0 +1,124 @@
+﻿@using Kidemy.Application.ViewModels.Slider;
+@using Kidemy.Domain.Enums.Slider;
+@using Kidemy.Domain.Statics;
+
+@model FilterSliderViewModel
+@{
+    ViewData["Title"] = Localizer["SlidersList"];
+}
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["Search"]</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="Slider" asp-action="List" method="post" id="filter-search" class="d-flex">
+                    <input type="hidden" asp-for="Page" />
+                    <div class="row w-100">
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="Title" class="form-label"></label>
+                            <input type="search" asp-for="Title" class="form-control me-2" placeholder="@Localizer["Title"]" aria-label="Search">
+                        </div>
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="Priority" class="form-label"></label>
+                            <input asp-for="Priority" class="form-control number" placeholder="@Localizer["Priority"]" aria-label="Search" />
+                        </div>
+                        <div class="mb-3 col-12 col-md-6">
+                            <label asp-for="SliderPlace" class="form-label"></label>
+                            <select asp-for="SliderPlace" class="form-select me-2 ">
+                                <option value="">@Localizer["All"]</option>
+                                @foreach (var sliderPlace in Enum.GetValues(typeof(SliderPlace)).Cast<SliderPlace>())
+                                {
+                                    if (Model.SliderPlace == sliderPlace)
+                                    {
+                                        <option value="@sliderPlace" selected="">@sliderPlace.GetEnumName()</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@sliderPlace">@sliderPlace.GetEnumName()</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3 col-7 col-md-7">
+                            <button class="btn btn-outline-primary w-25" type="submit">@Localizer["Search"]</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div id="FilterUsers" class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["SlidersList"]</h5>
+            </div>
+            @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                <div class="table-responsive mb-4 text-nowrap text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>@Localizer["Title"]</th>
+                                <th>@Localizer["SliderPlace"]</th>
+                                <th>@Localizer["Priority"]</th>
+                                <th>@Localizer["Published"]</th>
+                                <th>@Localizer["Image"]</th>
+                                <th>@Localizer["Operation"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in Model.Entities)
+                            {
+                                <tr>
+                                    <td>@Model.Counter</td>
+                                    <td>@(string.IsNullOrEmpty(item.Title) ? "-" : item.Title)</td>
+                                    <td>
+                                        <strong>@item.SliderPlace.GetEnumName()</strong>
+                                    </td>
+                                    <td>
+                                        <strong>@item.Priority</strong>
+                                    </td>
+                                    <td>
+                                        @if (item.IsPublished)
+                                        {
+                                            <span class="text-success"><i class="fa fa-check" aria-hidden="true"></i></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger"><i class="fa fa-times" aria-hidden="true"></i></span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <img src="@SiteTools.SliderImagePath@item.ImageName" class="logo-thumb-in-organs-list" ImageFile="1" />
+                                    </td>
+                                    <td>
+                                        <a permission="UpdateSlider" class="text-warning" asp-area="Admin" asp-controller="Slider" asp-action="Update" asp-route-id="@item.Id" id="@Localizer["Edit"]">
+                                            <i class="bx bx-edit-alt me-1"></i>
+                                        </a>
+                                        <a permission="DeleteSlider" class="text-danger" href="javascript:void(0)" onclick="DeleteConfirm('@Url.Action("Delete", "Slider", new { area = "Admin", id = @item.Id })')" id="deleteBtn-@item.Id" title="@Localizer["Delete"]">
+                                            <i class="bx bx-trash me-1"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+
+                                Model.Counter++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+
+</div>

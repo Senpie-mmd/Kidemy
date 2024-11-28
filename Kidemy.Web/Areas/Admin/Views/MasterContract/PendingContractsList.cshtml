@@ -1,0 +1,72 @@
+﻿@using Kidemy.Application.ViewModels.UploadedMasterContract;
+@model FilterMasterInformationForContractsPendingConfirmationViewModel
+
+@{
+    ViewData["Title"] = Localizer["PendingContractsList"];
+}
+
+<div class="row">
+    <div class="col-md-12 mb-3 d-none">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["Search"]</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="MasterContract" asp-action="MasterContractsPendingConfirmationList" method="post" id="filter-search" class="d-flex">
+                    <input type="hidden" asp-for="Page" />
+                    <div class="row w-100">
+
+                        <div class="mb-3 col-7 col-md-7">
+                            <button class="btn btn-outline-primary w-25" type="submit">@Localizer["Search"]</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div id="FilterUsers" class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["PendingContractsList"]</h5>
+            </div>
+            @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                <div class="table-responsive mb-4 text-nowrap text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>@Localizer["MasterFirstName"]</th>
+                                <th>@Localizer["MasterLastName"]</th>
+                                <th>@Localizer["Details"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in Model.Entities)
+                            {
+                                <tr>
+                                    <td>@Model.Counter</td>
+                                    <td>@item.MasterFirstName</td>
+                                    <td>@item.MasterLastName</td>
+                                    <td>
+                                        <a class="text-info" onclick="showModal('@Url.Action("MasterContractsDetails","MasterContract",new {area="Admin",masterId=item.MasterId})','@Localizer["MasterContractsDetails"]')" href="javascript:void(0)">
+                                            <i class="bx bx-detail me-1"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+
+                                Model.Counter++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+</div>

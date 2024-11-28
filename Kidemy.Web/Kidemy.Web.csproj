@@ -1,0 +1,202 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\css\ticket.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Areas\Admin\Views\Role\Create.cshtml" />
+    <None Include="Areas\Admin\Views\Role\List.cshtml" />
+    <None Include="Areas\Admin\Views\Role\Update.cshtml" />
+    <None Include="Areas\Admin\Views\Notification\SendNotification.cshtml" />
+    <None Include="Areas\Admin\Views\Notification\_SendNotificationUserFilter.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\Components\AdminDashboardPendingWithdrawRequests\AdminDashboardPendingWithdrawRequests.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\Components\Localized\Localized.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\Components\SettlementTransactions\SettlementTransactions.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\Components\SurveyQuestionsList\SurveyQuestionsList.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\EditorTemplates\ckeditor.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\EditorTemplates\tag.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\EditorTemplates\textarea.cshtml" />
+    <None Include="Areas\Admin\Views\SiteSetting\Update.cshtml" />
+    <None Include="Areas\Admin\Views\Slider\Create.cshtml" />
+    <None Include="Areas\Admin\Views\Slider\List.cshtml" />
+    <None Include="Areas\Admin\Views\Slider\Update.cshtml" />
+    <None Include="Areas\Admin\Views\SmsProvider\List.cshtml" />
+    <None Include="Areas\Admin\Views\SmsProvider\Update.cshtml" />
+    <None Include="Areas\Admin\Views\SocialMedia\Create.cshtml" />
+    <None Include="Areas\Admin\Views\SocialMedia\List.cshtml" />
+    <None Include="Areas\Admin\Views\SocialMedia\Update.cshtml" />
+    <None Include="Areas\Admin\Views\Survey\Create.cshtml" />
+    <None Include="Areas\Admin\Views\Survey\List.cshtml" />
+    <None Include="Areas\Admin\Views\Survey\SurveyAnswersList.cshtml" />
+    <None Include="Areas\Admin\Views\Survey\Update.cshtml" />
+    <None Include="Areas\Admin\Views\Survey\_CreateSurveyQuestion.cshtml" />
+    <None Include="Areas\Admin\Views\Survey\_SurveyAnswerDetails.cshtml" />
+    <None Include="Areas\Admin\Views\Survey\_UpdateSurveyQuestion.cshtml" />
+    <None Include="Areas\Admin\Views\Ticket\Create.cshtml" />
+    <None Include="Areas\Admin\Views\Ticket\Details.cshtml" />
+    <None Include="Areas\Admin\Views\Ticket\List.cshtml" />
+    <None Include="Areas\Admin\Views\Ticket\Update.cshtml" />
+    <None Include="Areas\UserPanel\Views\Ticket\Create.cshtml" />
+    <None Include="Areas\UserPanel\Views\Ticket\Details.cshtml" />
+    <None Include="Areas\UserPanel\Views\Ticket\List.cshtml" />
+    <None Include="Views\HandleError\NotFound.cshtml" />
+    <None Include="Views\HandleError\InternalError.cshtml" />
+    <None Include="wwwroot\assets\images\book\book-bg.svg" />
+    <None Include="wwwroot\assets\images\client\ae-card.svg" />
+    <None Include="wwwroot\assets\images\client\aftereffect.svg" />
+    <None Include="wwwroot\assets\images\client\algolia.svg" />
+    <None Include="wwwroot\assets\images\client\android.svg" />
+    <None Include="wwwroot\assets\images\client\angular.svg" />
+    <None Include="wwwroot\assets\images\client\app-store.svg" />
+    <None Include="wwwroot\assets\images\client\coca-cola.svg" />
+    <None Include="wwwroot\assets\images\client\envato.svg" />
+    <None Include="wwwroot\assets\images\client\figma.svg" />
+    <None Include="wwwroot\assets\images\client\google-play.svg" />
+    <None Include="wwwroot\assets\images\client\google.svg" />
+    <None Include="wwwroot\assets\images\client\graduated.svg" />
+    <None Include="wwwroot\assets\images\client\importio.svg" />
+    <None Include="wwwroot\assets\images\client\linkedin.svg" />
+    <None Include="wwwroot\assets\images\client\mastercard.svg" />
+    <None Include="wwwroot\assets\images\client\microsoft.svg" />
+    <None Include="wwwroot\assets\images\client\netflix.svg" />
+    <None Include="wwwroot\assets\images\client\paypal.svg" />
+    <None Include="wwwroot\assets\images\client\pencil.svg" />
+    <None Include="wwwroot\assets\images\client\science.svg" />
+    <None Include="wwwroot\assets\images\client\shippable.svg" />
+    <None Include="wwwroot\assets\images\client\uni-logo-01.svg" />
+    <None Include="wwwroot\assets\images\client\uni-logo-02.svg" />
+    <None Include="wwwroot\assets\images\client\uni-logo-03.svg" />
+    <None Include="wwwroot\assets\images\client\uni-logo-04.svg" />
+    <None Include="wwwroot\assets\images\client\visa.svg" />
+    <None Include="wwwroot\assets\images\client\yamaha.svg" />
+    <None Include="wwwroot\assets\images\element\01.svg" />
+    <None Include="wwwroot\assets\images\element\02.svg" />
+    <None Include="wwwroot\assets\images\element\03.svg" />
+    <None Include="wwwroot\assets\images\element\04.svg" />
+    <None Include="wwwroot\assets\images\element\05.svg" />
+    <None Include="wwwroot\assets\images\element\06.svg" />
+    <None Include="wwwroot\assets\images\element\07.svg" />
+    <None Include="wwwroot\assets\images\element\08.svg" />
+    <None Include="wwwroot\assets\images\element\09.svg" />
+    <None Include="wwwroot\assets\images\element\10.svg" />
+    <None Include="wwwroot\assets\images\element\14.svg" />
+    <None Include="wwwroot\assets\images\element\15.svg" />
+    <None Include="wwwroot\assets\images\element\16.svg" />
+    <None Include="wwwroot\assets\images\element\17.svg" />
+    <None Include="wwwroot\assets\images\element\18.svg" />
+    <None Include="wwwroot\assets\images\element\19.svg" />
+    <None Include="wwwroot\assets\images\element\20.svg" />
+    <None Include="wwwroot\assets\images\element\21.svg" />
+    <None Include="wwwroot\assets\images\element\22.svg" />
+    <None Include="wwwroot\assets\images\element\23.svg" />
+    <None Include="wwwroot\assets\images\element\24.svg" />
+    <None Include="wwwroot\assets\images\element\25.svg" />
+    <None Include="wwwroot\assets\images\element\26.svg" />
+    <None Include="wwwroot\assets\images\element\27.svg" />
+    <None Include="wwwroot\assets\images\element\29.svg" />
+    <None Include="wwwroot\assets\images\element\30.svg" />
+    <None Include="wwwroot\assets\images\element\abc.svg" />
+    <None Include="wwwroot\assets\images\element\account.svg" />
+    <None Include="wwwroot\assets\images\element\add-course.svg" />
+    <None Include="wwwroot\assets\images\element\app-store.svg" />
+    <None Include="wwwroot\assets\images\element\artist.svg" />
+    <None Include="wwwroot\assets\images\element\cart.svg" />
+    <None Include="wwwroot\assets\images\element\category-1.svg" />
+    <None Include="wwwroot\assets\images\element\category-2.svg" />
+    <None Include="wwwroot\assets\images\element\child.svg" />
+    <None Include="wwwroot\assets\images\element\coding.svg" />
+    <None Include="wwwroot\assets\images\element\coming-soon.svg" />
+    <None Include="wwwroot\assets\images\element\contact.svg" />
+    <None Include="wwwroot\assets\images\element\create-account.svg" />
+    <None Include="wwwroot\assets\images\element\data-science.svg" />
+    <None Include="wwwroot\assets\images\element\earn-money.svg" />
+    <None Include="wwwroot\assets\images\element\engineering.svg" />
+    <None Include="wwwroot\assets\images\element\error404-01.svg" />
+    <None Include="wwwroot\assets\images\element\exam.svg" />
+    <None Include="wwwroot\assets\images\element\gallery.svg" />
+    <None Include="wwwroot\assets\images\element\google-play.svg" />
+    <None Include="wwwroot\assets\images\element\help-center.svg" />
+    <None Include="wwwroot\assets\images\element\help.svg" />
+    <None Include="wwwroot\assets\images\element\high-school.svg" />
+    <None Include="wwwroot\assets\images\element\home.svg" />
+    <None Include="wwwroot\assets\images\element\idea.svg" />
+    <None Include="wwwroot\assets\images\element\instructor-course.svg" />
+    <None Include="wwwroot\assets\images\element\lego.svg" />
+    <None Include="wwwroot\assets\images\element\map.svg" />
+    <None Include="wwwroot\assets\images\element\marketing.svg" />
+    <None Include="wwwroot\assets\images\element\medal.svg" />
+    <None Include="wwwroot\assets\images\element\medical.svg" />
+    <None Include="wwwroot\assets\images\element\middle-school.svg" />
+    <None Include="wwwroot\assets\images\element\music.svg" />
+    <None Include="wwwroot\assets\images\element\online.svg" />
+    <None Include="wwwroot\assets\images\element\photography.svg" />
+    <None Include="wwwroot\assets\images\element\primary-school.svg" />
+    <None Include="wwwroot\assets\images\element\profit.svg" />
+    <None Include="wwwroot\assets\images\element\rocket.svg" />
+    <None Include="wwwroot\assets\images\element\song.svg" />
+    <None Include="wwwroot\assets\images\element\sport.svg" />
+    <None Include="wwwroot\assets\images\flags\ar.svg" />
+    <None Include="wwwroot\assets\images\flags\au.svg" />
+    <None Include="wwwroot\assets\images\flags\cn.svg" />
+    <None Include="wwwroot\assets\images\flags\fr.svg" />
+    <None Include="wwwroot\assets\images\flags\gr.svg" />
+    <None Include="wwwroot\assets\images\flags\in.svg" />
+    <None Include="wwwroot\assets\images\flags\it.svg" />
+    <None Include="wwwroot\assets\images\flags\nz.svg" />
+    <None Include="wwwroot\assets\images\flags\sp.svg" />
+    <None Include="wwwroot\assets\images\flags\uk.svg" />
+    <None Include="wwwroot\assets\images\flags\us.svg" />
+    <None Include="wwwroot\assets\images\logo-light.svg" />
+    <None Include="wwwroot\assets\images\logo-mobile-light.svg" />
+    <None Include="wwwroot\assets\images\logo-mobile.svg" />
+    <None Include="wwwroot\assets\images\logo.png" />
+    <None Include="wwwroot\assets\images\logo.svg" />
+    <None Include="wwwroot\assets\images\videos\en.vtt" />
+    <None Include="wwwroot\assets\images\videos\fr.vtt" />
+    <None Include="wwwroot\lib\Kendo\js\cultures\kendo.culture.fa-IR.min.js" />
+    <None Include="wwwroot\lib\Kendo\js\cultures\kendo.culture.fa-IR.min.js.map" />
+    <None Include="wwwroot\lib\Kendo\js\kendo.all.min.js" />
+    <None Include="wwwroot\lib\Kendo\js\kendo.all.min.js.map" />
+    <None Include="wwwroot\lib\Kendo\js\messages\kendo.messages.fa-IR.min.js" />
+    <None Include="wwwroot\lib\Kendo\js\messages\kendo.messages.fa-IR.min.js.map" />
+    <None Include="wwwroot\lib\Kendo\styles\kendo.default-main.min.css.map" />
+    <None Include="wwwroot\lib\Kendo\styles\kendo.default.min.css.map" />
+    <None Include="wwwroot\lib\Kendo\styles\kendo.default.mobile.min.css.map" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Barnamenevisan.Localizing" Version="1.0.9" />
+    <PackageReference Include="GoogleReCaptcha.V3" Version="1.3.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.11" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.3" />
+    <PackageReference Include="Quartz.AspNetCore" Version="3.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kidemy.Application\Kidemy.Application.csproj" />
+    <ProjectReference Include="..\Kidemy.Infra.IOC\Kidemy.Infra.IOC.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\admin\assets\img\favicon\favicon.ico">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\assets\images\favicon.ico">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

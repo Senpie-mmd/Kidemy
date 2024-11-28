@@ -1,0 +1,140 @@
+﻿@using Kidemy.Application.ViewModels.Consultation.ConsultationRequest;
+@model AdminSideSetTimeForConsultationRequestViewModel
+@{
+    ViewData["Title"] = Localizer["SetTimeConsultationRequest"];
+
+    var request = ViewBag.Request as AdminSideConsultaionRequestViewModel;
+}
+
+<div class="col-md-12  mb-3">
+    <div class="card ">
+        <div class="card-header ">
+            <h5>@Localizer["RequestDetails"]</h5>
+        </div>
+        <div class="   mb-4 text-nowrap " id="masterInformation">
+            <form method="post" asp-area="Admin" asp-controller="ConsultationRequest" asp-action="SetTime">
+                <input type="hidden" asp-for="ConsultationRequestId" value="@request.Id" />
+                <div class="row m-4">
+                    <div class="col-md-8 mb-3">
+                        <div class="row mt-4">
+                            <div class="col-12 col-lg-12">
+                                <div class="form-group mb-4">
+                                    <span>@Localizer["Topic"] :</span>
+                                    @request.Topic
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-12">
+                                <div class="form-group mb-4">
+                                    <span>@Localizer["Description"] :</span>
+                                    @request.Description
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <div class="form-group mb-4">
+                                    <span>@Localizer["Time"] :</span>
+                                    @if (request.DayOfWeek == DayOfWeek.Friday)
+                                    {
+                                        @Localizer["Friday"]
+                                    }
+                                    else if (request.DayOfWeek == DayOfWeek.Saturday)
+                                    {
+                                        @Localizer["Saturday"]
+                                    }
+                                    else if (request.DayOfWeek == DayOfWeek.Sunday)
+                                    {
+                                        @Localizer["Sunday"]
+                                    }
+                                    else if (request.DayOfWeek == DayOfWeek.Monday)
+                                    {
+                                        @Localizer["Monday"]
+                                    }
+                                    else if (request.DayOfWeek == DayOfWeek.Tuesday)
+                                    {
+                                        @Localizer["Tuesday"]
+                                    }
+                                    else if (request.DayOfWeek == DayOfWeek.Wednesday)
+                                    {
+                                        @Localizer["Wednesday"]
+                                    }
+                                    else if (request.DayOfWeek == DayOfWeek.Thursday)
+                                    {
+                                        @Localizer["Thursday"]
+                                    } - @Localizer["From"] @request.StartTime.Value.ToString("hh\\:mm")  @Localizer["To"] @request.EndTime.Value.ToString("hh\\:mm")
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <div class="form-group mb-4 ">
+                                    <span>@Localizer["Type"] :</span>
+                                    @request.TypeTitle  - @((decimal.Parse(request.TypePrice.ToString())).ToString("#,0")) @Localizer["Toman"]
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <div class="form-group mb-4">
+                                    <span>@Localizer["State"] :</span>
+                                    @request.state.GetEnumName()
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-12">
+                                <div class="form-group mb-4  col-12 col-lg-4">
+                                    <label>@Localizer["FixedDate"]</label>
+                                    <input asp-for="SetFixedDate" class="form-control flatpickr-input me-2 persianDate" autocomplete="off" placeholder="@Localizer["FixedDate"]">
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-12">
+                                <div class="form-group mb-4  col-12 col-lg-3">
+                                    <label class="form-label" for="form-repeater-1-2">@Localizer["FixedTime"]</label>
+                                    <input asp-for="SetFixedTime" type="time" id="form-repeater-1-2" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                @if (request.state != Kidemy.Domain.Enums.Consultation.ConsultationRequestState.Canceled)
+                                {
+                                    <div class="col-12 d-flex justify-content-start">
+                                        <button type="submit" class="btn btn-success">
+                                            @Localizer["Save"]
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                            <div class="card-footer">
+                                <div class="text-danger" asp-validation-summary="All"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+
+                        <div class="row mt-4">
+                            <div class="col-12 col-lg-12">
+                                <div class="form-group mb-4">
+                                    <span>@Localizer["AdviserName"] :</span>
+                                    @request.AdviserUserName
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-12">
+                                <div class="form-group mb-4">
+                                    <span>@Localizer["AdviserMobile"] :</span>
+                                    @request.AdviserMobile
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-12">
+                                <div class="form-group mb-4">
+                                    <span>@Localizer["RequestedUserName"] :</span>
+                                    @request.RequestedByUserMobile
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-12">
+                                <div class="form-group mb-4">
+                                    <span>@Localizer["RequestedUserMobile"] :</span>
+                                    @request.RequestedByUserMobile
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

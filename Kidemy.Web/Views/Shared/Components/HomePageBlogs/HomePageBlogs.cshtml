@@ -1,0 +1,73 @@
+﻿@using Kidemy.Application.ViewModels.Blog
+@model List<ClientSideBlogViewModel>
+
+@if (Model is not null && Model.Any())
+{
+    <section class="py-5">
+        <div class="container">
+            <div class="row position-relative text-center">
+                <!-- Title -->
+                <h1 class="fs-2">@Localizer["BlogsList"]</h1>
+            </div>
+        </div>
+    </section>
+}
+@if (Model is not null && Model.Any())
+{
+    <!-- =======================
+    Page content START -->
+    <section class="position-relative pt-0">
+        <div class="container">
+            <div class="row g-4">
+                @foreach (var item in Model)
+                {
+                    <!-- Card item START -->
+                    <div class="col-sm-6 col-lg-4 col-xl-3">
+                        <div class="card bg-transparent">
+                            <div class="overflow-hidden rounded-3">
+                                <a asp-area="" asp-controller="Blog" asp-action="Blog" asp-route-slug="@item.Slug">
+                                    <img src="@SiteTools.BlogImagePath@item.ImageName" class="card-img image-size" alt="course image">
+                                </a>
+                            </div>
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <!-- Title -->
+                                <h5 class="card-title fw-normal"><a asp-area="" asp-controller="Blog" asp-action="Blog" asp-route-slug="@item.Slug">@item.Title</a></h5>
+                                <div class="text-truncate-2" style="margin-bottom:1rem;">
+                                    @Html.Raw(item.Body)
+                                </div>
+                                <!-- Info -->
+                                <div class="d-flex justify-content-between">
+                                    <span dir="rtl"> <i class="fa fa-comments"></i> @item.CommentCount </span>
+                                    <h6 class="mb-0 fw-normal" dir="ltr"><a href="javascript:void(0)">@(item.AuthorName.Contains("***") ? Localizer["Kidemy"] : item.AuthorName)</a></h6>
+                                    @*                                     <span class="small">@item.CreatedDateOnUTC.ToUserDate()</span>
+                            *@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card item END -->
+                }
+            </div> <!-- Row end -->
+        </div>
+    </section>
+}
+<!-- =======================
+Page content END -->
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        var divTruncate = document.querySelectorAll('div.text-truncate-2');
+
+        divTruncate.forEach(div => {
+            var childCount = div.childElementCount;
+
+            if (childCount > 1) {
+                div.style.marginBottom = '23px';
+            }
+        })
+    })
+
+</script>

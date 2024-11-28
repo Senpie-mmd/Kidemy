@@ -1,0 +1,225 @@
+﻿@using Kidemy.Application.ViewModels.Course.ClientSideCourse.Courses
+@using Kidemy.Application.ViewModels.Course;
+@using Kidemy.Domain.Enums.Course;
+@using Kidemy.Domain.Statics
+@using Microsoft.Extensions.Localization
+@model ClientSideFilterCoursesViewModel
+@inject IStringLocalizer stringLocalizer;
+
+@{
+    ViewData["Title"] = Localizer["CoursesList"];
+    var favouriteCourses = ViewBag.FavouriteCourses as List<int>;
+}
+
+<form asp-area="" asp-controller="Courses" asp-action="CoursesList" method="get" id="filter-search">
+    <input type="hidden" asp-for="Page" />
+
+    <section class="bg-blue align-items-center d-flex" style="background:url(assets/images/pattern/04.png) no-repeat center center; background-size:cover;">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="text-white fs-2">@ViewData["Title"]</h1>
+                    <div class="d-flex justify-content-center">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb breadcrumb-dark breadcrumb-dots mb-0">
+                                <li class="breadcrumb-item"><a href="/">@Localizer["MainPage"]</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-xl-9">
+                    <div class="row mb-4 align-items-center">
+                        <!-- Search bar -->
+                        <div class="col-xl-6">
+                            <div class="border rounded p-2">
+                                <div class="input-group input-borderless">
+                                    <input class="form-control me-1" type="search" placeholder="@Localizer["SearchCourse"]" asp-for="Title">
+                                    <button type="submit" class="btn btn-primary mb-0 rounded z-index-1"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Select option -->
+                        <div class="col-xl-3 mt-3 mt-xl-0">
+                            <div class="border rounded p-2 input-borderless">
+                                <select class="form-select form-select-sm js-choice border-0" onchange="submitForm('filter-search')" asp-for="CourseRates" aria-label=".form-select-sm" asp-items="@Html.GetEnumSelectList<FilterCoursesListEnum>()">
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="col-12 col-xl-3 d-flex justify-content-between align-items-center mt-3 mt-xl-0">
+                            <!-- Advanced filter responsive toggler START -->
+                            <button class="btn btn-primary mb-0 d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
+                                <i class="fas fa-sliders-h me-1"></i> @Localizer["ShowFilter"]
+                            </button>
+                            <!-- Advanced filter responsive toggler END -->
+                            <p class="mb-0 text-end">
+                                @Model.GetShownEntitiesPagesTitle(stringLocalizer)
+                            </p>
+                        </div>
+
+                    </div>
+                    <div class="row g-4">
+
+                        @foreach (var item in Model?.Entities ?? new List<ClientSideCourseViewModel>())
+                        {
+                            <div class="col-sm-6 col-xl-4">
+
+                                <partial name="_CoursePartial" model="item" />
+
+                            </div>
+                        }
+
+                    </div>
+                    <div class="col-12">
+                        <partial name="_Paging" model="Model.GetCurrentPaging()" />
+                    </div>
+                </div>
+                <div class="col-lg-4 col-xl-3">
+                    <!-- Responsive offcanvas body START -->
+                    <div class="offcanvas-lg offcanvas-end" tabindex="-1" id="offcanvasSidebar">
+                        <div class="offcanvas-header bg-light">
+                            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">@Localizer["AdvancedSearch"]</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasSidebar" aria-label="Close"></button>
+                        </div>
+                        <div class="offcanvas-body p-3 p-lg-0">
+                            <div asp-area="" asp-controller="Courses" asp-action="CoursesList" method="get">
+                                <div class="card card-body shadow p-4 mb-4">
+                                    <h4 class="mb-3 fs-6">@Localizer["FilterCategory"]</h4>
+                                    <div class="col-12">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="form-check">
+                                                <input class="form-check-input" name="CategoryIds" type="checkbox" value="-1" id="flexCheckDefault--1" @((Model.CategoryIds.Contains(-1) ? "checked" : "")) onchange="unCheckedAllOtherBtn()">
+                                                <label class="form-check-label" for="flexCheckDefault--1">@Localizer["All"]</label>
+                                            </div>
+                                            <span class="small">(@Model.AllCoursesCount)</span>
+                                        </div>
+                                        @{
+                                            int counter1 = 1;
+                                            foreach (var item in Model?.categories.Where(n => n.ParentId == null).ToList() ?? new List<CategoriesForCourseListClientSideViewModel>())
+                                            {
+                                                counter1++;
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input map-JS-DOM" name="CategoryIds" type="checkbox" value="@item.Id" id="flexCheckDefault--@counter1" onclick="UnCheckAllBtn()" @((Model.CategoryIds.Contains(item.Id) ? "checked" : ""))>
+                                                        <label class="form-check-label" for="flexCheckDefault--@counter1">@item.Title</label>
+                                                    </div>
+                                                    <span class="small">(@item.CourseCount)</span>
+                                                </div>
+                                                foreach (var item2 in Model?.categories.Where(n => n.ParentId == item.Id) ?? new List<CategoriesForCourseListClientSideViewModel>())
+                                                {
+                                                    counter1++;
+                                                    <div class="d-flex justify-content-between align-items-center" style="margin-right: 14px;">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input map-JS-DOM" name="CategoryIds" type="checkbox" value="@item2.Id" id="flexCheckDefault--@counter1" onclick="UnCheckAllBtn()" @((Model.CategoryIds.Contains(item2.Id) ? "checked" : ""))>
+                                                            <label class="form-check-label" for="flexCheckDefault--@counter1">@item2.Title</label>
+                                                        </div>
+                                                        <span class="small">(@item2.CourseCount)</span>
+                                                    </div>
+
+                                                    foreach (var item3 in Model?.categories.Where(n => n.ParentId == item2.Id) ?? new List<CategoriesForCourseListClientSideViewModel>())
+                                                    {
+                                                        counter1++;
+                                                        <div class="d-flex justify-content-between align-items-center" style="margin-right: 30px;">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input map-JS-DOM" name="CategoryIds" type="checkbox" value="@item3.Id" id="flexCheckDefault--@counter1" onclick="UnCheckAllBtn()" @((Model.CategoryIds.Contains(item3.Id) ? "checked" : ""))>
+                                                                <label class="form-check-label" for="flexCheckDefault--@counter1">@item3.Title</label>
+                                                            </div>
+                                                            <span class="small">(@item3.CourseCount)</span>
+                                                        </div>
+                                                    }
+
+                                                }
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                                <div class="card card-body shadow p-4 mb-4">
+                                    <h4 class="mb-3 fs-6">@Localizer["PriceFilter"]</h4>
+                                    <ul class="list-inline mb-0">
+                                        @{
+                                            int counter3 = 0;
+                                            foreach (var item in Enum.GetValues(typeof(CoursePriceTypeForView)).Cast<CoursePriceTypeForView>())
+                                            {
+                                                counter3++;
+                                                <li class="list-inline-item">
+                                                    <input type="radio" asp-for="PriceType" value="@item" class="btn-check" id="CoursePriceOption--@counter3">
+                                                    <label class="btn btn-light btn-primary-soft-check" for="CoursePriceOption--@counter3">@item.GetEnumName()</label>
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                                <div class="card card-body shadow p-4 mb-4">
+                                    <h4 class="mb-3 fs-6">@Localizer["FilterLevel"]</h4>
+                                    <ul class="list-inline mb-0">
+                                        <li class="list-inline-item">
+                                            <input type="radio" asp-for="Level" value="" class="btn-check" id="CourseLevelOption--1" checked>
+                                            <label class="btn btn-light btn-primary-soft-check" for="CourseLevelOption--1">@Localizer["AllLevels"]</label>
+                                        </li>
+                                        @{
+                                            int counter4 = 1;
+                                            foreach (var item in Enum.GetValues(typeof(Kidemy.Domain.Enums.Course.CourseLevel)).Cast<Kidemy.Domain.Enums.Course.CourseLevel>())
+                                            {
+                                                counter4++;
+                                                <li class="list-inline-item">
+                                                    <input type="radio" asp-for="Level" value="@item" class="btn-check" id="CourseLevelOption--@counter4">
+                                                    <label class="btn btn-light btn-primary-soft-check" for="CourseLevelOption--@counter4">@item.GetEnumName()</label>
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                                <div class="d-grid p-2 p-lg-0 text-center">
+                                    <button class="btn btn-primary mb-0">@Localizer["FilterResult"]</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</form>
+
+@section FooterReferences
+{
+    <script asp-append-version="true">
+        function UnCheckAllBtn() {
+            document.getElementById("flexCheckDefault--1").checked = false;
+        }
+
+        function unCheckedAllOtherBtn() {
+            let allBtn = document.getElementById("flexCheckDefault--1");
+            if (allBtn.checked == true) {
+                let items = document.querySelectorAll(".map-JS-DOM");
+                items.forEach(item => {
+                    item.checked = false;
+                });
+            }
+        }
+
+        function submitForm(formId) {
+            document.getElementById(formId).submit();
+        }
+    </script>
+    <script asp-append-version="true">
+
+        var courseIdList = @Html.Raw(Json.Serialize(favouriteCourses));
+
+        checkFavorite(courseIdList);     
+
+    </script>
+
+}

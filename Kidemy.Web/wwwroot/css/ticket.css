@@ -1,0 +1,105 @@
+﻿.messages {
+    list-style: none;
+    max-height: 30rem;
+    overflow-y: scroll;
+    margin-top: 1rem;
+}
+
+.messages > li > img{
+    float: right;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-left: 15px;
+}
+
+.messages > li {
+    margin: 15px;
+    list-style: none;
+}
+
+.messages > li > h6 {
+    display: block;
+    padding: 6px 0 0;
+    color: #1a1c24;
+    font-weight: normal;
+    font-size: 17px;
+    margin: 0 70px 15px 0;
+}
+
+.messages > li > span {
+    display: block;
+    max-width: 60%;
+    color: #1a1c24;
+    margin-right: 70px;
+    position: relative;
+    line-height: 28px;
+}
+
+.messages > li > span > small {
+    padding: 0;
+    color: #838aa2;
+    display: block;
+    margin: 0;
+    font-size: 13px;
+    position: absolute;
+    bottom: 5px;
+    right: 15px;
+    left: auto;
+    direction: ltr;
+}
+
+    .messages > li > span > div.message {
+        padding: 25px;
+        border-radius: 15px;
+        display: inline-block;
+        margin: 2px;
+        min-width: 120px;
+        text-align: right;
+        background: #ffeacf;
+        color: #1a1c24;
+        max-width: 80%;
+    }
+
+.messages > li.usermessage {
+    text-align: right;
+    direction: ltr;
+}
+
+.messages > li.usermessage > img {
+    float: left;
+    margin-left: 0;
+    margin-right: 15px;
+}
+
+.messages > li.usermessage > h6 {
+    text-align: left;
+    margin-left: 70px;
+    margin-right: 0;
+}
+
+.messages > li.usermessage > span > div.message {
+    text-align: right;
+    background: #eff1f5;
+    color: #1a1c24;
+    direction: rtl;
+    max-width: 80%;
+}
+
+.messages > li.usermessage > span > small {
+    text-align: left;
+    right: auto;
+    left: 15px;
+    color: #343744;
+}
+
+.messages > li.usermessage > span {
+    margin-left: 70px;
+    margin-right: 0;
+    direction: ltr;
+    text-align: left;
+}
+
+.break-space, .break-space * {
+    white-space: break-spaces;
+}

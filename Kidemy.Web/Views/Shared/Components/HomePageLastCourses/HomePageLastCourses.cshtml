@@ -1,0 +1,36 @@
+﻿@using Kidemy.Application.ViewModels.Course.ClientSideCourse.Courses
+@using Kidemy.Application.ViewModels.DynamicText
+@using Kidemy.Domain.Enums.Course
+@model List<ClientSideCourseViewModel>
+
+@if (Model?.Any() ?? false)
+{
+    <section id="for-scroll">
+        <div class="container">
+            <!-- Title -->
+            <div class="row mb-4">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="fs-3">@Localizer["LastCourses"]</h2>
+                </div>
+
+            </div>
+
+
+        </div>
+        <section class="position-relative pt-0">
+            <div class="container">
+                <div class="row g-4">
+                    @foreach (var item in Model ?? new List<ClientSideCourseViewModel>())
+                    {
+                        <div class="col-sm-6 col-lg-4 col-xl-3">
+                            <partial name="_CoursePartial" model="@item" />
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="text-center mt-5">
+                <a asp-action="CoursesList" asp-controller="Courses" asp-area="" class="btn btn-primary-soft mb-0">مشاهده همه</a>
+            </div>
+        </section>
+    </section>
+}

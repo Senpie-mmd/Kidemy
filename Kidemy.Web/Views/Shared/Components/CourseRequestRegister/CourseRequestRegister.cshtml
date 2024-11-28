@@ -1,0 +1,59 @@
+﻿@using Kidemy.Application.ViewModels.Course.ClientSideCourse.CourseTag;
+@using Kidemy.Application.ViewModels.CourseRequest;
+@using Kidemy.Domain.DTOs;
+@using Kidemy.Domain.Enums.Course;
+@using Kidemy.Domain.Enums.User;
+@model ClientSideCourseRequestRegisterViewModel
+@{
+    var mastersList = ViewData["MastersList"] as List<UserFullNameModel>;
+    var courseTagsList = ViewData["CourseTagsList"] as List<ClientSideCourseTagViewModel>;
+}
+
+<div class="card-body mt-4">
+    <form method="post" asp-action="CourseRequestRegister" asp-controller="CourseRequest" class="row g-4">
+        <header class="headerCourseRequest mt-5">
+            <h1>@Localizer["NewCourseRequest"]</h1>
+        </header>
+  
+            <div class="col-6">
+            <label class="form-label">@Localizer["CourseRequestTitle"]</label>
+                <div class="input-group">
+                <input asp-for="CourseRequestTitle" class="form-control">
+                </div>
+            <span asp-validation-for="CourseRequestTitle" class="text-danger d-block"></span>
+            </div>
+
+        <div class="col-md-6 light-style">
+                <label class="form-label">@Localizer["YourRecommendedMaster"]</label>
+            <select asp-for="PreferedMasterId" class="form-select select2">
+                    @foreach (var item in mastersList ?? new List<UserFullNameModel>())
+                    {
+                        <option value="@item.UserId">@item.UserFullName</option>
+                    }
+                </select>
+            </div>
+
+        <div class="col-md-12 light-style">
+                <label asp-for="SelectedTags" class="form-label">@Localizer["RequiredSkills"]</label>
+                <select asp-for="SelectedTags" class="form-select me-2 select2" multiple>
+                    @foreach (var item in courseTagsList ?? new List<ClientSideCourseTagViewModel>())
+                    {
+                        <option value="@item.Title">@item.Title</option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">@Localizer["Description"]</label>
+                <div class="input-group">
+                    <textarea asp-for="Description" class="form-control" rows="6"></textarea>
+                </div>
+                <span asp-validation-for="Description" class="text-danger d-block"></span>
+            </div>
+ 
+
+        <div class="d-sm-flex justify-content-end">
+            <button type="submit" class="btn btn-primary mb-0 loading-support">@Localizer["Submit"]</button>
+        </div>
+    </form>
+</div>

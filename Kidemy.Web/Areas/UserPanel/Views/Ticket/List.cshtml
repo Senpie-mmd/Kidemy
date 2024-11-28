@@ -1,0 +1,69 @@
+﻿@using Kidemy.Application.Convertors
+@using Kidemy.Application.Statics
+@using Kidemy.Domain.Enums.Ticket
+@using Kidemy.Application.ViewModels.Ticket;
+@model ClientSideFilterTicketViewModel
+
+@{
+    ViewData["Title"] = Localizer["MyTickets"];
+}
+
+<form asp-area="UserPanel" asp-controller="Ticket" asp-action="List" method="get" id="filter-search" class="d-none">
+    <input type="hidden" asp-for="Page">
+</form>
+
+<div class="col-xl-12 col-lg-12 col-md-12">
+
+    <div class="card bg-transparent border rounded-3">
+        <div class="card-header bg-transparent border-bottom d-flex">
+            <h3 class="mb-0 fs-5 ff-vb">@Localizer["MyTickets"]</h3>
+            <a asp-action="Create" asp-controller="Ticket" asp-area="UserPanel" class="btn btn-success ms-auto">@Localizer["AddTicket"]</a>
+        </div>
+        @if (Model?.Entities?.Any() ?? false)
+        {
+            <div class="card-body">
+                <div class="row g-3 align-items-center justify-content-between mb-4">
+                </div>
+                <div class="table-responsive border-0">
+                    <table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="border-0 rounded-start">@Localizer["Id"]</th>
+                                <th scope="col" class="border-0 ">@Localizer["Title"]</th>
+                                <th scope="col" class="border-0 ">@Localizer["CreateDate"]</th>
+                                <th scope="col" class="border-0">@Localizer["Priority"]</th>
+                                <th scope="col" class="border-0">@Localizer["Section"]</th>
+                                <th scope="col" class="border-0">@Localizer["Status"]</th>
+                                <th scope="col" class="border-0">@Localizer["Details"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Entities)
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td>@item.Title</td>
+                                    <td class="ltr">@item.CreateDateOnUtc.ToUserShortDateTime()</td>
+                                    <td>@item.Priority.GetEnumName()</td>
+                                    <td>@item.Section.GetEnumName()</td>
+                                    <td>@item.Status.GetEnumName()</td>
+                                    <td>
+                                        <a class="btn btn-primary" aria-label="@Localizer["Show"]" asp-controller="Ticket" asp-action="Details" asp-route-id="@item.Id">
+                                            @Localizer["Show"]
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <partial name="_UserPanelPaging" model="Model.GetCurrentPaging()" />
+        }
+        else
+        {
+            <partial name="_NotFoundPartial" />
+        }
+    </div>
+</div>

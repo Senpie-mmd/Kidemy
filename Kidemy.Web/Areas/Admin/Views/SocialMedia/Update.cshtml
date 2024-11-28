@@ -1,0 +1,57 @@
+﻿@using Kidemy.Application.ViewModels.SocialMedia;
+@using Kidemy.Domain.Statics;
+
+@model AdminSideUpsertSocialMediaViewModel
+@{
+    ViewData["Title"] = Localizer["ViewTitle.Admin.UpdateSocialMedia"];
+}
+
+<form asp-action="Update" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card p-lg-5">
+                <div class="card-body">
+                    <div class="row">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="ImageName" />
+                        @await Component.InvokeAsync("Localized", Model)
+                        <div class="col-12 col-lg-12">
+                            <div class="form-group mb-4">
+                                <label asp-for="Link" class="form-label"></label>
+                                <input asp-for="Link" class="form-control" placeholder="https://google.com" />
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-12">
+                            <div class="form-group mb-4">
+                                <label asp-for="Priority" class="form-label"></label>
+                                <input asp-for="Priority" class="form-control number" min="1" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-start">
+                                <button type="submit" class="btn btn-warning">@Localizer["Edit"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div asp-validation-summary="All" class="text-danger mt-3"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4 mb-md-0">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mt-4 mb-4">
+                        <h6 class="fs-6 mb-2">@Localizer["PleaseUploadImage"]</h6>
+                        <img src="@SiteTools.SocialMediaImagePath@Model.ImageName" class="w-100 rounded-2 mb-3" ImageFile="1" />
+                        <label for="uploadImage" class=" w-100">
+                            <button type="button" class="btn btn-info w-100" id="uploadBtn">@Localizer["Upload"]</button>
+                        </label>
+                        <input class="d-none" type="file" id="uploadImage" ImageInput="1" accept="image/*" asp-for="Image" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

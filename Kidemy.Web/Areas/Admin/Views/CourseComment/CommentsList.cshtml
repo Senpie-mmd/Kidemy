@@ -1,0 +1,146 @@
+﻿@using Kidemy.Application.ViewModels.Course.AdminSideCourse.Courses
+@using Kidemy.Domain.Enums.Course
+@model AdminSideFilterCourseCommentsViewModel
+
+@{
+    ViewData["Title"] = Localizer["CommentsList"];
+}
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["Search"]</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="CourseComment" id="filter-search" method="get" asp-action="CommentsList" class="d-flex">
+                    <input type="hidden" asp-for="CourseId" />
+                    <input type="hidden" asp-for="Page" />
+                    <div class="row w-100">
+                        <div class="form-group mb-4">
+                            <label class="form-label" id="label-user-display">@Localizer["User"]</label>
+                            <div class="input-group" id="user-display">
+                                <input type="hidden" asp-for="UserId" id="User-Input" class="form-control" />
+                                <span class="input-group-text text-primary " onclick="ShowSearchUserModal('User')"><i class="bx bx-search-alt-2"></i></span>
+                                <input type="text" class="form-control" asp-for="UserName" id="User-Display" readonly="readonly">
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3 col-6 col-md-6">
+                            <label asp-for="CommentScore" class="form-label"></label>
+                            <select asp-for="CommentScore" class="form-select me-2 select2" data-placeholder="@Localizer["Select"]" asp-items="@Html.GetEnumSelectList<CourseCommentsScore>()">
+                                <option>@Localizer["All"]</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3 col-6 col-md-6">
+                            <label asp-for="IsConfirmed" class="form-label"></label>
+                            <select asp-for="IsConfirmed" class="form-select me-2 select2">
+                                <option>@Localizer["All"]</option>
+                                <option value="true">@Localizer["Confirmed"]</option>
+                                <option value="false">@Localizer["NotConfirmed"]</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="CommentMessage" class="form-label"></label>
+                            <input type="search" asp-for="CommentMessage" class="form-control me-2" placeholder="@Localizer["Message"]" aria-label="Search">
+                        </div>
+
+                        <div class="mb-3 col-7 col-md-7">
+                            <button class="btn btn-outline-primary w-25" type="submit">@Localizer["Search"]</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div id="LoadComments" class="col-md-12">
+        @if (Model != null && Model.Entities != null && Model.Entities.Any())
+        {
+            @foreach (var item in Model?.Entities ?? new List<AdminSideCourseCommentViewModel>())
+            {
+                <p class="p-3 shadow rounded">
+                    @Localizer["Writer"]: @item.UserName -- <span dir="ltr">@item.CommentedDate</span> -- @item.Score.GetEnumName() --
+                    @if (item.IsConfirmed == true)
+                    {
+                        <span class="alert alert-success p-2" id="success-info-@item.Id">@Localizer["Confirmed"]</span>
+                        <span class="alert alert-danger p-2 d-none" id="danger-info-@item.Id">@Localizer["NotConfirmed"]</span>
+                    }
+                    else
+                    {
+                        <span class="alert alert-success p-2 d-none" id="success-info-@item.Id">@Localizer["Confirmed"]</span>
+                        <span class="alert alert-danger p-2" id="danger-info-@item.Id">@Localizer["NotConfirmed"]</span>
+                    }
+                    <br />
+                    @Localizer["Comment"]:
+                    <br />
+                    @item.Message
+                    <br />
+                    <br />
+                    @if (item.IsConfirmed == true)
+                    {
+                        <a class="btn btn-danger text-white" id="deny-@item.Id" permission="ConfirmOrDenyComment"
+                           onclick="denyComment('@Url.Action("ConfirmOrDenyComment","CourseComment",new {area="Admin" ,isConfirm  = false , commentId = item.Id })', '@item.Id')">@Localizer["DenyComment"]</a>
+
+                        <a class="btn btn-success text-white d-none" id="confirm-@item.Id" permission="ConfirmOrDenyComment"
+                           onclick="confirmComment('@Url.Action("ConfirmOrDenyComment","CourseComment",new {area="Admin" ,isConfirm  = true , commentId = item.Id })', '@item.Id')">@Localizer["ConfirmComment"]</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-danger text-white d-none" id="deny-@item.Id" permission="ConfirmOrDenyComment"
+                           onclick="denyComment('@Url.Action("ConfirmOrDenyComment","CourseComment",new {area="Admin" ,isConfirm  = false , commentId = item.Id })', '@item.Id')">@Localizer["DenyComment"]</a>
+
+                        <a class="btn btn-success text-white" id="confirm-@item.Id" permission="ConfirmOrDenyComment"
+                           onclick="confirmComment('@Url.Action("ConfirmOrDenyComment","CourseComment",new {area="Admin" ,isConfirm  = true , commentId = item.Id })', '@item.Id')">@Localizer["ConfirmComment"]</a>
+                    }
+                </p>
+            }
+            <partial name="_Paging" model="@Model.GetCurrentPaging()" />
+        }
+        else
+        {
+            <partial name="_NotFoundPartial" />
+        }
+    </div>
+</div>
+
+@section FooterReferences {
+    <script asp-append-version="true">
+
+
+        function denyComment(url, commentId) {
+            $.ajax({
+                url: url,
+                method: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.isSuccess == true) {
+                        document.getElementById(`success-info-${commentId}`).classList.add("d-none");
+                        document.getElementById(`danger-info-${commentId}`).classList.remove("d-none");
+                        document.getElementById(`deny-${commentId}`).classList.add("d-none");
+                        document.getElementById(`confirm-${commentId}`).classList.remove("d-none");
+                    }
+                },
+            });
+        }
+
+        function confirmComment(url, commentId) {
+            $.ajax({
+                url: url,
+                method: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.isSuccess == true) {
+                        document.getElementById(`success-info-${commentId}`).classList.remove("d-none");
+                        document.getElementById(`danger-info-${commentId}`).classList.add("d-none");
+                        document.getElementById(`deny-${commentId}`).classList.remove("d-none");
+                        document.getElementById(`confirm-${commentId}`).classList.add("d-none");
+                    }
+                },
+            });
+        }
+
+    </script>
+}

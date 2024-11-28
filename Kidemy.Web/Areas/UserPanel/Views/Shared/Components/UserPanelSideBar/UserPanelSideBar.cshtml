@@ -1,0 +1,52 @@
+﻿@{
+    string browserPath = Context.Request.Path.Value.ToString().ToLower();
+}
+
+<div class="offcanvas-xl offcanvas-end" tabindex="-1" id="offcanvasSidebar">
+    <div class="offcanvas-header bg-light">
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">@Localizer["MyProfile"]</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasSidebar" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-3 p-xl-0">
+        <div class="bg-dark border rounded-3 p-3 w-100">
+            <div class="list-group list-group-dark list-group-borderless collapse-list">
+                <a class="list-group-item" asp-action="Index" asp-controller="Home" asp-area="UserPanel"><i class="bi bi-ui-checks-grid fa-fw me-2"></i>@Localizer["Dashboard"]</a>
+                <a class="list-group-item" asp-action="EditProfile" asp-controller="Home" asp-area="UserPanel"><i class="bi bi-pencil-square fa-fw me-2"></i>@Localizer["EditProfile"]</a>
+
+                <a class="list-group-item" asp-area="UserPanel" asp-controller="ChangePassword" asp-action="Index"><i class="bi bi-key fa-fw me-2"></i>@Localizer["ChangePassword"]</a>
+                <a class="list-group-item" asp-action="Index" asp-controller="Order" asp-area="UserPanel"><i class="bi bi-cart-check fa-fw me-2"></i>@Localizer["MyOrders"]</a>
+                <a class="list-group-item" asp-action="Index" asp-controller="Wallet" asp-area="UserPanel"><i class="bi bi-wallet2 fa-fw me-2"></i>@Localizer["Wallet"]</a>
+                <a class="list-group-item" asp-area="UserPanel" asp-controller="Wallet" asp-action="TransactionsList"><i class="far fa-fw fa-file-alt me-2"></i>@Localizer["Transactions"]</a>
+                <a class="list-group-item" asp-area="UserPanel" asp-controller="Course" asp-action="MercenaryCoursesList"><i class="far fa-fw fa fa-graduation-cap me-2"></i>@Localizer["MyMercenaryCourses"]</a>
+                <a class="list-group-item" asp-area="UserPanel" asp-controller="Course" asp-action="FreeCoursesList"><i class="far fa-fw fa fa-book me-2"></i>@Localizer["MyFreeCourses"]</a>
+                <a class="list-group-item" asp-area="UserPanel" asp-controller="MyActiveCourses" asp-action="MyActiveCourseList"><i class="far fa-fw fa fa-book me-2"></i>@Localizer["MyActiveCourses"]</a>
+
+                <a class="list-group-item" asp-action="List" asp-controller="Ticket" asp-area="UserPanel"><i class="bi bi-chat fa-fw me-2"></i>@Localizer["MyTickets"]</a>
+                <a class="list-group-item" asp-action="QuestionsList" asp-controller="CourseQuestion" asp-area="UserPanel"><i class="bi bi-question-circle fa-fw me-2"></i>@Localizer["MyQuestions"]</a>
+                <a class="list-group-item" asp-action="QuestionAnswersList" asp-controller="CourseQuestion" asp-area="UserPanel"><i class="bi bi-wechat fa-fw me-2"></i>@Localizer["MyAnswers"]</a>
+                <a class="list-group-item" asp-action="List" asp-controller="Adviser" asp-area="UserPanel"><i class=" fas fa-user-plus fa-fw me-2"></i>@Localizer["MyAppointmentsList"]</a>
+                <a class="list-group-item" asp-action="List" asp-controller="MyActiveCourseList" asp-area="UserPanel"><i class="fas fa-heart fa-fw me-2"></i>@Localizer["MyFavouriteCourses"]</a>
+                <hr />
+
+                @if (ViewData["UserIsMaster"] as bool? is true)
+                {
+                    <a class="list-group-item" permission="Master" asp-action="MasterCoursesList" asp-controller="MangeMasterCourses" asp-area="UserPanel">
+                        <i class="bi bi-list-columns" fa-fw me-2"></i>
+                        @Localizer["ManageCourses"]
+                    </a>
+                    <a class="list-group-item" asp-action="EditMaster" asp-controller="Master" asp-area="UserPanel" asp-route-id=@ViewData["UserId"]><i class="bi bi-pencil-fill fa-fw me-2"></i>@Localizer["MasterInformation"]</a>
+                    <a class="list-group-item" asp-action="MasterContractsList" asp-controller="Master" asp-area="UserPanel"><i class="bi bi-arrows-angle-contract fa-fw me-2"></i>@Localizer["MastersContracts"]</a>
+                    <a class="list-group-item" asp-action="MasterNotificationsList" asp-controller="Master" asp-area="UserPanel"><i class="bi bi-bell fa-fw me-2"></i>@Localizer["MasterNotification"]</a>
+                    <a class="list-group-item" asp-action="NotAnsweredCoursesQuestions" asp-controller="CourseQuestion" asp-area="UserPanel"><i class="bi bi-question-circle fa-fw me-2"></i>@Localizer["MyNotAnsweredCoursesQuestions"]</a>
+                    <a class="list-group-item" asp-action="List" asp-controller="BankAccountCard" asp-area="UserPanel"><i class="bi bi-credit-card fa-fw me-2"></i>@Localizer["MyBankAccountCard"]</a>
+                    <a class="list-group-item" asp-action="List" asp-controller="WithdrawRequest" asp-area="UserPanel"><i class="bi bi-currency-exchange fa-fw me-2"></i>@Localizer["MyWithdrawRequests"]</a>
+                    <a class="list-group-item" asp-action="SettlementTransactionList" asp-controller="SettlementTransaction" asp-area="UserPanel"><i class="bi bi-list-columns" fa-fw me-2"></i>@Localizer["MySettlementTransactions"]</a>
+                }
+
+
+                <a class="list-group-item text-danger bg-danger-soft-hover" href="/logout"><i class="fas fa-sign-out-alt fa-fw me-2"></i>@Localizer["Exit"]</a>
+            </div>
+        </div>
+    </div>
+</div>
+

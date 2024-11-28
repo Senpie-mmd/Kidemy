@@ -1,0 +1,122 @@
+﻿@using Kidemy.Application.ViewModels.Role;
+@using Kidemy.Application.ViewModels.User.AdminSide;
+@using Kidemy.Domain.Enums;
+@using Kidemy.Domain.Enums.User;
+@using Kidemy.Domain.Statics
+@model AdminSideUpsertUserViewModel
+@{
+    ViewData["Title"] = Localizer["CreateUser"];
+    var availableRoles = ViewData["AvailableRoles"] as List<AdminSideRoleViewModel>;
+}
+
+<form asp-area="Admin" asp-controller="User" asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card p-lg-5">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <div class="mb-4">
+                                <label asp-for="FirstName"></label>
+                                <input type="text" asp-for="FirstName" class="form-control " />
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div class="mb-4">
+                                <label asp-for="LastName"></label>
+                                <input type="text" asp-for="LastName" class="form-control " />
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div class="mb-4">
+                                <label asp-for="Mobile"></label>
+                                <input type="text" asp-for="Mobile" class="form-control " />
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div class="mb-4">
+                                <label asp-for="Email"></label>
+                                <input type="email" asp-for="Email" class="form-control " />
+                            </div>
+                            <div id="alertCode" class="alert alert-danger" style="display: none">
+                                <p class="text-muted">@Localizer["TheEmailEnteredIsNotValid"]</p>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div class="mb-4">
+                                <label asp-for="Password"></label>
+                                <input type="text" asp-for="Password"
+                                       class="form-control " />
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <label asp-for="BirthDate"></label>
+                            <input asp-for="BirthDate" class="form-control flatpickr-input me-2 persianDate" autocomplete="off" placeholder="@Localizer["BirthDate"]">
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <label asp-for="Gender"></label>
+                            <select asp-for="Gender" asp-items="@Html.GetEnumSelectList<Gender>()" class="form-select me-2 valid"></select>
+                            <span asp-validation-for="Gender" class="text-danger d-block"></span>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <div class="row">
+                                <div class="col-12 col-lg-3">
+                                    <div class="mb-4 form-check padding-top-2-percent">
+                                        <input class="form-check-input" type="checkbox" asp-for="IsEmailActive">
+                                        <label class="form-check-label" asp-for="IsEmailActive"></label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <div class="mb-4 form-check padding-top-2-percent">
+                                        <input class="form-check-input" type="checkbox" asp-for="IsMobileActive">
+                                        <label class="form-check-label" asp-for="IsMobileActive"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <div class="row">
+                                <h5 class="mb-0">@Localizer["Roles"]</h5>
+                                <hr />
+                                @foreach (var role in availableRoles)
+                                {
+                                    var isChecked = Model.RoleIds?.Contains(role.Id) ?? false;
+
+                                    <div class="col-12 col-lg-3">
+                                        <div class="mb-4 form-check padding-top-2-percent">
+                                            <input class="form-check-input" id="role-@role.Id" type="checkbox" @(isChecked ? "checked" : "") name="RoleIds" value="@role.Id">
+                                            <label class="form-check-label" for="role-@role.Id">@role.Title</label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-start">
+                            <button type="submit" class="btn btn-success">@Localizer["Save"]</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="text-danger" asp-validation-summary="All"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4 mb-md-0">
+            <div class="card p-lg-4">
+                <div class="card-body">
+                    <div class="mt-4">
+                        <h6 class="fs-6 mb-2">@Localizer["PleaseUploadImage"]</h6>
+                        <img src="@SiteTools.UserImagePath@SiteTools.DefaultImageName" class="w-100 rounded-2 mb-3" ImageFile="1" />
+                        <label for="uploadImage" class=" w-100">
+                            <button type="button" class="btn btn-info  w-100" id="uploadBtn">@Localizer["UploadImage"]</button>
+                        </label>
+                        <input class="d-none" type="file" id="uploadImage" ImageInput="1" accept="image/png, image/jpeg" asp-for="AvatarFile" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

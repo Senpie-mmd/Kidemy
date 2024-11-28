@@ -1,0 +1,327 @@
+﻿@using Kidemy.Application.ViewModels.Master
+@using Kidemy.Application.ViewModels.User.AdminSide;
+@using Kidemy.Application.ViewModels.User;
+@using Kidemy.Application.Services.Interfaces;
+@using Kidemy.Application.ViewModels.Wallet;
+@using Kidemy.Application.ViewModels.VIPPlan;
+@model AdminSideUserDetailsViewModel
+@inject IWalletService _WalletService
+@{
+    ViewData["Title"] = @Localizer["UserProfile"];
+    var balanceResult = await _WalletService.GetBalanceAsync((int)Model.Id);
+    decimal Balance = 0;
+    if (balanceResult.IsSuccess)
+    {
+        Balance = balanceResult.Value;
+    }
+
+    var chargeWalletModel = new ChargeWalletViewModel();
+    var withdrawFromWalletModel = new WithdrawFromWalletViewModel();
+    
+}
+
+<div class="modal fade" id="ChargeWalletModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ChargeWalletTitle">@Localizer["ChargeWallet"]</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body" id="ChargeWalletBody">
+                <form id="ChargeWalletForm" asp-action="ChargeWallet" asp-controller="Wallet" method="post">
+                    <input type="hidden" asp-for="@chargeWalletModel.UserId" value="@Model.Id" />
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label>@Localizer["AmountInToman"]</label>
+                                <input asp-for="@chargeWalletModel.Amount" class="form-control price" />
+                                <span asp-validation-for="@chargeWalletModel.Amount" class="text-danger d-block"></span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label>@Localizer["Description"]</label>
+                                <textarea rows="10" asp-for="@chargeWalletModel.Description" class="form-control"></textarea>
+                                <span asp-validation-for="@chargeWalletModel.Description" class="text-danger d-block"></span>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-start">
+                                <button type="submit" class="btn btn-success">@Localizer["Save"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="WithdrawFromWalletModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="WithdrawFromWalletTitle">@Localizer["WithdrawFromWallet"]</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="WithdrawFromWalletBody">
+                <form asp-action="WithdrawFromWallet" asp-controller="Wallet" method="post">
+                    <input type="hidden" asp-for="@withdrawFromWalletModel.UserId" value="@Model.Id" />
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label>@Localizer["AmountInToman"]</label>
+                                <input asp-for="@withdrawFromWalletModel.Amount" class="form-control price" />
+                            </div>
+                            <span asp-validation-for="@withdrawFromWalletModel.Amount" class="text-danger d-block"></span>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label>@Localizer["Description"]</label>
+                                <textarea asp-for="@withdrawFromWalletModel.Description" rows="10" class="form-control"></textarea>
+                            </div>
+                            <span asp-validation-for="@withdrawFromWalletModel.Description" class="text-danger d-block"></span>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-start">
+                                <button type="submit" class="btn btn-success">@Localizer["Save"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="AddBlockedAmountModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AddBlockedAmountTitle">@Localizer["BlockedAmount"]</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="BlockedAmountBody">
+              
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="AddSettlementTransactionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AddSettlementTransactionTitle">@Localizer["SettlementTransaction"]</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="SettlementTransactionBody">
+                <form asp-action="AddSettlementTransaction" asp-controller="SettlementTransaction" method="post">
+                    <input type="hidden" name="UserId" value="@Model.Id" />
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label>@Localizer["TransactionDate"]</label>
+                                <input name="TransactionDate" id="TransactionDate" type="text" autocomplete="off" class="form-control persianDateTime" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label>@Localizer["Amount(Toman)"]</label>
+                                <input name="Price" id="Price" class="form-control price" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label>@Localizer["CardNumber"]</label>
+                                <input name="CardNumber" id="CardNumber" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label>@Localizer["AccountNumber"]</label>
+                                <input name="AccountNumber" id="AccountNumber" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label>@Localizer["TrackingCode"]</label>
+                                <input name="TrackingCode" id="TrackingCode" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-start">
+                                <button type="submit" class="btn btn-success">@Localizer["Save"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="JoinToVIPMembersModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="JoinToVIPMembersTitle">@Localizer["JoinToVIPMembers"]</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="JoinToVIPMembersBody">
+                <form id="JoinToVIPMembersForm" asp-action="AssignPlanForUserByAdmin" asp-controller="VIPMembers" method="post">
+                    <input name="PlanId" type="hidden" />
+                    <input name="UserId" type="hidden" value="@Model.Id" />
+                    <div class="row">
+                        <div class="col-12">
+                            <table class="table align-middle p-4 mb-0">
+                                <tbody class="border-top-0">
+                                    @foreach (var item in (List<AdminSideVIPPlanViewModel>)ViewData["VIPPlans"])
+                                    {
+                                        <tr for="plan-@item.Id">
+                                            <td class="text-center">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" name="plan" type="radio" id="plan-@item.Id" value="@item.Price.ToString("#,0")" data-plan-id="@item.Id" />
+                                                    <label class="form-check-label"> @item.Title</label>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <h5>@item.DurationDay @Localizer["Day"]</h5>
+                                            </td>
+                                            <td class="text-center">
+                                                <h5>@(item.Price.ToString("#,0")) @Localizer["Toman"]</h5>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-start">
+                                <button type="submit" class="btn btn-success mt-4">@Localizer["Add"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="row mt-4">
+                    <div class="col-12 col-lg-12">
+                        <div class="form-group mb-4">
+                            <span>@Localizer["Email"] : </span>
+                            @Model.Email
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12">
+                        <div class="form-group mb-4">
+                            <span>@Localizer["Mobile"] : </span>
+                            @Model.Mobile
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12">
+                        <div class="form-group mb-4">
+                            <span>@Localizer["FullName"] : </span>
+                            @Model.FirstName @Model.LastName
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12">
+                        <div class="form-group mb-4">
+                            <span>@Localizer["WalletBalance"] : </span>
+                            @Balance.ToString("#,0") @Localizer["Toman"]
+                        </div>
+                    </div>
+                    @if (ViewData["UserIsVIPMember"] as bool? is true)
+                    {
+                        <div class="col-12 col-lg-12">
+                            <div class="form-group mb-4">
+                                <span>@Localizer["ThisUserToDate"]</span>
+                                @ViewData["MembershipEndDate"]
+                                <span>@Localizer["IsVIPMember"]</span>
+                            </div>
+                        </div>
+                    }
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-start">
+                            <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-warning mx-2">@Localizer["Edit"]</a>
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#ChargeWalletModal" class="btn btn-success mx-2">@Localizer["ChargeWallet"]</button>
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#WithdrawFromWalletModal" class="btn btn-danger mx-2">@Localizer["WithdrawFromWallet"]</button>
+                            
+                            @if (ViewData["UserIsMaster"] as bool? is true)
+                            {
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#AddSettlementTransactionModal" class="btn btn-success mx-2">@Localizer["AddSettlementTransaction"]</button>
+                                <a asp-area="Admin" asp-controller="Master" asp-action="SetBlockedAmount" asp-route-id="@Model.Id" data-ajax="true" data-method="get" data-ajax-begin="open_waiting()" data-ajax-success="close_waiting()"
+                                   data-ajax-mode="replace" data-ajax-update="BlockedAmountBody" data-ajax-complete="openBlockedAmountModal" title="@Localizer["MinimumBalanceModal"]" class="btn btn-danger mx-2">@Localizer["BlockedAmountBody"]</a>
+                                @if(!Model.UnableToWidthraw)
+                                {
+                                    <a href="javascript:void(0)" onclick="unableToWithdraw('@Url.Action("UnableToWithdrawUser", "User", new { area = "Admin", id = Model.Id })')" class="btn btn-danger btn-small mx-2">@Localizer["UnableToWithdraw"]</a>
+                                }
+                                else
+                                {
+                                    <a href="javascript:void(0)" onclick="ableToWithdraw('@Url.Action("AbleToWithdrawUser", "User", new { area = "Admin", id = Model.Id })')" class="btn btn-success btn-small mx-2">@Localizer["ableToWithdraw"]</a>
+                                }
+
+                            }
+
+
+                            @if (ViewData["UserIsVIPMember"] as bool? is true)
+                            {
+                                <a asp-action="ExpirationVIPAccount" asp-route-id="@Model.Id" class="btn btn-danger mx-2">@Localizer["ExpirationVIPAccount"]</a>
+                            }
+                            else
+                            {
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#JoinToVIPMembersModal" class="btn btn-success mx-2">@Localizer["JoinToVIPMembers"]</button>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (ViewData["UserIsMaster"] as bool? is true)
+    {
+       @await Component.InvokeAsync("MasterInformation", Model.Id)
+
+       @await Component.InvokeAsync("MasterContract", Model.Id)
+
+       @await Component.InvokeAsync("SettlementTransactions", Model.Id)
+    }
+    
+
+</div>
+
+@section FooterReferences
+{
+   
+    <partial name="_ValidationScriptsPartial" />
+    <script asp-append-version="true" src="~/admin/js/assignVIPPlan.js"></script>
+    <script asp-append-version="true" src="~/admin/js/settlement-transaction.js"></script>
+    <script asp-append-version="true" src="~/admin/js/blocked-amount.js"></script>
+    <script asp-append-version="true" src="~/admin/js/withraw-abilty.js"></script>
+}

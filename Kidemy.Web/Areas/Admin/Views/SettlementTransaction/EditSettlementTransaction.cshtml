@@ -1,0 +1,48 @@
+﻿@model Kidemy.Application.ViewModels.SettlementTransaction.AdminSideUpsertSettlementTransactionViewModel
+
+<form asp-action="EditSettlementTransaction" asp-controller="SettlementTransaction" asp-area="Admin" method="post" id="editSettlementTransaction">
+    <input type="hidden" asp-for="Id" value="@Model.Id" />
+    <input type="hidden" asp-for="UserId" value="@Model.UserId" />
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-4">
+                <label>@Localizer["TransactionDate"]</label>
+                <input asp-for="TransactionDate" type="text" autocomplete="off" class="form-control persianDateTime" />
+                <span class="text-danger" asp-validation-for="TransactionDate"></span>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="mb-4">
+                <label>@Localizer["Amount(Toman)"]</label>
+                <input asp-for="Price" class="form-control price" />
+                <span class="text-danger" asp-validation-for="Price"></span>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="mb-4">
+                <label>@Localizer["CardNumber"]</label>
+                <input asp-for="CardNumber" class="form-control" />
+                <span class="text-danger" asp-validation-for="CardNumber"></span>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="mb-4">
+                <label>@Localizer["AccountNumber"]</label>
+                <input asp-for="AccountNumber" class="form-control" />
+                <span class="text-danger" asp-validation-for="AccountNumber"></span>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="mb-4">
+                <label>@Localizer["TrackingCode"]</label>
+                <input asp-for="TrackingCode" class="form-control" />
+                <span class="text-danger" asp-validation-for="TrackingCode"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 d-flex justify-content-start">
+                <button type="submit" class="btn btn-warning">@Localizer["Edit"]</button>
+            </div>
+        </div>
+    </div>
+</form>

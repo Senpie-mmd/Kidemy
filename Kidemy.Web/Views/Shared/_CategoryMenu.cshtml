@@ -1,0 +1,20 @@
+﻿@using Kidemy.Application.ViewModels.Course
+@using Kidemy.Domain.Enums.Course;
+
+
+<ul class="navbar-nav navbar-nav-scroll me-auto">
+    <!-- Nav item 1 Demos -->
+    <li class="nav-item dropdown dropdown-menu-shadow-stacked">
+        <a class="nav-link bg-primary bg-opacity-10 rounded-3 text-primary px-3 py-3 py-xl-0" href="#" id="categoryMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bi bi-ui-radios-grid me-2"></i><span>@Localizer["Courses"]</span></a>
+        <ul class="dropdown-menu" aria-labelledby="categoryMenu">
+            @await Component.InvokeAsync("CategoriesLinkInNav")
+            <li> <a class="dropdown-item" asp-area="" asp-controller="Courses" asp-action="CoursesList" asp-route-Level="@CourseLevel.Beginner">@Localizer["BeginnerProgramming"]</a></li>
+            <li> <a class="dropdown-item" asp-area="" asp-controller="Courses" asp-action="CoursesList" asp-route-Level="@CourseLevel.Intermediate">@Localizer["IntermediateProgramming"]</a></li>
+            <li> <a class="dropdown-item" asp-area="" asp-controller="Courses" asp-action="CoursesList" asp-route-Level="@CourseLevel.Advanced">@Localizer["AdvancedProgramming"]</a></li>
+            <li> <hr class="dropdown-divider"></li>
+            <li> <a class="dropdown-item" asp-area="" asp-controller="Courses" asp-action="CoursesList" asp-route-PriceType="@CoursePriceTypeForView.VIP">@Localizer["ForVIPMembers"]</a></li>
+            <li> <hr class="dropdown-divider"></li>
+            <li> <a class="dropdown-item bg-primary text-primary bg-opacity-10 rounded-2 mb-0" asp-area="" asp-controller="Courses" asp-action="CoursesList">@Localizer["SeeAll"]</a></li>
+        </ul>
+    </li>
+</ul>

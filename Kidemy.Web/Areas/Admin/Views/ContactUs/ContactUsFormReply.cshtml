@@ -1,0 +1,80 @@
+﻿@using Kidemy.Application.ViewModels.ContactUs;
+@model AdminSideAnswerContactUsFormViewModel
+@{
+    ViewData["Title"] = Localizer["ViewTitle.Admin.ReplyContactUsForm"];
+    var contactUs = ViewData["ContactUsForm"] as AdminSideContactUsFormViewModel ?? new AdminSideContactUsFormViewModel();
+}
+
+<form asp-area="Admin" asp-controller="ContactUs" asp-action="ContactUsFormReply" method="post">
+    <input type="hidden" asp-for="ContactUsFormId" />
+    <input type="hidden" asp-for="AnswererId" value="@User.GetUserId()" />
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5>@Localizer["ReplyContactUsForm"]</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row w-100">
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="@contactUs.FullName" class="form-label"></label>
+                            <input type="search" asp-for="@contactUs.FullName" class="form-control me-2" disabled>
+                        </div>
+
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="@contactUs.Email" class="form-label"></label>
+                            <input type="search" asp-for="@contactUs.Email" class="form-control me-2" aria-label="Search" disabled>
+                        </div>
+
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="@contactUs.Description" class="form-label"></label>
+                            <input type="search" asp-for="@contactUs.Description" class="form-control me-2" disabled>
+                        </div>
+
+                        <div class="mb-3 col-6 col-md-6">
+                            <label class="form-label" asp-for="@contactUs.CreateDate"></label>
+                            <input type="search" value="@contactUs.CreateDate.ToShortDateString()" class="form-control me-2" disabled>
+                        </div>
+
+                        @if (contactUs.State == Kidemy.Domain.Enums.ContactUs.ContactUsFormState.NotAnswered)
+                        {
+                            <div class="mb-3 col-12 col-md-12">
+                                <label class="form-label">@Localizer["Answer"]</label>
+                                <textarea asp-for="Answer" rows="6" ckeditor="1" class="form-control"></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 d-flex justify-content-start">
+                                    <button type="submit" class="btn btn-success">@Localizer["Send"]</button>
+                                </div>
+                            </div>
+                        }
+                        else if (contactUs.State == Kidemy.Domain.Enums.ContactUs.ContactUsFormState.Answered)
+                        {
+                            <div class="mb-3 col-12 col-md-12">
+                                <label class="form-label">@Localizer["Answer"]</label>
+                                <textarea type="search" class="form-control me-2" disabled id="answer-text"></textarea>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="text-danger" asp-validation-summary="All"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@if (!string.IsNullOrEmpty(contactUs.AnswerText))
+{
+    <script>
+
+        var answer = "@Html.Raw(contactUs.AnswerText)";
+
+        var answerText = answer.replace(/<[^>]+>/g, '');
+
+        document.getElementById('answer-text').innerHTML = answerText;
+
+    </script>
+}

@@ -1,0 +1,66 @@
+﻿@using Kidemy.Application.ViewModels.BankAccountCard
+@model UpsertBankAccountCardViewModel
+@{
+    ViewData["Title"] = Localizer["AddBankAccountCard"];
+}
+
+
+
+<div class="row ">
+    <div class="col-xl-12 col-lg-12 col-md-12">
+
+        <div class="card border bg-transparent rounded-3">
+            <!-- Card header -->
+            <div class="card-header bg-transparent border-bottom">
+                <h5 class="card-header-title mb-0">@Localizer["AddBankAccountCard"]</h5>
+            </div>
+            <form asp-action="Create" asp-controller="BankAccountCard" asp-area="UserPanel" method="post">
+                <!-- Card body START -->
+                <div class="card-body">
+                    <!-- Bank Name -->
+                    <div class="mb-3">
+                        <label class="form-label">@Localizer["OwnerName"]</label>
+                        <input asp-for="OwnerName" class="form-control" type="text">
+                        <div class="rounded mt-1" id="psw-strength"></div>
+                        <span class="text-danger d-block" asp-validation-for="OwnerName"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">@Localizer["BankName"]</label>
+                        <input asp-for="BankName" class="form-control" type="text">
+                        <div class="rounded mt-1" id="psw-strength"></div>
+                        <span class="text-danger d-block" asp-validation-for="BankName"></span>
+                    </div>
+
+                    <!-- Card Number -->
+                    <div class="mb-3">
+                        <label class="form-label">@Localizer["CardNumber"]</label>
+                        <input asp-for="CardNumber" class="form-control" type="text" >
+                        <div class="rounded mt-1" id="psw-strength"></div>
+                        <span class="text-danger d-block" asp-validation-for="CardNumber"></span>
+                    </div>
+
+                    <!-- Account Number -->
+                    <div class="mb-3">
+                        <label class="form-label">@Localizer["AccountNumber"]</label>
+                        <input asp-for="AccountNumber" class="form-control" type="text">
+                        <span class="text-danger d-block" asp-validation-for="AccountNumber"></span>
+                    </div>
+                    <!-- Shaba Number -->
+                    <div class="mb-3">
+                        <label class="form-label">@Localizer["ShabaNumber"]</label>
+                        <input asp-for="ShabaNumber" class="form-control" type="text">
+                        <span class="text-danger d-block" asp-validation-for="ShabaNumber"></span>
+                        <span class="text-warning small d-block">@Localizer["InsertWithoutIr"]</span>
+                    </div>
+
+                    <!-- Button -->
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="submit" class="btn btn-primary mb-0 loading-support">@Localizer["Submit"]</button>
+                    </div>
+                </div>
+                <!-- Card body END -->
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,195 @@
+﻿@using Kidemy.Application.Convertors;
+@using Kidemy.Application.ViewModels.Ticket;
+@using Kidemy.Domain.Enums.Ticket
+@model AdminSideFilterTicketViewModel
+@{
+    ViewData["Title"] = Localizer["ViewTitle.Admin.TicketsList"];
+
+    string GetStatusColor(TicketStatus status)
+    {
+        var statusColorMapping = new Dictionary<TicketStatus, string>();
+        statusColorMapping.Add(TicketStatus.Answered, "success");
+        statusColorMapping.Add(TicketStatus.PendingUser, "secondary");
+        statusColorMapping.Add(TicketStatus.PendingAdmin, "warning");
+        statusColorMapping.Add(TicketStatus.Closed, "danger");
+
+        statusColorMapping.TryGetValue(status, out string result);
+        return result;
+    }
+}
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["Filter"]</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="Ticket" asp-action="List" method="post" id="filter-search" class="d-flex">
+                    <input type="hidden" asp-for="Page" />
+                    <div class="row w-100">
+                        <div class="mb-3 col-12 col-md-6">
+                            <label asp-for="Title" class="form-label"></label>
+                            <input type="search" asp-for="Title" class="form-control me-2" placeholder="@Localizer["Title"]" aria-label="Search">
+                        </div>
+                        <div class="mb-3 col-12 col-md-6">
+                            <label asp-for="Message" class="form-label"></label>
+                            <input type="search" asp-for="Message" class="form-control me-2" placeholder="@Localizer["Message"]" aria-label="Search">
+                        </div>
+                        <div class="mb-3 col-12 col-md-6">
+                            <label asp-for="Priority" class="form-label"></label>
+                            <select asp-for="Priority" class="form-select me-2 ">
+                                <option value="">@Localizer["All"]</option>
+                                @foreach (var priority in Enum.GetValues(typeof(TicketPriority)).Cast<TicketPriority>())
+                                {
+                                    if (Model.Priority == priority)
+                                    {
+                                        <option value="@priority" selected="">@priority.GetEnumName()</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@priority">@priority.GetEnumName()</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3 col-12 col-md-6">
+                            <label asp-for="Section" class="form-label"></label>
+                            <select asp-for="Section" class="form-select me-2 ">
+                                <option value="">@Localizer["All"]</option>
+                                @foreach (var ticketSection in Enum.GetValues(typeof(TicketSection)).Cast<TicketSection>())
+                                {
+                                    if (Model.Section == ticketSection)
+                                    {
+                                        <option value="@ticketSection" selected="">@ticketSection.GetEnumName()</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@ticketSection">@ticketSection.GetEnumName()</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3 col-12 col-md-6">
+                            <label asp-for="Status" class="form-label"></label>
+                            <select asp-for="Status" class="form-select me-2 ">
+                                <option value="">@Localizer["All"]</option>
+                                @foreach (var status in Enum.GetValues(typeof(TicketStatus)).Cast<TicketStatus>())
+                                {
+                                    if (Model.Status == status)
+                                    {
+                                        <option value="@status" selected="">@status.GetEnumName()</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@status">@status.GetEnumName()</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div>
+                            <div class="mb-3 col-6 col-md-6">
+                                <button class="btn btn-outline-primary w-25" type="submit">@Localizer["Search"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="FilterUsers" class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["TicketsList"]</h5>
+            </div>
+            @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                <div class="table-responsive mb-4 text-nowrap text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>@Localizer["Name"]</th>
+                                <th>@Localizer["Title"]</th>
+                                <th>@Localizer["Priority"]</th>
+                                <th>@Localizer["Section"]</th>
+                                <th>@Localizer["Status"]</th>
+                                <th>@Localizer["CreateDate"]</th>
+                                <th>@Localizer["Operation"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in Model.Entities)
+                            {
+                                <tr>
+                                    <td>@Model.Counter</td>
+                                    <td class="text-break-cst word-break-custome">
+                                        <strong>@item.UserFullName</strong>
+                                    </td>
+                                    <td>
+                                        <strong>@item.Title</strong>
+                                    </td>
+                                    <td>
+                                        <strong>@item.Priority.GetEnumName()</strong>
+                                    </td>
+                                    <td>
+                                        <strong>@item.Section.GetEnumName()</strong>
+                                    </td>
+                                    <td>
+                                        <strong class="badge bg-label-@(GetStatusColor(item.Status))">@item.Status.GetEnumName()</strong>
+                                    </td>
+                                    <td>
+                                        <strong>@item.CreateDateOnUtc.ToUserDate()</strong>
+                                    </td>
+                                    <td>
+                                        <a permission="TicketDetails" class="text-success" asp-area="Admin" asp-controller="Ticket" asp-action="Details" asp-route-id="@item.Id" id="editBtn-@item.Id" title="@Localizer["Details"]">
+                                            <i class="bx bx-book me-1"></i>
+                                        </a>
+                                        @if (item.Status != TicketStatus.Closed)
+                                        {
+                                            <a permission="UpdateTicket" class="text-warning" asp-area="Admin" asp-controller="Ticket" asp-action="Update" asp-route-id="@item.Id" id="editBtn-@item.Id" title="@Localizer["Edit"]">
+                                                <i class="bx bx-edit-alt me-1"></i>
+                                            </a>
+                                            <form method="post" permission="UpdateTicket" class="text-danger btn m-0 p-0" asp-area="Admin" asp-controller="Ticket" asp-action="CloseTicket" asp-route-id="@item.Id" id="editBtn-@item.Id" title="@Localizer["CloseTicket"]" onclick="submitLink(this)">
+                                                <i class='bx bx-x-circle'></i>
+                                            </form>
+                                        }
+                                    </td>
+                                </tr>
+
+                                Model.Counter++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+</div>
+
+@section FooterReferences {
+    <script asp-append-version="true">
+        async function submitLink(e) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: await jsLocalizer("Are you sure to close ticket ?"),
+                showCancelButton: true,
+                confirmButtonText: await jsLocalizer("Yes I'm sure"),
+                cancelButtonText: await jsLocalizer("Cancel"),
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    e.submit();
+                }
+            })
+        }
+
+
+    </script>
+}

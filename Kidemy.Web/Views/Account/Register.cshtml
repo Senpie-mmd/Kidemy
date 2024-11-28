@@ -1,0 +1,78 @@
+﻿@using Kidemy.Application.ViewModels.User;
+@using Kidemy.Application.ViewModels.User.ClientSide;
+@model RegisterViewModel
+@{
+    Layout = "_AccountLayout";
+    ViewData["Title"] = Localizer["SignIn"];
+}
+
+<div class="row my-5">
+    <div class="col-sm-10 col-xl-8 m-auto">
+        <!-- Title -->
+        <img src="/assets/images/element/03.svg" class="h-40px mb-2" alt="">
+        <div class="d-flex">
+            <h2 class="">@Localizer["SignIn"]</h2>
+            <a class="d-flex text-primary align-item-center ms-auto" href="/"><span class="me-2">@Localizer["BackToHome"]</span> <i class="fa fa-home" aria-hidden="true"></i></a>
+        </div>
+        <p class="mb-4">@Localizer["Nice to see you! Please register with your account."]</p>
+        <!-- Form START -->
+        <form asp-action="Register" asp-controller="Account" method="post">
+            <!-- Email -->
+            <div class="mb-4">
+                <label for="exampleInputEmail1" class="form-label">@Localizer["Mobile"]</label>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i class="bi bi-phone-fill"></i></span>
+                    <input type="tel" asp-for="Mobile" maxlength="11" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" class="form-control border-0 bg-light rounded-end ps-1" placeholder="" id="exampleInputEmail1">
+                </div>
+                <span class="text-danger" asp-validation-for="Mobile"></span>
+
+            </div>
+            <!-- Password -->
+            <div class="mb-4">
+                <label for="inputPassword5" class="form-label">@Localizer["Password"] *</label>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i class="fas fa-lock"></i></span>
+                    <input type="password" asp-for="Password" class="form-control border-0 bg-light rounded-end ps-1" placeholder="*********" id="inputPassword5">
+                </div>
+                <span class="text-danger" asp-validation-for="Password"></span>
+
+            </div>
+            <!-- Confirm Password -->
+            <div class="mb-4">
+                <label for="inputPassword6" class="form-label">@Localizer["ConfirmPassword"] *</label>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i class="fas fa-lock"></i></span>
+                    <input type="password" asp-for="ConfirmPassword" class="form-control border-0 bg-light rounded-end ps-1" placeholder="*********" id="inputPassword6">
+                </div>
+                <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
+
+            </div>
+            <!-- Check box -->
+            <div class="mb-4">
+                <div class="form-check">
+                    <input asp-for="AcceptTerms" type="checkbox" class="form-check-input" id="checkbox-1">
+                    @if (Thread.CurrentThread.CurrentCulture.Name == "fa-IR")
+                    {
+                        <label class="form-check-label" for="checkbox-1">با ثبت نام <a href="/page-details/%D8%B4%D8%B1%D8%A7%DB%8C%D8%B7-%D9%88-%D9%82%D9%88%D8%A7%D9%86%DB%8C%D9%86-%D8%B3%D8%A7%DB%8C%D8%AA">شرایط و قوانین سایت</a> را خواهید پذیرفت.</label>
+                    }
+                    else
+                    {
+                        <label class="form-check-label" for="checkbox-1">By registering, you will accept the <a href="/page-details/%D8%B4%D8%B1%D8%A7%DB%8C%D8%B7-%D9%88-%D9%82%D9%88%D8%A7%D9%86%DB%8C%D9%86-%D8%B3%D8%A7%DB%8C%D8%AA">terms and conditions of the site</a>.</label>
+                    }
+                </div>
+                <span class="text-danger" asp-validation-for="AcceptTerms"></span>
+            </div>
+            <!-- Button -->
+            <div class="align-items-center mt-0">
+                <div class="d-grid">
+                    <button class="btn btn-primary mb-0 loading-support" type="submit">@Localizer["SignIn"]</button>
+                </div>
+            </div>
+        </form>
+        <!-- Form END -->
+        <!-- Sign up link -->
+        <div class="mt-4 text-center">
+            <span>@Localizer["Already have an account"]<a asp-action="Login"> @Localizer["Login"]</a></span>
+        </div>
+    </div>
+</div>

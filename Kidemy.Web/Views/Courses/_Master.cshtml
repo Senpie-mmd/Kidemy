@@ -1,0 +1,56 @@
+﻿@using Kidemy.Application.ViewModels.Master;
+@model ClientSideMasterDetailsViewModel
+
+<section class="pt-5 pb-0">
+    <div class="container">
+        <div class="row g-0 g-lg-5">
+            <div class="col-lg-4">
+                <div class="row">
+                    <div class="col-md-6 col-lg-12">
+                        <div class="card shadow p-2 mb-4 text-center">
+                            <div class="rounded-3">
+                                <img src="@SiteTools.UserImagePath@Model.AvatarName" class="card-img" alt="course image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <h1 class="fs-3 mb-4">
+                    @Model.FirstName @Model.LastName
+                </h1>
+                <div class="col-lg-12">
+                    <h6>
+                        @Localizer["AboutMaster"]
+                    </h6>
+                    <p class="text-justify line-height-18">@Model.Bio</p>
+                </div>
+         @*        <ul class="list-group list-group-borderless">
+                    <li class="list-group-item px-0">
+                        <span class="h6 fw-light"><i class="fas fa-fw fa-map-marker-alt text-primary me-1 me-sm-3"></i>@Localizer["Address"]:</span>
+                        <span>@Model.Address</span>
+                    </li>
+ 
+                    <li class="list-group-item px-0">
+                        <span class="h6 fw-light"><i class="fas fa-fw fa-headphones text-primary me-1 me-sm-3"></i>@Localizer["Mobile"]:</span>
+                        <span>@Model.Mobile</span>
+                    </li>
+                </ul> *@
+
+            </div>
+   @*          <div class="row">
+                <div class="col-lg-12">
+                    <h6>
+                        @Localizer["AboutMaster"]
+                    </h6>
+                    <p class="mt-4">@Model.Bio</p>
+                </div>
+                 <div class="col-lg-12 mt-2">
+                    <span class="h6 fw-light">@Localizer["Email"]:</span>
+                    <span>@Model.Email</span>
+                </div> 
+            </div> *@
+
+        </div>
+    </div>
+</section>

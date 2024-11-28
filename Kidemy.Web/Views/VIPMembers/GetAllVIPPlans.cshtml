@@ -1,0 +1,100 @@
+﻿@using Kidemy.Application.ViewModels.VIPPlan;
+@model List<ClientSideVIPPlanViewModel>
+
+@{
+    ViewData["Title"] = Localizer["VIPPlans"];
+
+    var walletBalnace = ViewData["Balance"] as decimal? ?? 0;
+
+    var walletBalanceWithAppliedBlockAmount = ViewData["BalanceWithAppliedBlockAmount"] as decimal? ?? 0;
+}
+
+<section class="pt-5">
+    <div class="container">
+        <div class="row g-4 g-sm-5">
+            <div class="col-lg-8 mb-4 mb-sm-0">
+                <div class="card card-body p-4 shadow">
+                    <div class="table-responsive border-0 rounded-3">
+                        <div class="alert alert-info alert-dismissible d-flex justify-content-between align-items-center fade show py-3 pe-2" role="alert">
+                            <div>
+                                @ViewData["VipPageText"]
+                            </div>
+                            <button type="button" class="btn btn-link mb-0 text-primary-hover text-end" data-bs-dismiss="alert" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+                        </div>
+                        <table class="table align-middle p-4 mb-0">
+                            <tbody class="border-top-0">
+                                @foreach (var item in Model)
+                                {
+                                    <tr for="plan-@item.Id">
+                                        <td class="text-center">
+                                            <div class="form-check">
+                                                <input class="form-check-input" name="plan" type="radio" id="plan-@item.Id" value="@item.Price.ToString("#,0")" data-plan-id="@item.Id" />
+                                                <label class="form-check-label"> @item.Title</label>
+                                            </div>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <h5>@item.DurationDay @Localizer["Day"]</h5>
+                                        </td>
+                                        <td class="text-center">
+                                            <h5>@(item.Price.ToString("#,0")) @Localizer["Toman"]</h5>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <form id="vIPMembers-form" asp-action="BuyVIPPlan" asp-controller="VIPMembers" method="post">
+                    <input name="PlanId" type="hidden" />
+                    <div class="card card-body p-4 shadow">
+                        <h4 class="mb-3 fs-5">@Localizer["Bill"]</h4>
+
+                        <ul class="list-group list-group-borderless mb-2">
+                            <li class="list-group-item px-0 d-flex justify-content-between">
+                                <span class="h6 fw-light mb-0">@Localizer["InvoiceTotalPrice"] </span>
+                                <span> <span id="InvoiceTotalPriceId">0</span>@Localizer["Toman"]</span>
+                            </li>
+                            <li class="list-group-item px-0 d-flex justify-content-between">
+                                <span class="h6 fw-light mb-0">@Localizer["WalletBalance"]</span>
+                                <span><span id="WalletBalanceId" class="h6 fw-light mb-0 fw-bold">@walletBalnace.ToString("#,0") </span>@Localizer["Toman"]</span>
+                            </li>
+                            @if (walletBalanceWithAppliedBlockAmount != walletBalnace)
+                            {
+                                <li class="list-group-item px-0 d-flex justify-content-between">
+                                    <span class="h6 fw-light mb-0">@Localizer["UsableBalanceAmount"]</span>
+                                    <span class="h6 fw-light mb-0 fw-bold">@walletBalanceWithAppliedBlockAmount.ToString("#,0") @Localizer["Toman"]</span>
+                                </li>
+                            }
+                            <li class="list-group-item px-0 d-flex justify-content-between mt-4">
+                                <div class="form-check form-switch form-check-md" id="UseFromWalletBalnaceDivId" style="display:none">
+                                    <input class="form-check-input" id="UseFromWalletBalnace" name="UseFromWalletBalnace" type="checkbox" value="true">
+                                    <label class="form-check-label" for="UseFromWalletBalnace">@Localizer["UseFromWalletBalance"]</label>
+                                </div>
+                            </li>
+
+                            <li class="list-group-item px-0 d-flex justify-content-between">
+                                <span class="h5 mb-0">@Localizer["InvoicePayablePrice"]</span>
+                                <span><span class="h5 mb-0" id="InvoicePayablePriceId">0</span>@Localizer["Toman"]</span>
+                            </li>
+                        </ul>
+
+                        <!-- Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-lg btn-success loading-support">@Localizer["Pay"]</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section FooterReferences {
+    <script>
+        const walletBalance = @((int)(walletBalanceWithAppliedBlockAmount));
+    </script>
+    <script asp-append-version="true" src="/js/vipPlans.js"></script>
+}

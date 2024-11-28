@@ -1,0 +1,45 @@
+﻿@using Kidemy.Application.ViewModels.ContactUs;
+@model AdminSideUpsertContactUsViewModel
+@{
+    ViewData["Title"] = Localizer["ViewTitle.Admin.UpdateContactUs"];
+}
+
+<form asp-area="Admin" asp-controller="ContactUs" asp-action="UpdateContactUs" method="post">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card p-lg-5">
+                <div class="card-body">
+                    <div class="row">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="col-12 col-lg-12">
+                            <div class="mb-4">
+                                <label asp-for="Address"></label>
+                                <input type="text" asp-for="Address" class="form-control " />
+                            </div>
+                        </div>  
+                        <div class="col-12 col-lg-12">
+                            <div class="mb-4">
+                                <label asp-for="Mobile"></label>
+                                <input type="text" asp-for="Mobile" class="form-control " />
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-12">
+                            <div class="mb-4">
+                                <label asp-for="Email"></label>
+                                <input type="text" asp-for="Email" class="form-control " />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-start">
+                            <button type="submit" class="btn btn-warning">@Localizer["Edit"]</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="text-danger" asp-validation-summary="All"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

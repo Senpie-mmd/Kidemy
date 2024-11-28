@@ -1,0 +1,170 @@
+﻿@using System.Text;
+@using Kidemy.Web.Areas.Admin.Models;
+@model UploadModel
+@functions {
+    string GetExtenstions(UploadFileType type)
+    {
+        return type switch
+        {
+            UploadFileType.Image => "[\".jpg\", \".jpeg\", \".png\", \".svg\"]",
+            UploadFileType.Video => "[\".mp4\", \".avi\", \".mkv\", \".wmv\"]",
+            UploadFileType.Audio => "[\".mp3\", \".wav\", \".ogg\", \".wma\"]",
+            UploadFileType.Document => "[\".doc\", \".docx\", \".pdf\", \".txt\"]",
+            UploadFileType.Archive => "[\".zip\", \".rar\", \".7z\", \".tar\"]",
+            UploadFileType.All => "[\".jpg\", \".jpeg\", \".png\", \".svg\",\".mp4\", \".avi\", \".mkv\", \".wmv\",\".mp3\", \".wav\", \".ogg\", \".wma\",\".doc\", \".docx\", \".pdf\", \".txt\",\".zip\", \".rar\", \".7z\", \".tar\"]"
+        };
+    }
+}
+
+
+<div class="k-rtl" k-index="@Model.Index">
+    <input id="files-@Model.Index" name="files" type="file" />
+</div>
+
+<script src="~/lib/Kendo/js/kendo.all.min.js"></script>
+@if (Thread.CurrentThread.CurrentCulture.Name == "fa-IR")
+{
+    <script src="~/lib/Kendo/js/messages/kendo.messages.fa-IR.min.js"></script>
+    <script src="~/lib/Kendo/js/cultures/kendo.culture.fa-IR.min.js"></script>
+}
+
+<script>
+    $("#files-@Model.Index").kendoUpload({
+        async: {
+            chunkSize: 5000000,
+            saveUrl: "/chunk-save-file/@(Convert.ToBase64String(Encoding.UTF8.GetBytes(Model.SaveLocation)))",
+            removeUrl: "/remove-file/@(Convert.ToBase64String(Encoding.UTF8.GetBytes(Model.SaveLocation)))",
+            autoUpload: true,
+            concurrent: false,
+            autoRetryAfter: 300,
+            maxAutoRetries: 6
+        },
+    @if (Model.Files?.Any(f => !string.IsNullOrWhiteSpace(f)) ?? false)
+    {
+        <text>
+            files: [
+            @foreach (var fileName in Model.Files)
+            {
+                <text>{ name: '@fileName', extension: '@System.IO.Path.GetExtension(fileName)' }, </text>
+            }
+                                            ],
+        </text>
+    }
+        validation: {
+        maxFileSize: @(Model.MaxSizeInKB * 1000),
+    @if (Model.FileType is not null)
+    {
+        <text>allowedExtensions: @Html.Raw(GetExtenstions(Model.FileType.Value)), </text>
+    }
+            },
+        multiple: '@Model.IsMultiple' == 'True',
+        success: onSuccess_@(Model.Index),
+        cancel: removeFile,
+        remove: removeFile
+            });
+
+    function onSuccess_@(Model.Index)(e) {
+        if (e.operation == "upload") {
+            // Generate inputs by index for Model.InputName and assign id UploadUid
+            e.files.forEach((file) => {
+                                addInputForFile_@(Model.Index)(e.response.fileUid, file.extension);
+
+    @if (Model.FileType == UploadFileType.Image)
+    {
+        <text>
+                        let src = '@Model.SaveLocation' + e.response.fileUid + file.extension;
+                                                        showImage_@(Model.Index)(src, 0, e.response.fileUid);
+        </text>
+    }
+                            });
+        }
+    }
+
+    function addInputForFile_@(Model.Index)(fileName, fileExtension) {
+        let element = document.createElement("input");
+        element.setAttribute("type", "hidden");
+        element.setAttribute("name", `@(Model.InputName)`);
+        element.setAttribute("id", fileName);
+        element.setAttribute("value", fileName + fileExtension);
+        document.getElementById("files-@Model.Index").form.appendChild(element);
+
+        fixIndexOfInputsName();
+    }
+
+    function showImage_@(Model.Index)(src, index, uid){
+        var img = document.createElement("img");
+        img.setAttribute("src", src);
+        img.setAttribute("class", "img-fluid");
+        img.setAttribute("alt", "Responsive image");
+        img.style.width = '40px';
+        img.style.height = '40px';
+        img.style.objectFit = 'cover';
+
+        let aTag = document.createElement("a");
+        aTag.setAttribute("href", src);
+        aTag.setAttribute("target", "_blank");
+        aTag.appendChild(img);
+        let targetDiv = null;
+
+        if (uid?.length > 0) {
+            targetDiv = document.querySelector(`[data-uid="${uid}"].k-file .k-file-group-wrapper`);
+        }
+        else {
+            targetDiv = document.querySelectorAll(`[k-index="@Model.Index"] .k-file .k-file-group-wrapper`)[index];
+        }
+        targetDiv.innerHTML = "";
+        targetDiv.appendChild(aTag);
+    }
+
+    @if (Model.Files?.Any(f => !string.IsNullOrWhiteSpace(f)) ?? false)
+    {
+        var fileIndex = 0;
+        foreach (var file in Model.Files.Where(f => !string.IsNullOrWhiteSpace(f)))
+        {
+            <text>
+                addInputForFile_@(Model.Index)('@System.IO.Path.GetFileNameWithoutExtension(file)', '@System.IO.Path.GetExtension(file)');
+                @if (Model.FileType == UploadFileType.Image)
+                {
+                    <text>
+                    showImage_@(Model.Index)('@Model.SaveLocation' + '@System.IO.Path.GetFileName(file)', @fileIndex);
+                    </text>
+                }
+            </text>
+            fileIndex++;
+        }
+    }
+
+        function removeFile(e) {
+            console.log(e);
+            e.files.forEach(f => {
+                var formData = {
+                    fileName: f.uid + f.extension
+                };
+                addAntiforgeryToken(formData);
+
+                $.ajax({
+                    url: e.sender.options.async.removeUrl,
+                    type: "POST",
+                    data: formData,
+                    success: (data) => {
+                        document.getElementById("files-@Model.Index").form.querySelector(`#${f.uid}`)?.remove();
+                        document.getElementById("files-@Model.Index").form.querySelector(`input[value='${f.name}']`)?.remove();
+                        fixIndexOfInputsName();
+                    }
+                });
+            });
+        }
+
+    function fixIndexOfInputsName() {
+        var inputs = document.getElementById("files-@Model.Index").form.querySelectorAll("input[name*='@Model.InputName']");
+
+        if (inputs.length > 1) {
+            inputs.forEach((input, index) => {
+                input.name = `@(Model.InputName)[${index}]`;
+            });
+        }
+        else if (inputs.length == 1) {
+            inputs[0].name = `@(Model.InputName)`;
+        }
+    }
+</script>

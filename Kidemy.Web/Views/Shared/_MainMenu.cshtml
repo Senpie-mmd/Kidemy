@@ -1,0 +1,48 @@
+﻿@using Kidemy.Application.Services.Interfaces;
+@using Kidemy.Domain.Enums.Blog;
+
+<ul class="navbar-nav navbar-nav-scroll me-auto">
+    <!-- Nav item 1 Demos -->
+    <li class="nav-item dropdown">
+        <a class="nav-link" href="/" >@Localizer["HomePage"]</a>
+    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link" asp-area="" asp-controller="Blog" asp-action="BlogsList">@Localizer["Blog"]</a>
+        @* <a class="nav-link" href="/">@Localizer["HomePage"]</a> *@
+    </li> 
+    
+    <li class="nav-item dropdown">
+        <a class="nav-link" asp-area="" asp-controller="Courses" asp-action="TodayDiscount">@Localizer["TodayDiscounts"]</a>
+    </li>
+ 
+    <li class="nav-item">
+        <a class="nav-link" asp-area="" asp-controller="Adviser" asp-action="FilterAdvisers" id="pagesMenu" aria-haspopup="true" aria-expanded="false">@Localizer["AdviceAndTroubleshooting"]</a>
+    </li>
+
+    <li class="nav-item dropdown dropdown-menu-shadow-stacked">
+        <a class="nav-link" href="#" id="categoryMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>@Localizer["UsefulLinks"]</span></a>
+        <ul class="dropdown-menu" aria-labelledby="categoryMenu">
+            <li>
+                <a class="dropdown-item" asp-area="" asp-controller="CourseRequest" asp-action="CourseRequestList">@Localizer["CourseRequest"]</a>
+            </li>
+            <li>
+                <a class="dropdown-item" asp-area="" asp-controller="Master" asp-action="MasterList">@Localizer["MasterIntroduction"]</a>
+            </li>
+        </ul>
+    </li>
+    
+    <li class="nav-item">
+        <a class="nav-link" asp-area="" asp-controller="ContactUsForm" asp-action="CreateContactUsForm" id="pagesMenu" aria-haspopup="true" aria-expanded="false">@Localizer["ContactUs"]</a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" asp-area="" asp-controller="AboutUs" asp-action="Index" id="pagesMenu" aria-haspopup="true" aria-expanded="false">@Localizer["AboutUs"]</a>
+    </li>
+
+    @await Component.InvokeAsync("HeaderUsefulLinks")
+
+    @await Component.InvokeAsync("HeaderPages")
+
+@*     @await Component.InvokeAsync("BlogLinksForView", new {place = LinkPlace.Header})
+ *@
+</ul>

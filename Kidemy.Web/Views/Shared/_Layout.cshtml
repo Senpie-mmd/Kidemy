@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <title>@ViewData["Title"] - @Localizer["Kidemy"]</title>
+
+    <!-- Meta Tags -->
+    <partial name="_MetaTages" />
+    <!-- Dark mode Script -->
+    <partial name="_DarkModeScript" />
+    <partial name="_HeaderReferences" />
+
+
+</head>
+
+<body>
+
+    <!-- Header START -->
+    <header class="navbar-light navbar-sticky header-static">
+        <partial name="_Navbar" />
+    </header>
+    <!-- Header END -->
+    <!-- **************** MAIN CONTENT START **************** -->
+<main>
+    @RenderBody()
+</main>
+    @await Component.InvokeAsync("Footer")
+
+
+    <div class="back-top"><i class="bi bi-arrow-up-short position-absolute top-50 start-50 translate-middle"></i></div>
+
+    <partial name="_FooterReferences" />
+    @await RenderSectionAsync("Scripts", required: false)
+    @await RenderSectionAsync("FooterReferences", required: false)
+    <partial name="_Modals" model="null" />
+
+
+    <partial name="_Notification" />
+
+
+</body>
+
+</html>
+
+

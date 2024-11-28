@@ -1,0 +1,84 @@
+﻿@using Kidemy.Application.ViewModels.Course.ClientSideCourse.Courses
+@using Kidemy.Application.ViewModels.DynamicText
+@using Kidemy.Domain.Enums.Course
+@model List<ClientSideMainPagePopularCoursesViewModel>
+@{
+    var dynamicText = ViewData["DynamicText"] as ClientSideDynamicTextViewModel ?? new ClientSideDynamicTextViewModel();
+
+}
+
+@if (Model?.Any() ?? false)
+{
+    <section>
+        <div class="container">
+            <!-- Title -->
+            <div class="row mb-4">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="fs-3">@Localizer["MostPopularCourses"]</h2>
+                    <p class="mb-0">
+                        @(dynamicText != null ? dynamicText.Text : "")
+                    </p>
+                </div>
+            </div>
+
+            <ul class="nav nav-pills nav-pills-bg-soft justify-content-sm-center mb-4 px-3" id="course-pills-tab" role="tablist">
+                @{
+                    int topTabsCounter = 0;
+                    foreach (var item in Model.Where(n => n.PopularCourses?.Any() ?? false) ?? new List<ClientSideMainPagePopularCoursesViewModel>())
+                    {
+                        topTabsCounter++;
+
+                        if (topTabsCounter is 1)
+                        {
+                            <li class="nav-item me-2 me-sm-5">
+                                <button class="nav-link mb-2 mb-md-0 active" id="course-pills-tab-@item.Id" data-bs-toggle="pill" data-bs-target="#course-pills-tabs-@item.Id" type="button" role="tab" aria-controls="course-pills-tabs-@item.Id" aria-selected="false">@item.CategoryTitle</button>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item me-2 me-sm-5">
+                                <button class="nav-link mb-2 mb-md-0" id="course-pills-tab-@item.Id" data-bs-toggle="pill" data-bs-target="#course-pills-tabs-@item.Id" type="button" role="tab" aria-controls="course-pills-tabs-@item.Id" aria-selected="false">@item.CategoryTitle</button>
+                            </li>
+                        }
+                    }
+                }
+            </ul>
+            <div class="tab-content" id="course-pills-tabContent">
+                @{
+                    int counter = 0;
+                    foreach (var item in Model ?? new List<ClientSideMainPagePopularCoursesViewModel>())
+                    {
+                        counter++;
+                        if (counter is 1)
+                        {
+                            <div class="tab-pane fade show active" id="course-pills-tabs-@item.Id" role="tabpanel" aria-labelledby="course-pills-tab-@item.Id">
+                                <div class="row g-4">
+
+                                    @foreach (var item2 in item.PopularCourses ?? new List<ClientSideCourseViewModel>())
+                                    {
+                                        <div class="col-sm-6 col-lg-4 col-xl-3">
+                                            <partial name="_CoursePartial" model="@item2" />
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="tab-pane fade" id="course-pills-tabs-@item.Id" role="tabpanel" aria-labelledby="course-pills-tab-@item.Id">
+                                <div class="row g-4">
+                                    @foreach (var item2 in item.PopularCourses ?? new List<ClientSideCourseViewModel>())
+                                    {
+                                        <div class="col-sm-6 col-lg-4 col-xl-3">
+                                            <partial name="_CoursePartial" model="item2" />
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </section>
+}

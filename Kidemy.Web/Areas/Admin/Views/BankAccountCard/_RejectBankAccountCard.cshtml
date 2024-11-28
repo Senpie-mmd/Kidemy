@@ -1,0 +1,32 @@
+﻿@using Kidemy.Application.ViewModels.BankAccountCard
+@using Kidemy.Domain.Enums.BankAccount
+
+@model ChangeStatusBankAccountCardViewModel
+
+<form asp-area="Admin" asp-controller="BankAccountCard" asp-action="RejectBankAccountCard" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id"/>
+    <input type="hidden" asp-for="Status" value="@BankAccountCardStatus.Rejected"/>
+    <input type="hidden" name="returnUrl" value="@ViewData["returnUrl"]" />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">                  
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label asp-for="Description"></label>
+                                <textarea type="text" asp-for="Description" rows="5" class="form-control " ></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-start">
+                            <button type="submit" class="btn btn-success">@Localizer["Submit"]</button>
+                        </div>
+                    </div>
+                </div>             
+            </div>
+        </div>
+    </div>
+</form>

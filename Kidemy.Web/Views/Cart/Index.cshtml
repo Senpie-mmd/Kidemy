@@ -1,0 +1,201 @@
+﻿@using Kidemy.Application.ViewModels.Cart;
+@using Kidemy.Domain.Enums.Course;
+@using Kidemy.Domain.Statics;
+@model CartViewModel
+@{
+    ViewData["Title"] = Localizer["Cart"];
+    decimal? totalDiscountAmount = null;
+    if (Model.DiscountedTotalAmount is not null)
+    {
+        totalDiscountAmount = Model.TotalAmount - Model.DiscountedTotalAmount;
+    }
+    var enteredDiscountCode = Context.Request.Query["DiscountCode"].ToString();
+
+    var walletBalnace = ViewData["WalletBalance"] as decimal? ?? 0;
+
+    var walletBalanceWithAppliedBlockAmount = ViewData["BalanceWithAppliedBlockAmount"] as decimal? ?? 0;
+}
+
+<section class="py-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="bg-light p-4 text-center rounded-3">
+                    <h1 class="m-0 fs-2">@Localizer["Cart"]</h1>
+                    <!-- Breadcrumb -->
+                    <div class="d-flex justify-content-center">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb breadcrumb-dots mb-0">
+                                <li class="breadcrumb-item"><a href="/">@Localizer["HomePage"]</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">@Localizer["Cart"]</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="pt-5">
+    <div class="container">
+        <form asp-action="ProcessCartPayment" asp-controller="Cart" asp-area="" method="POST">
+        <div class="row g-4 g-sm-5">
+            <!-- Main content START -->
+            <div class="col-lg-8 mb-4 mb-sm-0">
+                <div class="card card-body p-4 shadow">
+                    <div class="table-responsive border-0 rounded-3">
+                        <!-- Table START -->
+                        <table class="table align-middle p-4 mb-0">
+                            <!-- Table head -->
+                            <!-- Table body START -->
+                            <tbody class="border-top-0">
+                                <!-- Table item -->
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr>
+                                        <!-- Course item -->
+                                        <td>
+                                            <div class="d-lg-flex align-items-center">
+                                                <!-- Image -->
+                                                <div class="w-100px w-md-80px mb-2 mb-md-0">
+                                                        <img src="@SiteTools.CourseImagesPath@item.Course.ImageFileName" class="rounded" alt="">
+                                                </div>
+                                                <!-- Title -->
+                                                <h6 class="mb-0 ms-lg-3 mt-2 mt-lg-0">
+                                                    <a asp-action="CourseDetails" asp-controller="Courses" asp-route-slug="@item.Course.Slug">@item.Course.Title</a>
+                                                </h6>
+                                            </div>
+                                        </td>
+
+                                        <!-- Amount item -->
+                                        <td class="text-center">
+                                            @if (item.Course.Price is 0 || item.Course.Type == CourseType.Free)
+                                            {
+                                                <h3 class="fw-bold mb-0 fs-5 me-2 text-success">
+                                                    @Localizer["Free"]
+                                                </h3>
+                                            }
+                                            else
+                                            {
+                                                if (item.Course.AppliedDiscount is null)
+                                                {
+                                                    <h3 class="fw-bold mb-0 fs-5 me-2">
+                                                        @item.Course.Price?.ToString("#,0")
+                                                        @Localizer["Toman"]
+                                                    </h3>
+                                                }
+                                                else
+                                                {
+                                                    <h3 class="fw-bold mb-0 fs-5 me-2">
+                                                        @item.Course.DiscountedPrice?.ToString("#,0") @Localizer["Toman"]
+                                                    </h3>
+                                                    <span class="text-decoration-line-through mb-0 me-2">@item.Course.Price?.ToString("#,0")</span>
+                                                    @if (item.Course.AppliedDiscount.IsPercentage)
+                                                    {
+                                                        <span class="badge text-bg-orange mb-0">@((int)item.Course.AppliedDiscount.Value)%</span>
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                        <!-- Action item -->
+                                        <td>
+                                            <button onclick="removeFromCart(@item.Id)" class="btn btn-sm btn-danger-soft px-2 mb-0"><i class="fas fa-fw fa-times"></i></button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Coupon input and button -->
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <input type="text" value="@enteredDiscountCode" name="DiscountCode" placeholder="@Localizer["EnterTheDiscountCode"]" class="form-control form-control">
+                                <button onclick="applyDiscountCode()" type="button" class="btn btn-primary">@Localizer["ApplyDiscountCode"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Main content END -->
+            <!-- Right sidebar START -->
+            <div class="col-lg-4">
+                <!-- Card total START -->
+                <div class="card card-body p-4 shadow">
+                    <!-- Title -->
+                    <h4 class="mb-3 fs-5">@Localizer["Bill"]</h4>
+
+                    <!-- Price and detail -->
+                    <ul class="list-group list-group-borderless mb-2">
+                        <li class="list-group-item px-0 d-flex justify-content-between">
+                            <span class="h6 fw-light mb-0">@Localizer["TotalAmount"]</span>
+                            <span class="h6 fw-light mb-0 fw-bold">@Model.TotalAmount.ToString("#,0") @Localizer["Toman"]</span>
+                        </li>
+                        <li class="list-group-item px-0 d-flex justify-content-between">
+                            <span class="h6 fw-light mb-0">@Localizer["WalletBalance"]</span>
+                            <span class="h6 fw-light mb-0 fw-bold">@walletBalnace.ToString("#,0") @Localizer["Toman"]</span>
+                        </li>
+                            @if (walletBalanceWithAppliedBlockAmount != walletBalnace)
+                            {
+                                <li class="list-group-item px-0 d-flex justify-content-between">
+                                    <span class="h6 fw-light mb-0">@Localizer["UsableBalanceAmount"]</span>
+                                    <span class="h6 fw-light mb-0 fw-bold">@walletBalanceWithAppliedBlockAmount.ToString("#,0") @Localizer["Toman"]</span>
+                                </li>
+                            }
+                        @if (totalDiscountAmount > 0)
+                        {
+                            <li class="list-group-item px-0 d-flex justify-content-between">
+                                <span class="h6 fw-light mb-0">@Localizer["Discount"]</span>
+                                <span class="text-success">@totalDiscountAmount?.ToString("#,0") @Localizer["Toman"]</span>
+                            </li>
+                        }
+                        <li class="list-group-item px-0 d-flex justify-content-between mt-4">
+                            <div class="form-check form-switch form-check-md" id="UseFromWalletBalnaceDivId">
+                                <input class="form-check-input" id="UseFromWalletBalnace" name="UseFromWalletBalance" type="checkbox" value="true">
+                                <label class="form-check-label" for="UseFromWalletBalnace">@Localizer["UseFromWalletBalance"]</label>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item px-0 d-flex justify-content-between">
+                            <span class="h5 mb-0">@Localizer["FinalAmount"]</span>
+                            <span class="h5 mb-0"><span id="final-amount">@((Model.DiscountedTotalAmount ?? Model.TotalAmount).ToString("#,0"))</span> @Localizer["Toman"]</span>
+                        </li>
+                    </ul>
+
+                    <!-- Button -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-lg btn-success loading-support">@Localizer["Pay"]</button>
+                    </div>
+                </div>
+                <!-- Card total END -->
+            </div>
+            <!-- Right sidebar END -->
+
+        </div><!-- Row END -->
+        </form>
+    </div>
+</section>
+
+<script>
+    var walletBalnace = @((int)(walletBalanceWithAppliedBlockAmount));
+    var finalAmount = @((int)(Model.DiscountedTotalAmount ?? @Model.TotalAmount));
+
+    window.addEventListener('load', () => {
+        document.getElementById("UseFromWalletBalnace").addEventListener("change", (e) => {
+            if(e.target.checked){
+                var newFinalAmount = finalAmount - walletBalnace;
+
+                if(newFinalAmount < 0){
+                    newFinalAmount = 0;
+                }
+
+                document.getElementById("final-amount").innerHTML = addCommas(newFinalAmount);
+            }
+            else{
+                document.getElementById("final-amount").innerHTML = addCommas(finalAmount);
+            }
+        })
+    });
+</script>

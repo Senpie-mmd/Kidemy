@@ -1,0 +1,546 @@
+﻿@using Kidemy.Application.Convertors
+@using Kidemy.Application.ViewModels.Course.ClientSideCourse.CourseDetail
+@using Kidemy.Domain.Enums.Course;
+@using Kidemy.Domain.Enums.CourseNotification;
+@using Microsoft.AspNetCore.Mvc.Routing;
+@using System.Text.Encodings.Web;
+@using System.Web;
+@model ClientSideCourseDetailViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+
+    var questionId = ViewBag.QuestionId as int?;
+    var favouriteCourses = ViewBag.FavouriteCourses as List<int>;
+
+}
+
+<!--Medium  modal-->
+<div class="modal fade" id="MediumModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="MediumModalTitle">Modal title</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="MediumModalBody">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="CustomMediumModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="CustomMediumModalTitle">Modal title</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="CustomMediumModalBody">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<section class="bg-light py-0 py-sm-5">
+    <div class="container">
+        <div class="row py-5">
+            <div class="col-lg-8">
+                <!-- Badge -->
+                <h6 class="mb-3 font-base bg-primary text-white py-2 px-4 rounded-2 d-inline-block">@Model.CategoryName</h6>
+                <!-- Title -->
+                <h1 class="fs-3">@Model.Title</h1>
+                <p class="text-align-justify">@Model.ShortDescription<p>
+                    <!-- Content -->
+                    <ul class="list-inline mb-0">
+                            @if (Model.AvrageScore > 1)
+                            {
+                            <li class="list-inline-item me-3 mb-1 mb-sm-0">
+                                <i class="fas fa-star text-warning me-2"></i>
+                                    @Model.AvrageScore.ToString().Replace("٫", ".")/5.0
+                            </li>
+                            }
+                        <li class="list-inline-item me-3 mb-1 mb-sm-0">
+                            <i class="fas fa-signal text-success me-2"></i>
+                                @Model.Level.GetEnumName()
+                        </li>
+                        <li class="list-inline-item me-3 mb-1 mb-sm-0">
+                            <i class="bi bi-patch-exclamation-fill text-danger me-2"></i>
+                                @Localizer["LastUpdate"]
+                                @Model.LastUpdatedDate.ToUserDate()
+                        </li>
+                    </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- =======================
+Page intro END -->
+<!-- =======================
+Page content START -->
+<section class="pb-0 py-lg-5">
+    <div class="container">
+        <div class="row">
+            <!-- Main content START -->
+            <div class="col-lg-8">
+                <div class="card shadow rounded-2 p-0">
+                    <!-- Tabs START -->
+                    <div class="card-header border-bottom px-4 py-3">
+                        <ul class="nav nav-pills nav-tabs-line py-0" id="course-pills-tab" role="tablist">
+                            <!-- Tab item -->
+                            <li class="nav-item me-2 me-sm-4" role="presentation">
+                                <button class="nav-link mb-2 mb-md-0 active" id="course-pills-tab-1" data-bs-toggle="pill" data-bs-target="#course-pills-1" type="button" role="tab" aria-controls="course-pills-1" aria-selected="true">@Localizer["Description"]</button>
+                            </li>
+                            <!-- Tab item -->
+                            <li class="nav-item me-2 me-sm-4" role="presentation">
+                                <button class="nav-link mb-2 mb-md-0" id="course-pills-tab-2" data-bs-toggle="pill" data-bs-target="#course-pills-2" type="button" role="tab" aria-controls="course-pills-2" aria-selected="false">@Localizer["CourseEpisodes"]</button>
+                            </li>
+                            <!-- Tab item -->
+                            <li class="nav-item me-2 me-sm-4" role="presentation">
+                                <button class="nav-link mb-2 mb-md-0" id="course-pills-tab-3" data-bs-toggle="pill" data-bs-target="#course-pills-3" type="button" role="tab" aria-controls="course-pills-3" aria-selected="false">@Localizer["Master"]</button>
+                            </li>
+                            <!-- Tab item -->
+                            <li class="nav-item me-2 me-sm-4" role="presentation">
+                                <button class="nav-link mb-2 mb-md-0" id="course-pills-tab-4" data-bs-toggle="pill" data-bs-target="#course-pills-4" type="button" role="tab" aria-controls="course-pills-4" aria-selected="false" onclick="LoadComments('@Model.Slug')">@Localizer["Comment"]</button>
+                            </li>
+                            <!-- Tab item -->
+                            <li class="nav-item me-2 me-sm-4" role="presentation">
+                                <a class="nav-link mb-2 mb-md-0" asp-area="" asp-controller="Courses" asp-action="QuestionsList" asp-route-CourseSlug="@Model.Slug">@Localizer["QuestionAnswer"]</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Tabs END -->
+                    <!-- Tab contents START -->
+                    <div class="card-body p-4">
+                        <div class="tab-content pt-2" id="course-pills-tabContent">
+                            <!-- Content START -->
+                            <div class="tab-pane fade show active" id="course-pills-1" role="tabpanel" aria-labelledby="course-pills-tab-1">
+                                @Html.Raw(Model.Description)
+                            </div>
+                            <!-- Content END -->
+                            <!-- Content START -->
+                            <div class="tab-pane fade" id="course-pills-2" role="tabpanel" aria-labelledby="course-pills-tab-2">
+                                @await Component.InvokeAsync("CourseEpisodes", new { slug = Model.Slug })
+                            </div>
+                            <!-- Content END -->
+                            <!-- Content START -->
+                            <div class="tab-pane fade" id="course-pills-3" role="tabpanel" aria-labelledby="course-pills-tab-3">
+                                @await Component.InvokeAsync("CourseMaster", new { slug = Model.Slug })
+                            </div>
+                            <div class="tab-pane fade w-100" id="course-pills-4" role="tabpanel" aria-labelledby="course-pills-tab-4">
+                                @await Component.InvokeAsync("CourseComments", new { slug = Model.Slug })
+                            </div>
+                            <div class="tab-pane fade" id="course-pills-6" role="tabpanel" aria-labelledby="course-pills-tab-6">
+                                <a class="nav-link mb-2 mb-md-0" asp-area="" asp-controller="Courses" asp-action="QuestionsList" asp-route-CourseSlug="@Model.Slug">@Localizer["QuestionAnswer"]</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 pt-5 pt-lg-0">
+                <div class="row mb-5 mb-lg-0">
+                    <div class="col-md-6 col-lg-12">
+                        <div class="card shadow p-2 mb-4 z-index-9">
+                            <div class="overflow-hidden rounded-3">
+                                <img src="@SiteTools.CourseImagesPath/@Model.ImageFileName" class="card-img" alt="course image">
+                                <div class="bg-overlay bg-dark opacity-6"></div>
+                                <div class="card-img-overlay d-flex align-items-start flex-column p-3">
+                                    <div class="m-auto" id="test">
+                                        <a href="@SiteTools.CourseVideosPath@Model.DemoVideoFileName" class="glightbox3 btn btn-lg text-danger btn-round btn-white-shadow mb-0" data-glightbox="" data-gallery="course-video">
+                                            <i class="fas fa-play"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card body -->
+                            <div class="card-body px-3">
+                                <!-- Info -->
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <!-- Price and time -->
+                                    <div>
+                                        @if (Model.Price is 0 || Model.Type == CourseType.Free)
+                                        {
+                                            <h3 class="fw-bold mb-0 fs-5 me-2 text-success">
+                                                @Localizer["Free"]
+                                            </h3>
+                                        }
+                                        else if (Model.Type == CourseType.VIP)
+                                        {
+                                            <h3 class="fw-bold mb-0 fs-5 me-2 text-info">
+                                                @Localizer["ForVIPMembers"]
+                                            </h3>
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                @if (Model.AppliedDiscount is null)
+                                                {
+                                                    <h3 class="fw-bold mb-0 fs-5 me-2">
+                                                        @Model.Price?.ToString("#,0")
+                                                        @Localizer["Toman"]
+                                                    </h3>
+                                                }
+                                                else
+                                                {
+                                                    <h3 class="fw-bold mb-0 fs-5 me-2">
+                                                        @Model.DiscountedPrice?.ToString("#,0") @Localizer["Toman"]
+                                                    </h3>
+                                                    <span class="text-decoration-line-through mb-0 me-2">@Model.Price?.ToString("#,0")</span>
+                                                    @if (Model.AppliedDiscount.IsPercentage)
+                                                    {
+                                                        <span class="badge text-bg-orange mb-0">@((int)Model.AppliedDiscount.Value)%</span>
+                                                    }
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+
+                                    <!-- Share button with dropdown -->
+                                    <div class="dropdown">
+                                        <!-- Share button -->
+                                        <a href="#" class="btn btn-sm btn-light rounded small" role="button" id="dropdownShare" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-fw fa-share-alt"></i>
+                                        </a>
+                                        <!-- dropdown button -->
+                                        <ul class="dropdown-menu dropdown-w-sm dropdown-menu-end min-w-auto shadow rounded" aria-labelledby="dropdownShare">
+                                            <li>
+                                                <a class="dropdown-item" href="@SiteTools.SiteAddress/course/c-@Model.Id" id="myLink"><i class="fas fa-copy me-2"></i>@Localizer["CopyLink"]</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="notification bg-info" id="copyNotification">@Localizer["Copied"]</div>
+
+                                <!-- Buttons -->
+                                @if (Model.Type != CourseType.Free && Model.Type != CourseType.VIP && (ViewData["UserCanPlayAllVideosOfCourse"] as bool?) == true)
+                                {
+                                    <div class="mt-3 d-sm-flex justify-content-sm-between">
+                                        <span class="text-success">@Localizer["YouHaveBoughtTheCourse"]</span>
+                                    </div>
+                                }
+                                else if (Model.Price > 0)
+                                {
+                                    if (User?.Identity?.IsAuthenticated ?? false)
+                                    {
+                                        <div class="mt-3 d-sm-flex justify-content-sm-between">
+                                            <a href="javascript:void(0)" data-courseid="@Model.Id" class="btn btn-success mb-0 col-12 add-to-cart">@Localizer["AddToCart"]</a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="mt-3 d-sm-flex justify-content-sm-between">
+                                            <a href="/login?returnUrl=@HttpUtility.UrlEncode(Context.Request.Path)" class="btn btn-success mb-0 col-12">@Localizer["AddToCart"]</a>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <!-- Video END -->
+                        <!-- Course info START -->
+                        <div class="card card-body shadow p-4 mb-4">
+                            <!-- Title -->
+                            <h4 class="mb-3 fs-5">@Localizer["CourseDetails"]</h4>
+                            <ul class="list-group list-group-borderless">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span class="h6 fw-light mb-0"><i class="fas fa-fw fa-book-open text-primary"></i>@Localizer["VideosCount"]</span>
+                                    <span>@Model.VideoCount</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span class="h6 fw-light mb-0"><i class="fas fa-fw fa-clock text-primary"></i>@Localizer["CourseVideosTotalTime"]</span>
+                                    <span>@Model.CourseVideosTotalTime</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span class="h6 fw-light mb-0"><i class="fas fa-fw fa-signal text-primary"></i>@Localizer["CourseLevel"]</span>
+                                    <span>@Model.Level.GetEnumName()</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span class="h6 fw-light mb-0"><i class="fas fa-fw fa-user-clock text-primary"></i>@Localizer["LastUpdatedDate"]</span>
+                                    <span>@Model.LastUpdatedDate.ToUserDate()</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span class="h6 fw-light mb-0"><i class="fas fa-fw fa-medal text-primary"></i>@Localizer["Certificate"]</span>
+                                    @if (Model.HasCertificate is true)
+                                    {
+                                        <span>@Localizer["Has"]</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@Localizer["DoesNotHave"]</span>
+                                    }
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="card card-body shadow p-4 mb-4">
+                            <a asp-area="" asp-controller="Courses" asp-action="CourseNotification" asp-route-courseSlug="@Model.Slug" asp-route-CourseId="@Model.Id" asp-route-Type="@CourseNotificationType.UpdateCourse" class="btn btn-primary">@Localizer["InformationAboutCourseUpdates"]</a>
+                            <a asp-area="" asp-controller="Courses" asp-action="CourseNotification" asp-route-courseSlug="@Model.Slug" asp-route-CourseId="@Model.Id" asp-route-Type="@CourseNotificationType.FinishCourse" class="btn btn-primary">@Localizer["NotificationOfCompletionOfTheCourse"]</a>
+                        </div>
+                        <!-- Course info END -->
+                    </div>
+                    <div class="col-md-6 col-lg-12">
+
+                        @await Component.InvokeAsync("LastCoursesList")
+
+                        @if (Model.Tags.Any())
+                        {
+                            <div class="card card-body shadow p-4">
+                                <h4 class="mb-3 fs-5">@Localizer["Tags"]</h4>
+                                <ul class="list-inline mb-0">
+                                    @foreach (var item in Model.Tags ?? new List<ClientSideCourseTagsViewModel>())
+                                    {
+                                        <li class="list-inline-item">
+                                            <a class="btn btn-outline-light btn-sm" asp-area="" asp-controller="Courses" asp-action="CoursesList"
+                                               asp-route-CourseTag="@item.Title">
+                                                @item.Title
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- =======================
+Page content END -->
+<!-- =======================
+Listed courses START -->
+@await Component.InvokeAsync("OfferdCoursesList", new { MasterId = Model.MasterId, CurrentCourseId = Model.Id })
+
+<input type="hidden" asp-for="Slug" id="SlugInput" />
+
+@section FooterReferences {
+
+    <script asp-append-version="true">
+        let spinner = document.getElementById("spinner-div");
+        let isCoursesLoadedOnce = false;
+        let isFAQLoaded = false;
+        let isCommentsLoaded = false;
+        let isMasterLoaded = false;
+
+        function LoadCourseEpisodes(slug) {
+            if (isCoursesLoadedOnce == false) {
+
+                loadAnimation('course-pills-2');
+
+                isCoursesLoadedOnce = true;
+                $("#course-pills-2").load("/course-episodes/" + slug);
+            }
+        }
+
+        function LoadComments(slug) {
+            if (isCommentsLoaded == false) {
+
+                loadAnimation('course-pills-4');
+
+                isCommentsLoaded = true;
+                $("#course-pills-4").load("/course-comments/?slug=" + slug);
+            }
+            spinner.classList.add("DeActive");
+        }
+
+        function showMediumModal(url, title) {
+            $('#MediumModalBody').load(url);
+
+            document.getElementById("MediumModalTitle").innerHTML = title;
+            $("#MediumModal").modal("show");
+        }
+
+        function showCustomMediumModal(url, title) {
+            $('#CustomMediumModalBody').load(url);
+
+            document.getElementById("CustomMediumModalTitle").innerHTML = title;
+            $("#CustomMediumModal").modal("show");
+        }
+
+        function LoadMaster(slug) {
+            if (isMasterLoaded == false) {
+
+                loadAnimation('course-pills-3');
+
+                isMasterLoaded = true;
+                $("#course-pills-3").load("/course-master/" + slug);
+            }
+        }
+
+        function submitReportCommentForm(formId) {
+            event.preventDefault();
+
+            var $form = $(formId);
+
+            if ($form.valid()) {
+                var formData = $form.serialize();
+
+                $.post($form.attr('action'), formData,
+                    function (response) {
+                        if (response.isSuccess == true) {
+                            location.reload();
+                        }
+                        else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: response.message,
+                                confirmButtonText: response.data,
+                            });
+                        }
+
+                    }, 'json');
+            }
+        }
+
+        function submitReplyCommentForm(formId) {
+            event.preventDefault();
+
+            var $form = $(formId);
+
+            if ($form.valid()) {
+                var formData = $form.serialize();
+
+                $.post($form.attr('action'), formData,
+                    function (response) {
+                        if (response.isSuccess == true) {
+                            location.reload();
+                        }
+                        else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: response.message,
+                                confirmButtonText: response.data,
+                            });
+                        }
+
+                    }, 'json');
+            }
+        }
+
+        function FillCustomPageId(pageId) {
+            let slug = document.getElementById("SlugInput").value;
+
+            let encodedSlug = encodeURIComponent(slug);
+            console.log(slug);
+            console.log(pageId);
+
+            loadAnimation('course-pills-4');
+            $("#course-pills-4").load("/course-comments/?slug=" + encodedSlug + "&page=" + pageId);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            document.querySelectorAll("div#course-pills-1 p").forEach(p => {
+                p.classList.add("text-align-justify");
+            });
+
+        });
+
+        function loadAnimation(targetId) {
+            var spinnerDiv = document.createElement('div');
+            spinnerDiv.id = 'spinner-div';
+            spinnerDiv.className = 'pt-5';
+
+            // Create a div for the spinner itself
+            var spinner = document.createElement('div');
+            spinner.className = 'spinner-border text-primary';
+            spinner.setAttribute('role', 'status');
+
+            // Append the spinner div to the target element
+            document.getElementById(targetId).appendChild(spinnerDiv);
+
+            // Append the spinner to the spinner div
+            spinnerDiv.appendChild(spinner);
+        }
+
+    </script>
+
+    <script asp-append-version="true">
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var link = document.getElementById('myLink');
+
+            link.addEventListener('click', function (event) {
+                // Prevent the default link behavior
+                event.preventDefault();
+
+                // Get the href attribute of the clicked link
+                var hrefToCopy = link.getAttribute('href');
+
+                // Create a temporary textarea element
+                var tempInput = document.createElement('textarea');
+                tempInput.value = hrefToCopy;
+                document.body.appendChild(tempInput);
+
+                // Select the value of the textarea
+                tempInput.select();
+                tempInput.setSelectionRange(0, 99999); // For mobile devices
+
+                // Copy the selected text
+                document.execCommand('copy');
+
+                // Remove the temporary textarea
+                document.body.removeChild(tempInput);
+
+                // Show a message (you might replace this with your specific logic for showing a message)
+                console.log('Link copied to clipboard: ' + hrefToCopy);
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var link = document.getElementById('myLink');
+            var notification = document.getElementById('copyNotification');
+
+            link.addEventListener('click', function (event) {
+                // Prevent the default link behavior
+                event.preventDefault();
+
+                // Get the href attribute of the clicked link
+                var hrefToCopy = link.getAttribute('href');
+
+                // Create a temporary textarea element
+                var tempInput = document.createElement('textarea');
+                tempInput.value = hrefToCopy;
+                document.body.appendChild(tempInput);
+
+                // Select the value of the textarea
+                tempInput.select();
+                tempInput.setSelectionRange(0, 99999); // For mobile devices
+
+                // Copy the selected text
+                document.execCommand('copy');
+
+                // Remove the temporary textarea
+                document.body.removeChild(tempInput);
+
+                // Show success notification
+                notification.style.display = 'block';
+                setTimeout(function () {
+                    notification.style.display = 'none';
+                }, 2000); // Hide the notification after 2 seconds (2000 milliseconds)
+            });
+        });
+
+    </script>
+
+    <script asp-append-version="true">
+
+        var courseIdList = @Html.Raw(Json.Serialize(favouriteCourses));
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            checkFavorite(courseIdList);
+
+        })
+
+    </script>
+}

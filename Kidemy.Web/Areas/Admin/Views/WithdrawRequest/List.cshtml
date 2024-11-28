@@ -1,0 +1,133 @@
+﻿@using Kidemy.Application.ViewModels.WithrawRequest
+@using Kidemy.Domain.Models.WithdrawRequest
+
+@model FilterWithdrawRequestViewModel
+@{
+    ViewData["Title"] = Localizer["WithdrawRequestsList"];
+}
+@functions {
+    string GetStatusColor(WithdrawRequestStatus status)
+    {
+        return (status) switch
+        {
+            WithdrawRequestStatus.Accepeted => "success",
+            WithdrawRequestStatus.Pending => "secondary",
+            WithdrawRequestStatus.Rejected => "danger",
+        };
+    }
+}
+
+
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["Filter"]</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="WithdrawRequest" asp-action="List" method="post" id="filter-search" class="d-flex">
+                    <input type="hidden" asp-for="Page" />
+                    <div class="row w-100">
+                        <div class="mb-3 col-12 col-md-6">
+                            <label asp-for="UserName" class="form-label"></label>
+                            <input type="search" asp-for="UserName" class="form-control me-2" placeholder="@Localizer["UserName"]" aria-label="Search">
+                        </div>
+                        <div class="mb-3 col-12 col-md-6">
+                            <label asp-for="Status" class="form-label"></label>
+                            <select asp-for="Status" class="form-select me-2 " asp-items="@Html.GetEnumSelectList<WithdrawRequestStatus>()">
+                                <option value="">@Localizer["All"]</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-12 col-md-6">
+                            <button class="btn btn-outline-primary w-25" type="submit">@Localizer["Search"]</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="FilterUsers" class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["WithdrawRequestsList"]</h5>
+            </div>
+            @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                <div class="table-responsive mb-4 text-nowrap text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>@Localizer["UserName"]</th>
+                                <th>@Localizer["Amount"]</th>
+                                <th>@Localizer["Status"]</th>
+                                <th>@Localizer["DestinationBankAccountCard"]</th>
+                                <th>@Localizer["Operation"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in Model.Entities)
+                            {
+                                <tr>
+                                    <td>@Model.Counter</td>
+                                    <td class="text-break-cst word-break-custome">
+                                        <a class="text-primary" asp-action="Profile" asp-controller="User" asp-area="Admin" asp-route-id="@item.UserId">@item.UserName</a>
+                                    </td>
+                                    <td class="text-break-cst">
+                                        @item.Amount?.ToString("#,0") @Localizer["Toman"]
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-label-@(GetStatusColor(item.Status))">@item.Status.GetEnumName()</span>
+                                    </td>
+                                    <td>
+                                        <a class="text-primary" href="javascript:void(0)" onclick="showBankAccountCard(@item.DestinationBankAccountCardId)">@Localizer["Show"]</a>
+                                    </td>
+                                    <td>
+                                        @if (item.Status == WithdrawRequestStatus.Pending)
+                                        {
+                                            <a class="btn btn-success btn-sm" href="javascript:void(0)" onclick="acceptWithdrawRequest(@item.Id)">
+                                                @Localizer["Accept"]
+                                            </a>
+                                            <a class="btn btn-danger btn-sm" href="javascript:void(0)" onclick="rejectWithdrawRequest(@item.Id)">
+                                                @Localizer["DoReject"]
+                                            </a>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(item.Description))
+                                        {
+                                            <div>
+                                                <a class="btn btn-primary" href="javascript:void(0)" onclick="showMessage(this)">@Localizer["Details"]</a>
+                                                <span class="d-none">@item.Description</span>
+                                            </div>
+                                        }
+                                    </td>
+                                </tr>
+
+                                Model.Counter++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+</div>
+
+@section FooterReferences{
+    <script>
+       async function showMessage(element) {
+            var description = element.nextElementSibling.textContent;
+            $("#MediumModalTitle").html(await jsLocalizer('Description'));
+            $("#MediumModalBody").html(description);
+            $("#MediumModal").modal('show');
+        }
+
+        
+    </script>
+}

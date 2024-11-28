@@ -1,0 +1,60 @@
+﻿@using Kidemy.Application.ViewModels.UploadedMasterContract;
+@using Kidemy.Domain.Statics
+@using Kidemy.Domain.Enums.Master
+@model List<AdminSideMasterContractsPendingConfirmationDetailViewModel> ;
+
+<form typeof="post" asp-controller="MasterContract" asp-action="UpdateMasterContractsPendingConfirmation">
+    
+    @if (Model != null && Model != null && Model.Any())
+    {
+        var index = 0;
+        @foreach (var item in Model)
+        {
+            <input type="hidden" asp-for="@item.UploadedMasterContractId" name="[@index].UploadedMasterContractId" />
+
+            <div class="row m-4">
+                <div class="col-md-12 mb-3">
+                    <div class="row mt-4">
+                        <div class="col-12 col-lg-6">
+                            <div class="form-group">
+                                <span>@Localizer["Title"] : </span>
+                                @item.Title
+                            </div>
+                            <a class="btn btn-info mt-2" asp-area="Admin" asp-controller="MasterContract" asp-action="DownloadMasterContract" asp-route-fileMasterContractName="@item.FileName">
+                                @Localizer["Download"]
+                            </a>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <span>@Localizer["Status"] :</span>
+                            <select asp-for="@item.Status" name="[@index].Status" class="form-select me-2 ">
+                                @foreach (var status in Enum.GetValues(typeof(UploadedMasterContractStatus)).Cast<UploadedMasterContractStatus>())
+                                {
+                                    if (item.Status == status)
+                                    {
+                                        <option value="@status" selected="">@status.GetEnumName()</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@status">@status.GetEnumName()</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            index++;
+        }
+        <div class="row">
+            <div class="col-12 d-flex justify-content-start">
+                <button type="submit" class="btn btn-success">
+                    @Localizer["ChangeStatus"]
+                </button>
+            </div>
+        </div>
+
+        
+    }
+
+</form>

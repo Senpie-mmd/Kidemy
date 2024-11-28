@@ -1,0 +1,91 @@
+﻿@using Kidemy.Application.ViewModels.Survey.SurveyModels;
+@using Kidemy.Domain.Enums.Survey;
+@model ClientSideSurveyViewModel
+@{
+    ViewData["Title"] = Localizer["Survey"];
+}
+
+<div class="container">
+    <div class="row">
+        <!-- Left sidebar START -->
+        <div class="col-12">
+            <div class="card bg-transparent border rounded-3">
+                <!-- Card header -->
+                <div class="card-header bg-transparent border-bottom">
+                    <h3 class="card-header-title mb-0 ff-vb fs-5">نظرسنجی</h3>
+                </div>
+                <!-- Card body START -->
+                <div class="card-body ">
+                    <!-- Form -->
+                    <form method="post" id="survey-form" class="row g-4">
+                        <input type="hidden" name="SurveyId" value="@Model.Id" />
+                        @{
+                            int qIndex = 0;
+                            int optionsIndex = 0;
+                        }
+                        @foreach (var item in Model.Questions.OrderBy(q => q.Priority))
+                        {
+                            if (item.Type is SurveyQuestionType.Descriptive)
+                            {
+                                <div class="col-12">
+                                    <input type="hidden" name="QuestionAnswers[@qIndex].QuestionId" value="@item.Id" />
+                                    <label class="survey-label">@item.Title</label>
+                                    <textarea class="col-6 form-control" rows="6" name="QuestionAnswers[@qIndex].Answer"></textarea>
+                                </div>
+                            }
+
+                            else if (item.Type is SurveyQuestionType.MultipleChoice)
+                            {
+                                <div class="col-12 mb-3" class="survey-multiple-choice-box">
+                                    <input type="hidden" name="QuestionAnswers[@qIndex].QuestionId" value="@item.Id" />
+                                    <label class="survey-label">@item.Title</label>
+                                    <br />
+                                    @foreach (var option in item.Options.Split(","))
+                                    {
+
+                                        <div class="form-check">
+                                            <input name="QuestionAnswers[@qIndex].Answer" class="form-check-input" id="QuestionAnswers-@qIndex-@optionsIndex" type="checkbox" value="@option" />
+                                            <label class="form-check-label" for="QuestionAnswers-@qIndex-@optionsIndex">@option</label>
+
+                                        </div>
+                                        optionsIndex++;
+                                    }
+                                </div>
+                            }
+                            else if (item.Type is SurveyQuestionType.OneChoice)
+                            {
+                                <div class="col-12 mb-3">
+                                    <input type="hidden" name="QuestionAnswers[@qIndex].QuestionId" value="@item.Id" />
+                                    <label class="survey-label">@item.Title</label>
+                                    <br />
+                                    @foreach (var option in item.Options.Split(","))
+                                    {
+                                        <div class="form-check">
+                                            <input name="QuestionAnswers[@qIndex].Answer" class="form-check-input" id="QuestionAnswers-@qIndex-@optionsIndex" type="radio" value="@option" />
+                                            <label class="form-check-label" for="QuestionAnswers-@qIndex-@optionsIndex">@option</label>
+
+                                        </div>
+                                        optionsIndex++;
+                                    }
+                                </div>
+                            }
+
+                            qIndex++;
+                        }
+
+
+                        <!-- Save button -->
+                        <div class="d-sm-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary mb-0">@Localizer["Submit"]</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Card body END -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section FooterReferences{
+    <script asp-append-version="true" src="/js/survey.js"></script>
+}

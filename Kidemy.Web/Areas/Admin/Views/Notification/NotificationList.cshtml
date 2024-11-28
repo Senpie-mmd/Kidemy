@@ -1,0 +1,85 @@
+﻿@using Kidemy.Application.ViewModels.Notification;
+@model FilterNotificationViewModel
+@{
+    ViewData["Title"] = Localizer["NotificationList"];
+}
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["Search"]</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="Notification" asp-action="NotificationList" method="post" id="filter-search" class="d-flex">
+                    <input type="hidden" asp-for="Page" />
+                    <div class="row w-100">
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="Subject" class="form-label">@Localizer["Title"]</label>
+                            <input type="search" asp-for="Subject" class="form-control me-2" placeholder="@Localizer["Title"]" aria-label="Search">
+                        </div>
+
+                        <div class="mb-3 col-7 col-md-7">
+                            <button class="btn btn-outline-primary w-25" type="submit">@Localizer["Search"]</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div id="FilterUsers" class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["NotificationList"]</h5>
+            </div>
+            @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                <div class="table-responsive mb-4 text-nowrap text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>@Localizer["Subject"]</th>
+                                <th>@Localizer["Message"]</th>
+                                <th>@Localizer["Operation"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in Model.Entities)
+                            {
+                                <tr>
+
+                                    <td>@Model.Counter</td>
+                                    <td>@(string.IsNullOrEmpty(item.Subject) ? "-" : item.Subject)</td>
+                                    <td>
+                                        <p class="cut-p-long">
+                                            @(string.IsNullOrEmpty(item.Message) ? "-" : item.Message)
+                                        </p>
+
+                                    </td>
+
+                                    <td>
+                                        <a class="text-warning" asp-area="Admin" asp-controller="Notification" asp-action="UpdateNotification" asp-route-id="@item.Id" id="@Localizer["Edit"]">
+                                            <i class="bx bx-edit-alt me-1"></i>
+                                        </a>
+                                        <a class="text-danger" href="javascript:void(0)" onclick="DeleteConfirm('@Url.Action("DeleteNotification", "Notification", new { area = "Admin", id = @item.Id })')" id="deleteBtn-@item.Id" title="@Localizer["Delete"]">
+                                            <i class="bx bx-trash me-1"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+
+                                Model.Counter++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,189 @@
+﻿@using Kidemy.Application.ViewModels.Notification;
+@model SendNotificationViewModel
+@{
+    ViewData["Title"] = Localizer["SendNotification"];
+}
+
+<div class="modal fade" id="LargeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header p-0">
+                <h5 class="modal-title" id="LargModalTitle"></h5>
+                <button type="button"
+                        class="btn-close m-3"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body row" id="FilterUserLargeModalBody">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card p-lg-5">
+            <form asp-controller="Notification" asp-action="SendNotification" method="post"
+                  asp-area="Admin" id="sendEmail-form" onsubmit="checkEditorInSendEmail(this)">
+                <input type="hidden" value="@User.GetUserId()" asp-for="SenderId" />
+                <input type="hidden" id="EmailsOrNumbers" />
+                <input type="hidden" asp-for="UserIds" id="Ids" />
+                <div class="card-body">
+                    <div class="row">
+                        <div id="containEmails"></div>
+
+                        <div class="col-12 col-lg-12">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group mb-4">
+                                <label class="form-label" id="label-user-display">@Localizer["User"]</label>
+                                <div class="input-group" id="user-display">
+                                    <span class="input-group-text text-primary" onclick="$('#LargeModal').modal('show')"><i class="bx bx-search-alt-2"></i></span>
+                                    <input type="text" class="form-control" id="User-Display" readonly="readonly">
+                                </div>
+
+                                <div class="mt-3 form-check" id="select-all-user">
+                                    <input type="checkbox" id="select-All-User" onchange="resetValue(this);" class="form-check-input" asp-for="IsAllUser" />
+                                    <label for="select-All-User" class="form-check-label">@Localizer["SelectAllUser"]</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-12">
+                            <div class="form-group mb-4">
+                                <label asp-for="Subject" class="form-label"></label>
+                                <input asp-for="Subject" id="subject" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-12">
+                            <div class="form-group mb-4">
+                                <label asp-for="Message" class="form-label"></label>
+                                <textarea asp-for="Message" rows="6" id="message" class="form-control"></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 d-flex justify-content-start">
+                                    <button type="submit" class="btn btn-success">@Localizer["Send"]</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="text-danger" id="summary" asp-validation-summary="All"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section FooterReferences
+    {
+    <script asp-append-version="true">
+        $('#FilterUserLargeModalBody').load('/Admin/Notification/FilterUsersForSendNotification');
+
+        function searchForm(e) {
+            event.preventDefault();
+
+            let form = $('#FilterUserForm');
+            let resultElement = $('#FilterUserLargeModalBody')
+
+            $.ajax({
+                url: "/Admin/Notification/FilterUsersForSendNotification",
+                type: "get",
+                data: form.serialize(),
+                success: function (response) {
+
+                    resultElement.html(response);
+                }
+            });
+        }
+
+        function asignValues() {
+            debugger
+            let input = document.getElementById("User-Display");
+            let emailsOrNumbers = document.getElementById("EmailsOrNumbers");
+            let numbers = document.querySelectorAll(".CheckBox");
+            let Ids = document.querySelector("#Ids");
+            let numbersList = [];
+            let isFirst = true;
+
+            input.value = "";
+            emailsOrNumbers.value = "";
+            Ids.value = "";
+
+            for (let i = 0; i < numbers.length; i++) {
+                if (numbers[i].checked == true) {
+                    numbersList.push([numbers[i].id]);
+                
+                    let index = numbers[i].id.indexOf("-");
+                    if (isFirst == true) {
+                        input.value = numbers[i].id.substring(0, index);
+                        emailsOrNumbers.value = numbers[i].id.substring(0, index);
+                        Ids.value = numbers[i].id.substring((index + 1));
+                        isFirst = false;
+                    }
+                    else {
+                        input.value += "-" + numbers[i].id.substring(0, index);
+                        emailsOrNumbers.value += "-" + numbers[i].id.substring(0, index);
+                        Ids.value += "-" + numbers[i].id.substring((index + 1));
+                    }
+
+                }
+            }
+            isFirst = true;
+            $("#LargeModal").modal("hide");
+        }
+
+        async function checkEditorInSendEmail(e) {
+            event.preventDefault();
+
+            let subject = document.querySelector("#subject");
+            let ckEditor = document.querySelector("#message");
+            let selectAllUsers = document.querySelector("#select-All-User");
+            let emailsOrNumbers = document.querySelector("#EmailsOrNumbers");
+
+            if (subject.value == "" || subject.value.trim() == "") {
+                document.getElementById("summary").innerHTML = await jsLocalizer("PleaseEnterSubject");
+            }
+            else if ( ckEditor.value.trim() == "" || ckEditor.value == "") {
+                document.getElementById("summary").innerHTML = await jsLocalizer("PleaseEnterMessage");
+            }
+            else {
+                if (selectAllUsers.checked == true || emailsOrNumbers.value.trim() != "") {
+                    e.submit();
+                }
+                else {
+                    document.getElementById("summary").innerHTML = await jsLocalizer("PleaseChooseUserToSend");
+                }
+            }
+        }
+
+        function FillPageId(id) {
+            $("#Page").val(id);
+
+            searchForm();
+        }
+
+        function resetValue(e) {
+            let input = document.getElementById("User-Display");
+            let emailsOrNumbers = document.getElementById("EmailsOrNumbers");
+            let Ids = document.querySelector("#Ids");
+            let numbers = document.querySelectorAll(".CheckBox");
+
+            input.value = "";
+            emailsOrNumbers.value = "";
+            Ids.value = "";
+
+            for (let i = 0; i < numbers.length; i++) {
+                if (numbers[i].checked == true) {
+                    numbers[i].checked = false;
+                }
+            }
+
+            if (e.checked == true) {
+                input.parentElement.style = "display: none;";
+            }
+            else {
+                input.parentElement.style = "display: normal;";
+            }
+        }
+    </script>
+}

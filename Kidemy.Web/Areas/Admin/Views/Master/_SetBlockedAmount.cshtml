@@ -1,0 +1,22 @@
+﻿@using Kidemy.Application.ViewModels.Master
+@model BlockedAmountViewModel
+
+<form asp-action="SetBlockedAmount" asp-controller="Master" asp-area="Admin" method="post" id="editBlockedAmount">
+    <input type="hidden" asp-for="MasterId" value="@Model.MasterId" />
+    <input type="hidden" asp-for="UserId" value="@Model.UserId" />
+    <div class="row">
+      
+        <div class="col-12">
+            <div class="mb-4">
+                <label>@Localizer["Amount(Toman)"]</label>
+                <input asp-for="BlockedAmount" type="text" id="Price" class="form-control price" />
+                <span class="text-danger" asp-validation-for="BlockedAmount"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 d-flex justify-content-start">
+                <button type="submit" class="btn btn-warning">@Localizer["Edit"]</button>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,28 @@
+﻿@using Kidemy.Application.Convertors;
+@using Kidemy.Application.ViewModels.VIPMembers;
+@model ClientSideVIPUserInformationViewModel;
+
+<div class="section-style-vip box-shadow-vip p-2 border">
+    <header><h2>@Localizer["SiteVIPMembersAccount"]</h2></header>
+    <div class="inner">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="alert alert-warning">
+                    @ViewData["VIPDashBoardText"]
+                    @if (Model.IsVIPUser)
+                    {
+                        <span>@Model.MembershipEndDate.ToUserDate()</span>
+                    }
+                </div>
+            </div>
+        </div>
+        @if (!Model.IsVIPUser)
+        {
+            <div class="row">
+                <div class="text-end">
+                    <a asp-action="GetAllVIPPlans" asp-controller="VIPMembers" asp-area="" class="btn btn-lg btn-primary-soft mb-3 mb-sm-0">@Localizer["BecomeVIPMemberRightNow"]</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

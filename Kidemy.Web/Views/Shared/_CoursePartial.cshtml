@@ -1,0 +1,39 @@
+﻿@using Kidemy.Application.ViewModels.Course.ClientSideCourse.Courses
+@using Kidemy.Domain.Enums.Course
+@model ClientSideCourseViewModel
+
+<div class="card shadow h-100">
+    <!-- Image -->
+    <a asp-area="" asp-controller="Courses" asp-action="CourseDetails" asp-route-slug="@Model.Slug">
+        <img src="@SiteTools.CourseImagesPath@Model.ImageFileName" class="card-img-top image-size" alt="course image">
+    </a>
+    <!-- Card body -->
+    <div class="card-body pb-0">
+        <!-- Badge and favorite -->
+        <div class="d-flex justify-content-between mb-2">
+            <a asp-area="" asp-controller="Courses" asp-action="CoursesList" asp-route-Level="@Model.Level" class="badge bg-purple bg-opacity-10 text-purple">@Model.Level.GetEnumName()</a>
+            <a title="@Localizer["AddToFavourite"]" href="javascript:void(0)" onclick="favourite('@Url.Action("FavouriteCourse", "Courses", new { courseId = Model.Id })')" class="h6 fw-light mb-0"><i id="like-@Model.Id" class="far fa-solid fa-heart"></i></a>
+        </div>
+        <!-- Title -->
+        <h5 class="card-title fw-normal height-40 course-title-in-papular-courses">
+            <a asp-area="" asp-controller="Courses" asp-action="CourseDetails" asp-route-slug="@Model.Slug">@Model.Title</a>
+        </h5>
+        <p class="mb-2 text-truncate-2 height-45">@Model.Description</p>
+        <!-- Rating star -->
+        <ul class="list-inline mb-0 height-23">
+            @if (Model.AvrageScore > 0)
+            {
+                <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                <li class="list-inline-item ms-2 h6 fw-light mb-0">@Model.AvrageScore?.ToString().Replace(",", ".")/5.0</li>
+            }
+        </ul>
+    </div>
+    <!-- Card footer -->
+    <div class="card-footer pt-0 pb-3">
+        <hr>
+        <div class="d-flex justify-content-between">
+            <span class="h6 fw-light mb-0"><i class="far fa-clock text-danger me-2"></i>@(new TimeSpan(Model.CourseVideosLength.Sum(n => n.Ticks)))</span>
+            <span class="h6 fw-light mb-0"><i class="fas fa-table text-orange me-2"></i>@Model.VideosCount @Localizer["Video"]</span>
+        </div>
+    </div>
+</div>

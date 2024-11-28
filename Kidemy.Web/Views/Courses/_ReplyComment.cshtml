@@ -1,0 +1,17 @@
+﻿@using Kidemy.Domain.Enums.Course;
+@using Kidemy.Application.ViewModels.Course.ClientSideCourse.Comments
+@model ClientSideCreateCommentViewModel
+
+<form class="row g-3" method="post" id="ReplyCommentForm" asp-area="" asp-controller="Courses" asp-action="ReplyComment">
+    <input type="hidden" asp-for="ReplyForCommentId" id="commentIdInput" />
+
+    <div class="col-12 bg-light-input">
+        <label asp-for="Message"></label>
+        <textarea class="form-control" asp-for="Message" rows="3"></textarea>
+        <span asp-validation-for="Message"></span>
+    </div>
+
+    <div class="col-12">
+        <button type="submit" onclick="submitReplyCommentForm('#ReplyCommentForm')" class="btn btn-primary mb-0">@Localizer["Reply"]</button>
+    </div>
+</form>

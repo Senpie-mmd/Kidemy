@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = Localizer["ViewTitle.Admin.Dashborad"];
+    ViewData["Backable"] = false;
+}
+
+
+<div class="row">
+    <div class="col-12 "> 
+        @await Component.InvokeAsync("AdminDashboardTopContent") 
+    </div> 
+
+        <div class="col-12 col-md-6 mb-4">
+    @await Component.InvokeAsync("AdminDashboardTickets")
+    </div>
+
+    <div class="col-12 col-md-6 mb-4">
+        @await Component.InvokeAsync("AdminDashboardContactUsForm")
+    </div>
+
+    <div class="col-12 col-md-6 mb-4">
+        @await Component.InvokeAsync("AdminDashboardNotConfirmedCourseQuestions")
+    </div>
+    
+
+    <div class="col-12 col-md-6 mb-4">
+        @await Component.InvokeAsync("AdminDashboardCourseQuestionsDoesNotAnsweredByTeacherAfter48Hours")
+    </div>
+
+    <div class="col-12 col-md-6 mb-4">
+        @await Component.InvokeAsync("AdminDashboardPendingBankAccountCards")
+    </div>
+
+    <div class="col-12 col-md-6 mb-4">
+        @await Component.InvokeAsync("AdminDashboardPendingWithdrawRequests")
+    </div>
+
+    <div class="col-12 col-md-6 mb-4">
+        @await Component.InvokeAsync("AdminDashboardLatestOrders")
+    </div>
+
+    <div class="col-12 col-md-6 mb-4">
+        @await Component.InvokeAsync("AdminDashboardUnPublishedCourseVideos")
+    </div>
+</div>
+
+
+@section FooterReferences {
+    <script asp-append-version="true" src="/admin/js/custom-admin.js"></script>
+    <script>
+        async function ConfrimCourseQuestion(url) {
+            Swal.fire({
+                html: `<b>${await jsLocalizer("ConfrimCourseQuestion")}</b>`,
+                showDenyButton: true,
+                confirmButtonText: await jsLocalizer("Yes"),
+                denyButtonText: await jsLocalizer("No")
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var formData = {};
+                    addAntiforgeryToken(formData);
+
+                    $.ajax({
+                        type: 'post',
+                        url: url,
+                        data: formData,
+                        success: async function (response) {
+                            window.location.reload();
+                        },
+                        error: async function (response) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: await jsLocalizer("Error.e"),
+                                confirmButtonText: await jsLocalizer("Ok"),
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+} 

@@ -1,0 +1,45 @@
+﻿@using Kidemy.Application.ViewModels.MasterNotification;
+@using Kidemy.Web.Areas.Admin.Models;
+@model AdminSideUpdateMasterNotificationViewModel
+@{
+    ViewData["Title"] = Localizer["UpdateMasterNotification"];
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card p-lg-5">
+            <form asp-controller="MasterNotification" asp-action="UpdateMasterNotification" method="post"
+                  asp-area="Admin" id="sendEmail-form" onsubmit="checkEditorInSendEmail(this)">
+                <input type="hidden" value="@Model.Id" asp-for="Id" />
+
+                <div class="card-body">
+                    <div class="row">
+      
+                        <div class="col-12 col-lg-8">
+                            <div class="form-group mb-4">
+                                <label asp-for="Message" class="form-label"></label>
+                                <textarea asp-for="Message" rows="6" id="message" class="form-control"></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 d-flex justify-content-start">
+                                    <button type="submit" class="btn btn-success">@Localizer["Edit"]</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-4">
+                            <div class="mt-4">
+                                <h6 class="fs-6 mb-2">@Localizer["PleaseUploadFile"]</h6>
+                                <partial name="_Upload" model="@(new UploadModel{Index = 0,FileType = UploadFileType.All, IsMultiple = false, MaxSizeInKB = 100_000_000, SaveLocation = SiteTools.MasterNotificationVideosPath, InputName = "DemoVideoFileName",Files = new List<string>() {Model.DemoVideoFileName}})" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="text-danger" id="summary" asp-validation-summary="All"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

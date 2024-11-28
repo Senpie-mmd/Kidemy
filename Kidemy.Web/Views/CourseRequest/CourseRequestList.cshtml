@@ -1,0 +1,146 @@
+﻿@using Kidemy.Application.ViewModels.CourseRequest;
+@model FilterForClientSideCourseRequestViewModel
+@{
+    ViewData["Title"] = Localizer["TotalNumberOfRequests"];
+}
+
+<div class="modal fade" id="RequestMasterVolunteerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="RequestMasterVolunteerTitle">@Localizer["MasterDescription"]</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="RequestMasterVolunteerBody">
+                <form id="RequestMasterVolunteerForm" asp-action="CourseRequestMasterVolunteerRegister" asp-controller="CourseRequest" method="post">
+                    <input name="CourseRequestId" type="hidden" id="CourseRequestId" />
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label type="text" class="form-label"></label>
+                                <textarea name="MasterDescription" rows="6" class="form-control" type="text" placeholder="@Localizer["Description"]" id="VolunteerDescriptionId"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-start">
+                                <button type="submit" class="btn btn-success mt-4">@Localizer["Add"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <div class="card ">
+                <div class="card-header">
+                    <h5>@Localizer["Search"]</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-controller="CourseRequest" asp-action="CourseRequestList" method="post" id="filter-search" class="d-flex">
+                        <input type="hidden" asp-for="Page" />
+                        <div class="row w-100">
+                            <div class="mb-3 col-6 col-md-6">
+                                <input type="search" asp-for="Title" class="form-control" placeholder="@Localizer["Title"]" aria-label="Search">
+                            </div>
+
+                            <div class="mb-3 col-6 col-md-6">
+                                <button class="btn btn-outline-primary w-25" type="submit">@Localizer["Search"]</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <div id="FilterUsers" class="col-md-12">
+            <div class="card border">
+                <div class="card-header">
+                    <h5>@Localizer["TotalNumberOfRequests"]</h5>
+                </div>
+                @if (Model != null && Model.Entities != null && Model.Entities.Any())
+                {
+                    <div class="table-responsive mb-4 text-nowrap text-center">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>@Localizer["Title"]</th>
+                                    <th>@Localizer["CreatedDate"]</th>
+                                    <th>@Localizer["Votes"]</th>
+                                    <th>@Localizer["Operation"]</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-border-bottom-0">
+                                @foreach (var item in Model.Entities)
+                                {
+
+                                    <tr>
+                                        <td>@Model.Counter</td>
+                                        <td>@(string.IsNullOrEmpty(item.Title) ? "-" : item.Title)</td>
+                                        <td dir="ltr">@item.CreatedDateOnUTC.ToUserShortDateTime()</td>
+                                        <td>@item.VoteCount</td>
+                                        <td>
+                                            <form method="post" asp-controller="CourseRequest" asp-action="CourseRequestVoteRegister">
+                                                <input type="hidden" name="CourseRequestId" value="@item.Id" />
+
+                                                <button type="submit" class="btn btn-success loading-support">@Localizer["Agree"]</button>
+                                            </form>
+
+                                            @if (ViewData["UserIsMaster"] as bool? is true)
+                                            {
+                                                <button type="button" onclick="showVolunteerModal(@item.Id)" class="btn btn-info mx-2">@Localizer["ReadyToTeachThisCourse"]</button>
+                                            }
+                                        </td>
+                                    </tr>
+
+                                    Model.Counter++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+                }
+                else
+                {
+                    <partial name="_NotFoundPartial" />
+                }
+            </div>
+        </div>
+    </div>
+
+    @await Component.InvokeAsync("CourseRequestRegister" ,new ClientSideCourseRequestRegisterViewModel())
+</div>
+
+<script>
+    function showVolunteerModal(id) {
+
+        const courseRequestId = document.getElementById('CourseRequestId');
+        courseRequestId.value = id;
+
+        $("#RequestMasterVolunteerModal").modal("show");
+
+        var requestMasterVolunteerForm = document.getElementById("RequestMasterVolunteerForm");
+        requestMasterVolunteerForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const volunteerDescription = document.getElementById("VolunteerDescriptionId");
+
+            if (volunteerDescription.value == null || volunteerDescription.value.trim()=='') {
+                showError(await jsLocalizer("PleaseEnterDescription"))
+                return;
+            }
+
+            e.target.submit();
+
+        });
+    }
+</script>

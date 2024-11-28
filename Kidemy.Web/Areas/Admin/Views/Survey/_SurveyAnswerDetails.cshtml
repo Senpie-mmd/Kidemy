@@ -1,0 +1,21 @@
+﻿@using Kidemy.Application.ViewModels.Survey.SurveyAnswersModels;
+@model AdminSideSurveyAnswerDetailsViewModel
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between row">
+        <div class="col-12 col-md-6 d-flex">
+            <h5 class="me-3">@Localizer["AnswererFullName"]: </h5>
+            <p><a class="text-primary" asp-route-id="@Model.AnswererId" asp-action="Profile" asp-controller="User" asp-area="Admin">@Model.AnswererFullName</a></p>
+        </div>
+        <div class="col-12 col-md-6 d-flex">
+            <h5 class="me-3">@Localizer["SurveyTitle"]: </h5>
+            <p>@Model.SurveyTitle</p>
+        </div>
+        @foreach (var answer in Model.Answers)
+        {
+            <div class="col-12 d-flex mt-3">
+                <h5 class="me-3">@answer.QuestionTitle </h5>
+                @answer.AnswerText
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,48 @@
+@using Kidemy.Application.ViewModels.Survey;
+@using Kidemy.Application.ViewModels.Survey.SurveyQuestionModels;
+@using Kidemy.Domain.Enums.Survey;
+@model AdminSideUpsertSurveyQuestionViewModel
+
+<form id="survey-question-form" asp-action="UpdateSurveyQuestionAjax" asp-controller="Survey" asp-area="Admin" method="post">
+    <input type="hidden" asp-for="SurveyId" />
+    <input type="hidden" asp-for="Id" />
+    <div class="row ">
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                @await Component.InvokeAsync("Localized",Model)
+                                <div class="col-6 col-lg-6">
+                                    <div class="form-group mb-4">
+                                        <label asp-for="Type" class="form-label">@Localizer["QuestionType"]</label>
+                                        <select asp-for="Type" class="form-select me-2" asp-items="@Html.GetEnumSelectList<SurveyQuestionType>()">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-group mb-4">
+                                        <label asp-for="Priority" class="form-label">@Localizer["Priority"]</label>
+                                        <input asp-for="Priority" class="form-control" min="1" />
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-12">
+                                    <button type="submit" id="btn-submit" class="btn btn-success">@Localizer["Submit"]</button>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="text-danger" asp-validation-summary="All" id="summary-validation"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<link asp-append-version="true" href="/admin/assets/vendor/libs/tagify/tagify.css" rel="stylesheet" />
+<script asp-append-version="true" src="/admin/assets/vendor/libs/tagify/tagify.js"></script>
+<script asp-append-version="true" src="/admin/js/survey.js"></script>

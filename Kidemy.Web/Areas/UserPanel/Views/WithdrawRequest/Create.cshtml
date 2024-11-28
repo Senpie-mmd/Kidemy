@@ -1,0 +1,87 @@
+﻿@using Kidemy.Application.ViewModels.BankAccountCard
+@using Kidemy.Application.ViewModels.WithrawRequest
+@model UpsertWithdrawRequestViewModel
+@{
+    ViewData["Title"] = Localizer["AddWithdrawRequest"];
+
+    
+    var masterBlockedBalnace = ViewBag.MasterBlockedBalnace as decimal?;
+    var masterBalance = ViewBag.MasterBalnace as decimal?;
+
+    var bankAccounts = ViewBag.BankAccounts as FilterBankAccountCardViewModel;
+    var minimumWithdrawableAmount = ViewBag.MinimumWithdrawableAmount as decimal?;
+
+    var walletBalnace = ViewData["WalletBalance"] as decimal? ?? 0;
+
+    var walletBalanceWithAppliedBlockAmount = ViewData["BalanceWithAppliedBlockAmount"] as decimal? ?? 0;
+}
+
+<div class="row ">
+    <div class="col-xl-12 col-lg-12 col-md-12">
+
+        <div class="card border bg-transparent rounded-3">
+            <!-- Card header -->
+            <div class="card-header bg-transparent border-bottom">
+                <h5 class="card-header-title mb-0">@Localizer["AddWithdrawRequest"]</h5>
+            </div>
+            <form asp-action="Create" asp-controller="WithdrawRequest" asp-area="UserPanel" method="post">
+
+                <div class="card-body">
+
+
+                    <div class="mb-3">
+                        <label class="form-label" asp-for="DestinationBankAccountCardId"></label>
+                        <select asp-for="DestinationBankAccountCardId" class="form-control form-select js-choice z-index-9 border-1">
+
+                            @if (bankAccounts.Entities != null)
+                            {
+                                @foreach (var bankAccountCard in bankAccounts.Entities)
+                                {
+                                    if (Model.DestinationBankAccountCardId == bankAccountCard.Id)
+                                    {
+                                        <option value="@bankAccountCard.Id" selected="">@bankAccountCard.CardNumber</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@bankAccountCard.Id">@bankAccountCard.CardNumber</option>
+                                    }
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="DestinationBankAccountCardId" class="text-danger d-block"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">@Localizer["Amount(Toman)"]</label>
+                        <input class="form-control price mb-2" asp-for="Amount" placeholder="@Localizer["Amount(Toman)"]" autocomplete="off">
+                        @if (minimumWithdrawableAmount != null)
+                        {
+                            <span class="text-warning small d-block">@Localizer["WithdrawRequestMinimumAmount"]: @minimumWithdrawableAmount.GetValueOrDefault().ToString("#,0") @Localizer["Toman"]</span>
+                        }
+
+                        <span class="text-danger mt-3" asp-validation-for="Amount"></span>
+                    </div>
+
+                    <ul class="list-group list-group-borderless mb-2">
+                        <li class="list-group-item px-0 d-flex justify-content-between">
+                            <span class="h6 fw-light mb-0">@Localizer["WalletBalance"]</span>
+                            <span class="h6 fw-light mb-0 fw-bold">@walletBalnace.ToString("#,0") @Localizer["Toman"]</span>
+                        </li>
+                        @if (walletBalanceWithAppliedBlockAmount != walletBalnace)
+                        {
+                            <li class="list-group-item px-0 d-flex justify-content-between">
+                                <span class="h6 fw-light mb-0">@Localizer["WithdrawableAmount"]</span>
+                                <span class="h6 fw-light mb-0 fw-bold">@walletBalanceWithAppliedBlockAmount.ToString("#,0") @Localizer["Toman"]</span>
+                            </li>
+                        }
+                    </ul>
+
+                    <!-- Button -->
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="submit" class="btn btn-primary mb-0 loading-support">@Localizer["Submit"]</button>
+                    </div>
+                </div>
+                <!-- Card body END -->
+            </form>
+        </div>
+    </div>
+</div>

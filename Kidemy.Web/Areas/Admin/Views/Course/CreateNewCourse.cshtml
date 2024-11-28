@@ -1,0 +1,216 @@
+﻿@using Kidemy.Application.ViewModels.Course.AdminSideCourse.Categories
+@using Kidemy.Application.ViewModels.Course.AdminSideCourse.Courses
+@using Kidemy.Domain.Enums.Course
+@using Kidemy.Domain.Statics
+@using Kidemy.Web.Areas.Admin.Models
+@model AdminSideCreateCourseViewModel
+
+@{
+    ViewData["Title"] = Localizer["CreateNewCourse"];
+}
+
+<form asp-area="Admin" asp-controller="Course" asp-action="CreateNewCourse" id="CreateNewCourseForm" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="MasterId" id="MasterId" />
+    <input type="hidden" asp-for="MasterFullName" id="masterFullNameInput" />
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card p-lg-5">
+                <div class="card-body">
+                    <div class="row">
+                        @await Component.InvokeAsync("Localized", Model)
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label type="text" class="form-label" asp-for="Slug"></label>
+                                <input asp-for="Slug" class="form-control" type="text" id="Slug" />
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-group mb-4">
+                                <label class="form-label" id="label-master-display">@Localizer["Master"]</label>
+                                <div class="input-group" id="master-display">
+                                    <span class="input-group-text text-primary" onclick="showModal('@Url.Action("LoadMastersForCourse","Course",new {area="Admin"})','@Localizer["MastersList"]')"><i class="bx bx-search-alt-2"></i></span>
+                                    <input type="text" class="form-control" id="MasterDisplay-Display" value="@Model.MasterFullName" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="CourseCategoryIds" class="form-label"></label>
+                            <select asp-for="CourseCategoryIds" class="form-select me-2 select2" data-placeholder="@Localizer["Select"]">
+                                @foreach (var item in Model?.Categories ?? new List<AdminSideCategoryAsOptionViewModel>())
+                                {
+                                    <option value="@item.Id">@item.Title</option>
+                                }
+
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label type="text" class="form-label" asp-for="CourseTags"></label>
+                                <input asp-for="CourseTags" class="form-control" tagify />
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="Level" class="form-label"></label>
+                            <select asp-for="Level" class="form-select me-2 select2" asp-items="@Html.GetEnumSelectList<CourseLevel>()"></select>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div class="form-group mb-4">
+                                <label asp-for="MasterCommissionPercentage" class="form-label"></label>
+                                <input asp-for="MasterCommissionPercentage" class="form-control" max="100" min="0" />
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6">
+                            <div class="form-group mb-4">
+                                <label asp-for="FileSuffix" class="form-label"></label>
+                                <input asp-for="FileSuffix" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label asp-for="Status" class="form-label"></label>
+                            <select asp-for="Status" class="form-select me-2 select2" asp-items="@Html.GetEnumSelectList<CourseStatus>()"></select>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="Type" class="form-label"></label>
+                            <select asp-for="Type" class="form-select me-2 select2" id="CourseTypeInput"
+                                    onchange="changeCourseType()" asp-items="@Html.GetEnumSelectList<CourseType>()"></select>
+                        </div>
+
+                        <div class="col-12" id="priceContainer">
+                            <div class="mb-4">
+                                <label type="text" class="form-label" asp-for="Price"></label>
+                                <input asp-for="Price" class="form-control price" id="priceInput" />
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-3">
+                            <div class="mb-4 form-check padding-top-2-percent">
+                                <input class="form-check-input" type="checkbox" asp-for="IsOffer">
+                                <label class="form-check-label" asp-for="IsOffer"></label>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-3">
+                            <div class="mb-4 form-check padding-top-2-percent">
+                                <input class="form-check-input" type="checkbox" asp-for="IsPublished">
+                                <label class="form-check-label" asp-for="IsPublished"></label>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-3">
+                            <div class="mb-4 form-check padding-top-2-percent">
+                                <input class="form-check-input" type="checkbox" asp-for="AllowComenting">
+                                <label class="form-check-label" asp-for="AllowComenting"></label>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-3">
+                            <div class="mb-4 form-check padding-top-2-percent">
+                                <input class="form-check-input" type="checkbox" asp-for="HasCertificate">
+                                <label class="form-check-label" asp-for="HasCertificate"></label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-start">
+                                <input type="submit" value="@Localizer["Submit"]" class="btn btn-success" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div asp-validation-summary="All" class="text-danger mt-3"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4 mb-md-0">
+            <div class="card p-lg-4 mb-3">
+                <div class="card-body">
+                    <div class="mt-4">
+                        <h6 class="fs-6 mb-2">@Localizer["PleaseChooseCourseImage"]</h6>
+                        <img src="@SiteTools.CourseImagesPath@SiteTools.DefaultImageName" class="w-100 rounded-2 mb-3" ImageFile="1" />
+                        <label for="uploadImage" class=" w-100">
+                            <button type="button" class="btn btn-info  w-100" id="uploadBtn">@Localizer["Upload"]</button>
+                        </label>
+                        <input class="d-none" type="file" id="uploadImage" ImageInput="1" accept="image/png, image/jpeg" asp-for="CourseImageFileName" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-lg-4 mb-3">
+                <div class="card-body">
+                    <div class="mt-4">
+                        <h6 class="fs-6 mb-2">@Localizer["PleaseChooseCoursePreviewVideo"]</h6>
+                        <partial name="_Upload" model="@(new UploadModel{Index = 0,FileType = UploadFileType.Video, IsMultiple = false, MaxSizeInKB = 100_000_000, SaveLocation = SiteTools.CourseVideosPath, InputName = "DemoVideoFileName",Files = new List<string>() {Model.DemoVideoFileName}})" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section FooterReferences {
+    <script asp-append-version="true" src="/admin/js/slug-generator.js"></script>
+    <script asp-append-version="true">
+        let priceContainer = document.getElementById("priceContainer");
+        let masterFullNameInput = document.getElementById("MasterDisplay-Display");
+        let masterIdInput = document.getElementById("MasterId");
+        let masterFullNameHiddenInput = document.getElementById("masterFullNameInput")
+        let courseTypeInput = document.getElementById("CourseTypeInput");
+        let CreateNewCourseForm = document.getElementById("CreateNewCourseForm");
+        let priceInput = document.getElementById("priceInput");
+
+        changeCourseType();
+
+        function changeCourseType() {
+            if (courseTypeInput.value == 1) {
+                priceContainer.style.display = "block";
+            }
+            else {
+                priceContainer.style.display = "none";
+            }
+        }
+
+        function chooseMaster(masterId, masterFullName) {
+            masterFullNameInput.value = masterFullName;
+            masterIdInput.value = masterId;
+            masterFullNameHiddenInput.value = masterFullName;
+
+            $("#LargeModal").modal("hide");
+        }
+
+        function searchForm(e) {
+            event.preventDefault();
+
+            let form = $("#FilterMastersForm");
+            let resultElement = $('#LargeModalBody')
+
+            $.ajax({
+                url: "/Admin/Course/LoadMastersForCourse",
+                type: "get",
+                data: form.serialize(),
+                success: function (response) {
+
+                    resultElement.html(response);
+                }
+            });
+        }
+
+        CreateNewCourseForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            if (priceInput.value != "") {
+                priceInput.value = priceInput.value.replaceAll(",", "");
+            }
+
+            CreateNewCourseForm.submit();
+        });
+    </script>
+}

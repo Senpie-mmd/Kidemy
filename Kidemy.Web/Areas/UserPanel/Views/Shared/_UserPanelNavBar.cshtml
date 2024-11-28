@@ -1,0 +1,31 @@
+﻿
+<nav class="navbar navbar-expand-xl">
+	<div class="container">
+		<!-- Logo START -->
+		@await Component.InvokeAsync("SiteLogo")
+		<!-- Logo END -->
+		<!-- Responsive navbar toggler -->
+		<button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-animation">
+				<span></span>
+				<span></span>
+				<span></span>
+			</span>
+		</button>
+
+		<!-- Main navbar START -->
+		<div class="navbar-collapse w-100 collapse" id="navbarCollapse">
+
+            <!-- Nav Main menu START -->
+            <partial name="_MainMenu" />
+            <!-- Nav Main menu END -->
+            <!-- Nav Search START -->
+            <partial name="_SearchBox" />
+            <!-- Nav Search END -->
+		</div>
+		<!-- Main navbar END -->
+        <!-- Profile START -->
+		@await Component.InvokeAsync("NavProfile")
+        <!-- Profile START -->
+	</div>
+</nav>

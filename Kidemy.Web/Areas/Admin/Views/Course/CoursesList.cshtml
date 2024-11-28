@@ -1,0 +1,154 @@
+﻿@using Kidemy.Application.ViewModels.Course.AdminSideCourse.Courses
+@using Kidemy.Application.ViewModels.Course;
+@using Kidemy.Domain.Enums.Course
+@using Kidemy.Domain.Statics
+@model AdminSideFilterCourseViewModel
+
+@{
+    ViewData["Title"] = Localizer["CoursesList"];
+}
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["Search"]</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="Course" method="get" asp-action="CoursesList" id="filter-search" class="d-flex">
+                    <input type="hidden" asp-for="Page" />
+                    <div class="row w-100">
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="Title" class="form-label"></label>
+                            <input type="search" asp-for="Title" class="form-control me-2" placeholder="@Localizer["Title"]" aria-label="Search">
+                        </div>
+
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="Level" class="form-label"></label>
+                            <select type="search" asp-for="Level" class="form-control me-2" asp-items="@Html.GetEnumSelectList<CourseLevel>()" aria-label="Search">
+                                <option>@Localizer["Select"]</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="CourseStatus" class="form-label"></label>
+                            <select type="search" asp-for="CourseStatus" class="form-control me-2" asp-items="@Html.GetEnumSelectList<CourseStatus>()" aria-label="Search">
+                                <option>@Localizer["Select"]</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="PriceType" class="form-label"></label>
+                            <select type="search" asp-for="PriceType" class="form-control me-2" asp-items="@Html.GetEnumSelectList<CourseType>()" aria-label="Search">
+                                <option>@Localizer["Select"]</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3 col-7 col-md-7">
+                            <button class="btn btn-outline-primary w-25" type="submit">@Localizer["Search"]</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div id="FilterUsers" class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@ViewData["Title"]</h5>
+            </div>
+            @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                <div class="table-responsive mb-4 text-nowrap text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>@Localizer["Title"]</th>
+                                <th>@Localizer["CourseType"]</th>
+                                <th>@Localizer["CourseLevel"]</th>
+                                <th>@Localizer["CourseStatus"]</th>
+                                <th>@Localizer["Price"]</th>
+                                <th>@Localizer["Slug"]</th>
+                                <th>@Localizer["Operation"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in Model?.Entities ?? new List<AdminSideCourseViewModel>())
+                            {
+                                <tr>
+                                    <td>@Model.Counter</td>
+                                    <td>@item.Title</td>
+                                    <td>@item.CourseType.GetEnumName()</td>
+                                    <td>@item.Level.GetEnumName()</td>
+                                    <td>@item.Status.GetEnumName()</td>
+                                    <td>
+                                        @if (item.CourseType == CourseType.Free)
+                                        {
+                                            <span class="text-success">@Localizer["Free"]</span>
+                                        }
+                                        else if (item.CourseType == CourseType.VIP)
+                                        {
+                                            <span class="text-info">@Localizer["ForVIPMembers"]</span>
+                                        }
+                                        else
+                                        {
+                                            @item.Price?.ToString("#,0") @Localizer["Toman"]
+                                        }
+                                    </td>
+                                    <td>@item.Slug</td>
+                                    <td>
+                                        <a class="text-success" permission="CourseVideoList" asp-area="Admin" asp-controller="Course" asp-action="CourseVideosList" asp-route-CourseId="@item.Id" title="@Localizer["CourseVideos"]">
+                                            <i class='bx bxs-video'></i>
+                                        </a>
+                                        <a class="text-info mx-2" permission="ConfirmOrDenyComment" href="javascript:void(0)" onclick="showCustomModal('@Url.Action("LoadCourseComments","Course",new {area="Admin", CourseId = item.Id})','@Localizer["CommentsList"]')" title="@Localizer["CommentsList"]">
+                                            <i class='bx bx-message-square-dots'></i>
+                                        </a>
+                                        <a class="text-secondary" asp-area="Admin" asp-controller="CourseQuestion" asp-action="List" asp-route-courseId="@item.Id" id="@Localizer["CourseQuestions"]" title="@Localizer["CourseQuestions"]">
+                                            <i class="bx bxs-chat me-1"></i>
+                                        </a>
+                                        <a class="text-warning" permission="UpdateCourse" asp-area="Admin" asp-controller="Course" asp-action="UpdateCourse" asp-route-id="@item.Id" id="@Localizer["Edit"]" title="@Localizer["Edit"]">
+                                            <i class="bx bx-edit-alt me-1"></i>
+                                        </a>
+                                        <a class="text-danger" permission="DeleteCourse" href="javascript:void(0)" onclick="DeleteConfirm('@Url.Action("DeleteCourse", "Course", new { area = "Admin", id = @item.Id })')" id="deleteBtn-@item.Id" title="@Localizer["Delete"]">
+                                            <i class="bx bx-trash me-1"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+
+                                Model.Counter++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="CustomLargeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="CustomLargModalTitle"></h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body row" id="CustomLargeModalBody">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section FooterReferences {
+    <script asp-append-version="true" src="/admin/js/CoursesList.js"></script>
+}

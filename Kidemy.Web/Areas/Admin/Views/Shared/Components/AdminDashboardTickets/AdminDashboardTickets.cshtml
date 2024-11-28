@@ -1,0 +1,76 @@
+﻿@using Kidemy.Application.ViewModels.Ticket;
+@using Kidemy.Domain.Enums.Ticket;
+@model AdminSideFilterTicketViewModel
+
+@{
+    string GetStatusColor(TicketStatus status)
+    {
+        var statusColorMapping = new Dictionary<TicketStatus, string>();
+        statusColorMapping.Add(TicketStatus.Answered, "success");
+        statusColorMapping.Add(TicketStatus.PendingUser, "secondary");
+        statusColorMapping.Add(TicketStatus.PendingAdmin, "warning");
+
+        statusColorMapping.TryGetValue(status, out string result);
+        return result;
+    }
+}
+
+<div class="card h-100">
+    <div class="card-header d-inline-flex">
+        <h5>لیست تیکت های در انتظار پاسخ</h5>
+
+        <a asp-action="List" asp-controller="Ticket" asp-area="Admin" class="ms-auto">
+          همه
+        </a>
+
+    </div>
+    @if (Model != null && Model.Entities != null && Model.Entities.Any())
+    {
+        <div class="table-responsive mb-4 text-nowrap text-center">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>عنوان</th>
+                        <th>اولویت</th>
+                        <th>بخش مربوطه</th>
+                        <th>وضعیت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    @foreach (var item in Model.Entities)
+                    {
+                        <tr>
+                            <td>@Model.Counter</td>
+                            <td>
+                                <strong>@item.Title</strong>
+                            </td>
+                            <td>
+                                <strong>@item.Priority.GetEnumName()</strong>
+                            </td>
+                            <td>
+                                <strong>@item.Section.GetEnumName()</strong>
+                            </td>
+                            <td>
+                                <strong class="badge bg-label-@(GetStatusColor(item.Status))">@item.Status.GetEnumName()</strong>
+                            </td>
+                            <td>
+                                <a class="text-success" asp-area="Admin" asp-controller="Ticket" asp-action="Details" asp-route-id="@item.Id" id="editBtn-@item.Id" title="جزئیات">
+                                    <i class="bx bx-book me-1"></i>
+                                </a>                            
+                            </td>
+                        </tr>
+
+                        Model.Counter++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <partial name="_NotFoundPartial" />
+    }
+</div>
+

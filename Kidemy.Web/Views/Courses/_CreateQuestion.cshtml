@@ -1,0 +1,16 @@
+﻿@using Kidemy.Application.ViewModels.Course.ClientSideCourse.CourseQuestion
+@using Kidemy.Domain.Enums.Course
+@using Kidemy.Application.ViewModels.Course.ClientSideCourse.Comments
+@model ClientSideUpsertCourseQuestionViewModel
+
+<form class="w-100 d-flex flex-column" asp-area="" asp-controller="Courses" asp-action="CreateQuestion" onsubmit="submitForm('#createQuestionForm')" id="createQuestionForm" method="post">
+    
+    <input type="hidden" asp-for="CourseSlug" />
+
+    <textarea asp-for=Title class="one mb-2 form-control pe-4 bg-light"  rows="1" placeholder="@Localizer["QuestionTitle"] ..."></textarea>
+
+    <textarea asp-for=Description class="one  mb-2 form-control pe-4 bg-light" id="autoheighttextarea" rows="auto" placeholder="@Localizer["QuestionDescription"] ..."></textarea>
+
+    <button class="btn btn-primary mb-0 col-12 col-lg-2" type="submit">@Localizer["SubmitQuestion"]</button>
+
+</form>

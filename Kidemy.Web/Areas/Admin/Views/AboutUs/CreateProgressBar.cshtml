@@ -1,0 +1,59 @@
+﻿@using Kidemy.Application.ViewModels.AboutUs;
+@using Kidemy.Domain.Enums.Ticket;
+@model CreateAboutUsProgressBarViewModel
+@{
+    ViewData["Title"] = Localizer["ViewTitle.Admin.CreateAboutUsProgressBar"];
+}
+
+<div class="modal fade" id="LargeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="LargModalTitle"></h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body row" id="LargeModalBody">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card p-lg-5">
+            <form asp-action="CreateProgressBar" enctype="multipart/form-data">
+                <input type="hidden" name="SelectedImageName" id="SelectedImageName" />
+                <div class="card-body">
+                    <div class="row">
+                        @await Component.InvokeAsync("Localized", Model)
+
+                        <div class="col-12 col-lg-12">
+                            <div class="form-group mb-4">
+                                <label asp-for="Percent" class="form-label"></label>
+                                <input asp-for="Percent" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="text-danger" asp-validation-summary="All"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-start">
+                        <button type="submit" class="btn btn-success">@Localizer["Create"]</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section FooterReferences
+    {
+    <script asp-append-version="true" src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.min.js"></script>
+    <script asp-append-version="true" src="~/admin/js/UserModal.js"></script>
+}

@@ -1,0 +1,101 @@
+﻿@using Kidemy.Application.Services.Interfaces;
+@using Kidemy.Application.ViewModels.ContactUs;
+@using Kidemy.Application.ViewModels.SocialMedia;
+@using Kidemy.Domain.Statics;
+@model ClientSideCreateContactUsFormViewModel
+
+@inject ISocialMediaService socialMediaService
+@{
+	ViewData["Title"] = Localizer["ContactUs"];
+	var socialMedias = await socialMediaService.FilterSocialMediaAsync(new FilterSocialMediaViewModel());
+}
+	<!-- =======================
+	Page Banner START -->
+	@await Component.InvokeAsync("ContactUs")
+	<!-- =======================
+	Page Banner END -->
+	<!-- =======================
+	Image and contact form START -->
+	<section>
+		<div class="container">
+			<div class="row g-4 g-lg-0 align-items-center">
+
+				<div class="col-md-6 align-items-center text-center">
+					<!-- Image -->
+					<img src="/assets/images/element/contact.svg" class="h-400px" alt="">
+
+					<!-- Social media button -->
+					<div class="d-sm-flex align-items-center justify-content-center mt-2 mt-sm-4">
+						<h5 class="mb-0">ما را دنبال کنید:</h5>
+						<ul class="list-inline mb-0 ms-sm-2">
+							@if (socialMedias is not null && socialMedias.Value.Entities.Any())
+							{
+								foreach (var socialMedia in socialMedias.Value.Entities.OrderBy(s => s.Priority))
+								{
+									<li class="list-inline-item">
+										<a class="fs-5 me-1" href="@socialMedia.Link">
+											<img src="@SiteTools.SocialMediaImagePath@socialMedia.ImageName" class="socialMedia-img" title="@socialMedia.Title" />
+										</a>
+									</li>
+								}
+							}
+@*							<li class="list-inline-item"> <a class="fs-5 me-1 text-facebook" href="#"><i class="fab fa-fw fa-facebook-square"></i></a> </li>
+							<li class="list-inline-item"> <a class="fs-5 me-1 text-instagram" href="#"><i class="fab fa-fw fa-instagram"></i></a> </li>
+							<li class="list-inline-item"> <a class="fs-5 me-1 text-twitter" href="#"><i class="fab fa-fw fa-twitter"></i></a> </li>
+							<li class="list-inline-item"> <a class="fs-5 me-1 text-linkedin" href="#"><i class="fab fa-fw fa-linkedin-in"></i></a> </li>
+							<li class="list-inline-item"> <a class="fs-5 me-1 text-dribbble" href="#"><i class="fas fa-fw fa-basketball-ball"></i></a> </li>
+							<li class="list-inline-item"> <a class="fs-5 me-1 text-pinterest" href="#"><i class="fab fa-fw fa-pinterest"></i></a> </li>*@
+						</ul>
+					</div>
+				</div>
+
+				<!-- Contact form START -->
+				<div class="col-md-6">
+					<!-- Title -->
+					<h2 class="mt-4 mt-md-0 fs-4">با ما در ارتباط باشید</h2>
+					<p>برای درخواست نمایندگی لطفا با بخش فروش شرکت تماس بگیرید یا فرم را پر کنید سپس همکاران ما با شما تماس خواهند گرفت.</p>
+
+					<form asp-area="" asp-controller="ContactUsForm" asp-action="CreateContactUsForm" method="post">
+						<!-- Name -->
+						<div class="mb-4 bg-light-input">
+							<label for="yourName" class="form-label">نام و نام خانوادگی *</label>
+							<input type="text" asp-for="FullName" class="form-control form-control-lg">
+							<span class="text-danger" asp-validation-for="FullName"></span>
+						</div>
+						<!-- Email -->
+						<div class="mb-4 bg-light-input">
+							<label for="emailInput" class="form-label">ایمیل *</label>
+							<input type="email" asp-for="Email" class="form-control form-control-lg" >
+							<span class="text-danger" asp-validation-for="Email"></span>
+						</div>
+						<!-- Message -->
+						<div class="mb-4 bg-light-input">
+							<label for="textareaBox" class="form-label">متن درخواست *</label>
+							<textarea class="form-control" asp-for="Description" rows="4"></textarea>
+							<span class="text-danger" asp-validation-for="Description"></span>
+						</div>
+						<!-- Button -->
+						<div class="d-grid">
+							<button class="btn btn-lg btn-primary mb-0" type="submit">ارسال</button>
+						</div>
+					</form>
+				</div>
+				<!-- Contact form END -->
+			</div>
+		</div>
+	</section>
+	<!-- =======================
+	Image and contact form END -->
+	<!-- =======================
+	Map START -->
+	<section class="pt-0">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<iframe class="w-100 h-400px grayscale rounded" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1020.3264588553086!2d51.440573994490634!3d35.717991177779275!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f8e03daa1a610f9%3A0xa5d03ed00a4ba043!2sBarnamenevisan!5e0!3m2!1sfa!2sjp!4v1693916512150!5m2!1sfa!2sjp" width="600" height="500" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- =======================
+	Map END -->

@@ -1,0 +1,58 @@
+﻿@using Kidemy.Application.ViewModels.BankAccountCard
+@model FilterBankAccountCardViewModel
+<div class="card h-100">
+    <div class="card-header d-inline-flex">
+        <h5>@Localizer["PendingBankAccountCards"]</h5>
+
+        <a asp-action="bankaccountcardlist" asp-controller="bankaccountcard" asp-area="Admin"  class="ms-auto">
+            @Localizer["All"]
+        </a>
+
+    </div>
+    @if (Model != null && Model.Entities != null && Model.Entities.Any())
+    {
+        <div class="table-responsive mb-4 text-nowrap text-center">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>@Localizer["UserFullName"]</th>
+                        <th>@Localizer["OwnerName"]</th>
+                        <th>@Localizer["CardNumber"]</th>
+                        <th>@Localizer["ShabaNumber"]</th>
+                        <th>@Localizer["Operation"]</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    @foreach (var item in Model.Entities)
+                    {
+                        <tr>
+                            <td> @Model.Counter</td>
+                            <td>
+                                <a class="text-primary" asp-action="Profile" asp-controller="User" asp-area="Admin" asp-route-id="@item.UserId">
+                                    @(string.IsNullOrEmpty(item.UserName) ? "-" : item.UserName)
+                                </a>
+                            </td>
+                            <td>@item.OwnerName</td>
+                            <td>@(string.IsNullOrEmpty(item.CardNumber?.ToString()) ? "-" : item.CardNumber)</td>
+                            <td>@(string.IsNullOrEmpty(item.ShabaNumber?.ToString()) ? "-" : item.ShabaNumber)</td>
+                            <td>
+                                <a class="btn btn-success btn-sm" href="javascript:void(0)" onclick="confirmBankAccountCard('@Url.Action("ConfirmBankAccountCard", "BankAccountCard", new { area = "Admin", id = @item.Id, returnUrl = Context.Request.Path })')">
+                                    @Localizer["Accept"]
+                                </a>
+                                <a class="btn btn-danger btn-sm" href="javascript:void(0)" onclick="showRejectModal('@Url.Action("ShowRejectModal", "BankAccountCard", new { area = "Admin", id = @item.Id, returnUrl = Context.Request.Path})')">
+                                    @Localizer["DoReject"]
+                                </a>
+                            </td>
+                        </tr>
+                        Model.Counter++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <partial name="_NotFoundPartial" />
+    }
+</div>

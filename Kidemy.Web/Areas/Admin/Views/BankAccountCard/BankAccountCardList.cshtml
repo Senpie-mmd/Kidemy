@@ -1,0 +1,121 @@
+﻿@using Kidemy.Application.ViewModels.BankAccountCard
+@using Kidemy.Domain.Enums.BankAccount
+
+@model FilterBankAccountCardViewModel
+@{
+    ViewData["Title"] = Localizer["BankAccountCardList"];
+}
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["Filter"]</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="BankAccountCard" asp-action="BankAccountCardList" method="get" id="filter-search">
+                    <input type="hidden" asp-for="Page" />
+                    <div class="row">
+
+                        <div class="mb-3 col-12 col-md-6">
+                            <label class="form-label">@Localizer["Status"]</label>
+                            <select asp-for="Status" class="form-select me-2 " asp-items="Html.GetEnumSelectList<BankAccountCardStatus>()">
+                            </select>
+                        </div>
+
+                        <div class="mb-3 col-12 col-md-6">
+                        </div>
+
+                        <div class="mb-3 col-md-6 col-sm-12 align-items-end d-flex">
+                            <button class="btn btn-outline-primary w-50" type="submit">@Localizer["Search"]</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="FilterUsers" class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["BankAccountCardList"]</h5>
+            </div>
+            @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                <div class="table-responsive mb-4 text-nowrap text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>@Localizer["UserFullName"]</th>
+                                <th>@Localizer["OwnerName"]</th>
+                                <th>@Localizer["BankName"]</th>
+                                <th>@Localizer["AccountNumber"]</th>
+                                <th>@Localizer["CardNumber"]</th>
+                                <th>@Localizer["ShabaNumber"]</th>
+                                <th>@Localizer["Status"]</th>
+                                <th>@Localizer["Operation"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in Model.Entities)
+                            {
+                                <tr>
+                                    <td> @Model.Counter</td>
+                                    <td>
+                                        <a class="text-primary" asp-action="Profile" asp-controller="User" asp-area="Admin" asp-route-id="@item.UserId">
+                                            @(string.IsNullOrEmpty(item.UserName) ? "-" : item.UserName)
+                                        </a>
+                                    </td>
+                                    <td>@item.OwnerName</td>
+                                    <td>@(string.IsNullOrEmpty(item.BankName?.ToString()) ? "-" : item.BankName)</td>
+                                    <td>@(string.IsNullOrEmpty(item.AccountNumber?.ToString()) ? "-" : item.AccountNumber)</td>
+                                    <td>@(string.IsNullOrEmpty(item.CardNumber?.ToString()) ? "-" : item.CardNumber)</td>
+                                    <td>@(string.IsNullOrEmpty(item.ShabaNumber?.ToString()) ? "-" : item.ShabaNumber)</td>
+                                    <td>@item.Status.GetEnumName()</td>
+                                    <td>
+                                        @if (item.Status == BankAccountCardStatus.Pending)
+                                        {
+                                            <a class="btn btn-success btn-sm" href="javascript:void(0)" onclick="confirmBankAccountCard('@Url.Action("ConfirmBankAccountCard", "BankAccountCard", new { area = "Admin", id = @item.Id })')">
+                                                @Localizer["Accept"]
+                                            </a>
+                                            <a class="btn btn-danger btn-sm" href="javascript:void(0)" onclick="showRejectModal('@Url.Action("ShowRejectModal", "BankAccountCard", new { area = "Admin", id = @item.Id })')">
+                                                @Localizer["DoReject"]
+                                            </a>
+                                        }
+                                        @if (item.Status == BankAccountCardStatus.Rejected && !string.IsNullOrWhiteSpace(item.Description))
+                                        {
+                                            <div>
+                                                <a class="btn btn-primary" href="javascript:void(0)" onclick="showMessage(this)">@Localizer["Details"]</a>
+                                                <span class="d-none">@item.Description</span>
+                                            </div>
+                                        }
+                                    </td>
+                                </tr>
+                                Model.Counter++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+
+</div>
+
+@section FooterReferences{
+    <script>
+        async function showMessage(element) {
+            var description = element.nextElementSibling.textContent;
+            $("#MediumModalTitle").html(await jsLocalizer('Description'));
+            $("#MediumModalBody").html(description);
+            $("#MediumModal").modal('show');
+        }
+
+
+    </script>
+}

@@ -1,0 +1,35 @@
+﻿@using Kidemy.Application.ViewModels.Master;
+@model ClientSideMasterDetailsViewModel
+@{
+    ViewData["Title"] = Localizer["MastersList"];
+}
+
+
+<section class="pt-5 pb-0">
+    <div class="container">
+        <div class="row g-0 g-lg-5">
+
+            <div class="col-lg-4">
+                <div class="row">
+                    <div class="col-md-6 col-lg-12">
+                        <div class="card shadow p-2 mb-4 text-center">
+                            <div class="rounded-3">
+                                <img src="@SiteTools.UserImagePath@Model.AvatarName" class="card-img master-details-image" alt="course image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <h1 class="mb-0 fs-3">
+                    @Model.FirstName @Model.LastName
+                </h1>
+
+                <p class="mt-4 large-text">@Model.Bio</p>
+
+            </div>
+        </div>
+        @await Component.InvokeAsync("MasterCourses", new { masterId = Model.Id})
+    </div>
+</section>

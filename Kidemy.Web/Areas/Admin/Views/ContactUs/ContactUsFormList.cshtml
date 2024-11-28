@@ -1,0 +1,107 @@
+﻿@using Kidemy.Application.ViewModels.ContactUs;
+@using Kidemy.Domain.Enums.ContactUs;
+@model FilterContactUsFormViewModel
+
+@{
+    ViewData["Title"] = Localizer["ViewTitle.Admin.ContactUsFormList"];
+}
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>فیلتر</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="ContactUs" asp-action="ContactUsFormList" method="get" id="filter-search" class="d-flex">
+                    <input type="hidden" asp-for="Page" />
+                    <div class="row w-100">
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="State" class="form-label"></label>
+                            <select asp-for="State" class="form-select me-2 ">
+                                @foreach (var item in Enum.GetValues(typeof(ContactUsStateForFilter)).Cast<ContactUsStateForFilter>())
+                                {
+                                    <option value="@item">@item.GetEnumName()</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3 col-6 col-md-6">
+                        </div>
+                        <div class="mb-3 col-6 col-md-6">
+                            <button class="btn btn-outline-primary w-25" type="submit">@Localizer["Search"]</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="FilterUsers" class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["ContactUsFormList"]</h5>
+            </div>
+            @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                <div class="table-responsive mb-4 text-nowrap text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["FirstNameAndLastName"]</th>
+                                <th>@Localizer["Email"]</th>
+                                <th>@Localizer["Description"]</th>
+                                <th>@Localizer["Status"]</th>
+                                <th>@Localizer["Operation"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in Model.Entities)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@item.FullName</strong>
+                                    </td>
+
+
+
+                                    <td> @(string.IsNullOrWhiteSpace(item.Email) ? "-" : item.Email)</td>
+
+                                    <td class="td-break-text-500">
+                                        @item.Description
+                                    </td>
+                                    @switch (item.State)
+                                    {
+                                        case ContactUsFormState.NotAnswered:
+                                            <td>
+                                                <span class="badge bg-label-danger">@item.State.GetEnumName()</span>
+                                            </td>
+                                            break;
+
+                                        case ContactUsFormState.Answered:
+                                            <td>
+                                                <span class="badge bg-label-success"> @item.State.GetEnumName()</span>
+                                            </td>
+                                            break;
+                                    }
+                                    <td>
+                                        <a class=" @(item.State==ContactUsFormState.Answered?"text-info":"text-warning")" asp-area="Admin" asp-controller="ContactUs" asp-action="ContactUsFormReply" asp-route-id="@item.Id" id="editBtn-@item.Id" title="@(item.State==ContactUsFormState.Answered?Localizer["Details"]:Localizer["Reply"])">
+                                            <i class="@(item.State==ContactUsFormState.Answered?"fa fa-eye":"fa-solid fa-reply") fa-fw me-1"></i>
+                                        </a>
+                                        <a class="text-danger" href="javascript:void(0)" onclick="DeleteConfirm('@Url.Action("DeleteContactUsForm", "ContactUs", new { area = "Admin", id = @item.Id })')" title="@Localizer["Delete"]">
+                                            <i class="bx bx-trash  fa-fw me-1"></i>
+                                        </a>
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+
+</div>

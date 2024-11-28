@@ -1,0 +1,104 @@
+﻿@using Kidemy.Application.ViewModels.Site;
+@model AdminSideDashboardTopContentViewModel
+
+@if (!Model.IsNull())
+{
+    <div class="row mb-lg-4 align-items-center justify-content-center">
+        <div class="col-12 col-lg-3 col-md-4 col-sm-6 mb-3 ">
+            <a asp-area="Admin" asp-controller="User" asp-action="List">
+                <div class="card mb-lg-0 mb-4 dashboard-card">
+                    <div class="py-2 card-body text-center d-flex flex-column align-items-center justify-content-center">
+                        <h2>
+                            <i class="bx bx-user text-primary display-2"></i>
+                        </h2>
+                        <h4>@Localizer["Users"]</h4>
+                        <h5 class="mb-1">@Model.UserCount</h5>
+                    </div>
+                </div>
+            </a>
+        </div>
+         <div class="col-12 col-lg-3 col-md-4 col-sm-6 mb-3 ">
+            <a asp-area="Admin" asp-controller="User" asp-action="List">
+                <div class="card mb-lg-0 mb-4 dashboard-card">
+                    <div class="py-2 card-body text-center d-flex flex-column align-items-center justify-content-center">
+                        <h2>
+                            <i class="bx bx-user text-info display-2"></i>
+                        </h2>
+                        <h4>@Localizer["TodayUsers"]</h4>
+                        <h5 class="mb-1">@Model.TodayUsersCount</h5>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+         <div class="col-12 col-lg-3 col-md-4 col-sm-6 mb-3 ">
+            <a asp-area="Admin" asp-controller="User" asp-action="List">
+                <div class="card mb-lg-0 mb-4 dashboard-card">
+                    <div class="py-2 card-body text-center d-flex flex-column align-items-center justify-content-center">
+                        <h2>
+                            <i class="bx bx-mail-send text-primary display-2"></i>
+                        </h2>
+                        <h4>@Localizer["NewFinanceRequest"]</h4>
+                        <h5 class="mb-1">@Model.NewWithdrawRequestCount</h5>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+         <div class="col-12 col-lg-3 col-md-4 col-sm-6 mb-3 ">
+            <a asp-area="Admin" asp-controller="User" asp-action="List">
+                <div class="card mb-lg-0 mb-4 dashboard-card">
+                    <div class="py-2 card-body text-center d-flex flex-column align-items-center justify-content-center">
+                        <h2>
+                            <i class="tf-icons bx bxs-videos text-secondary display-2"></i>
+                        </h2>
+                        <h4>@Localizer["NewCourseRequest"]</h4>
+                        <h5 class="mb-1">@Model.NewCourseRequestCount</h5>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+         <div class="col-12 col-lg-3 col-md-4 col-sm-6 mb-3 ">
+            <a asp-area="Admin" asp-controller="User" asp-action="List">
+                <div class="card mb-lg-0 mb-4 dashboard-card">
+                    <div class="py-2 card-body text-center d-flex flex-column align-items-center justify-content-center">
+                        <h2>
+                            <i class="tf-icons bx bx-user-pin text-warning display-2"></i>
+                        </h2>
+                        <h4>@Localizer["InProgressMaterResume"]</h4>
+                        <h5 class="mb-1">@Model.InProgressMasterRequestCount</h5>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-lg-3 col-md-4 col-sm-6 mb-3 ">
+            <a asp-area="Admin" asp-controller="Ticket" asp-action="List">
+                <div class="card mb-lg-0 mb-4 dashboard-card">
+                    <div class="py-2 card-body text-center d-flex flex-column align-items-center justify-content-center">
+                        <h2>
+                            <i class="bx bx-message text-danger display-2"></i>
+                        </h2>
+                        <h4>@Localizer["Tickets"]</h4>
+                        <h5 class="mb-1">@Model.TicketCount</h5>
+                    </div>
+                </div>
+            </a>
+        </div>           
+        
+        <div class="col-12 col-lg-3 col-md-4 col-sm-6 mb-3 ">
+            <a asp-area="Admin" asp-controller="ContactUs" asp-action="ContactUsFormList">
+                <div class="card mb-lg-0 mb-4 dashboard-card">
+                    <div class="py-2 text-center d-flex flex-column align-items-center justify-content-center">
+                        <h2>
+                            <i class="bx bx-support text-success display-2"></i>
+                        </h2>
+                        <h4>@Localizer["ContactUs"]</h4>
+                        <h5 class="mb-1">@Model.ContactUsFormCount</h5>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+}

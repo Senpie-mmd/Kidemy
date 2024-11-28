@@ -1,0 +1,243 @@
+﻿@using Kidemy.Application.ViewModels.Consultation.Adviser;
+@model AdminSideUpsertAdviserViewModel
+@{
+    ViewData["Title"] = Localizer["EditAdviser"];
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card p-lg-5">
+            <form class="form-repeater" asp-action="Edit" asp-controller="Adviser" asp-area="Admin" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="UserId" />
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-lg-12">
+                            <div class="form-group mb-4">
+                                <label asp-for="UserId" class="form-label"></label>
+                                <div class="input-group">
+                                    @* <input type="hidden" asp-for="UserId" id="User-Input" class="form-control" />*@
+                                    @*<span class="input-group-text text-primary " onclick="ShowSearchUserModal('User','2')"><i class="bx bx-search-alt-2"></i></span>*@
+                                    <input type="text" class="form-control bg-secondary text-white" asp-for="AdviserFullName" id="User-Display" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-12 d-flex">
+                            <div class="form-group mb-4 col-md-6">
+                                <label asp-for="ConsultationPercentage" class="form-label"></label>
+                                <input asp-for="ConsultationPercentage" class="form-control" />
+                            </div>
+                            <div class="form-group mx-1 mb-4 col-md-6">
+                                <label asp-for="Priority" class="form-label"></label>
+                                <input asp-for="Priority" class="form-control" />
+                            </div>
+                        </div>
+
+                        <!-- Form Repeater -->
+                        <div class="col-12 mb-4">
+                            <div class="divider">
+                                <div class="divider-text">@Localizer["ChooseDate"]</div>
+                            </div>
+                            <div class="repeater">
+                                <div data-repeater-list="AdviserAvailableDates">
+                                    @if (Model.AdviserAvailableDates is not null && Model.AdviserAvailableDates.Any())
+                                    {
+                                        @foreach (var item in Model.AdviserAvailableDates)
+                                        {
+                                            <div data-repeater-item>
+                                                <div class="row">
+                                                    <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
+                                                        <label class="form-label" for="form-repeater-1-1">@Localizer["DayOfWeek"]</label>
+                                                        <select id="form-repeater-1-1" class="form-select" name="DayOfWeek">
+                                                            <option value="@item.DayOfWeek">@Localizer[item.DayOfWeek.ToString()]</option>
+                                                            @foreach (var day in ((DayOfWeek[])Enum.GetValues(typeof(DayOfWeek))))
+                                                            {
+                                                                if (day != item.DayOfWeek)
+                                                                {
+                                                                    <option value="@day">@Localizer[day.ToString()]</option>
+                                                                }
+
+                                                            }
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
+                                                        <label class="form-label" for="form-repeater-1-2">@Localizer["StartTime"]</label>
+                                                        <input value="@item.StartTime" name="@(nameof(item.StartTime))" type="time" id="form-repeater-1-2" class="form-control" />
+                                                    </div>
+                                                    <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
+                                                        <label class="form-label" for="form-repeater-1-3">@Localizer["EndTime"]</label>
+                                                        <input value="@item.EndTime" name="@(nameof(item.EndTime))" type="time" id="form-repeater-1-3" class="form-control" />
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
+                                                    <button class="btn btn-label-danger mt-4" data-repeater-delete>
+                                                        <i class="bx bx-x me-1"></i>
+                                                        <span class="align-middle">@Localizer["Delete"]</span>
+                                                    </button>
+                                                </div>
+                                                <hr />
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div data-repeater-item>
+                                            <div class="row">
+                                                <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
+                                                    <label class="form-label" for="form-repeater-1-1">@Localizer["DayOfWeek"]</label>
+                                                    <select id="form-repeater-1-1" class="form-select" name="DayOfWeek">
+                                                        @foreach (var day in ((DayOfWeek[])Enum.GetValues(typeof(DayOfWeek))))
+                                                        {
+                                                            <option value="@day">@Localizer[day.ToString()]</option>
+                                                        }
+                                                    </select>
+                                                </div>
+
+                                                <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
+                                                    <label class="form-label" for="form-repeater-1-2">@Localizer["StartTime"]</label>
+                                                    <input name="StartTime" type="time" id="form-repeater-1-2" class="form-control" />
+                                                </div>
+                                                <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
+                                                    <label class="form-label" for="form-repeater-1-3">@Localizer["EndTime"]</label>
+                                                    <input name="EndTime" type="time" id="form-repeater-1-3" class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
+                                                <button class="btn btn-label-danger mt-4" data-repeater-delete>
+                                                    <i class="bx bx-x me-1"></i>
+                                                    <span class="align-middle">@Localizer["Delete"]</span>
+                                                </button>
+                                            </div>
+                                            <hr />
+                                        </div>
+                                    }
+                                </div>
+                                <div class="mb-0">
+                                    <button type="button" class="btn btn-primary" data-repeater-create>
+                                        <i class="bx bx-plus me-1"></i>
+                                        <span class="align-middle">@Localizer["Add"]</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- /Form Repeater -->
+
+                        <!-- Form Repeater -->
+                        <div class="col-12 mb-4">
+                            <div class="divider">
+                                <div class="divider-text">@Localizer["ChooseType"]</div>
+                            </div>
+                            <div class="repeater">
+                                <div data-repeater-list="AdviserConsultationTypes">
+
+
+                                    @if (Model.AdviserConsultationTypes is not null && Model.AdviserConsultationTypes.Any())
+                                    {
+                                        @foreach (var item in Model.AdviserConsultationTypes)
+                                        {
+                                            <div data-repeater-item>
+                                                <div class="row">
+                                                    <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
+                                                        <label class="form-label" for="form-repeater-1-1">@Localizer["Time(Minute)"]</label>
+                                                        <input value="@item.Title" name="@(nameof(item.Title))" type="text" id="form-repeater-1-1" class="form-control" />
+                                                    </div>
+
+                                                    <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
+                                                        <label class="form-label" for="form-repeater-1-2">@Localizer["Price"] (@Localizer["Toman"])</label>
+                                                        <input value="@item.Price" name="@(nameof(item.Price))"  id="form-repeater-1-2" class="form-control price" />
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
+                                                    <button type="button" class="btn btn-label-danger mt-4" data-repeater-delete>
+                                                        <i class="bx bx-x me-1"></i>
+                                                        <span class="align-middle">@Localizer["Delete"]</span>
+                                                    </button>
+                                                </div>
+                                                <hr />
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div data-repeater-item>
+                                            <div class="row">
+                                                <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
+                                                    <label class="form-label" for="form-repeater-1-1">@Localizer["Time(Minute)"]</label>
+                                                    <input name="Title" type="text" id="form-repeater-1-1" class="form-control" />
+                                                </div>
+                                                <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
+                                                    <label class="form-label" for="form-repeater-1-2">@Localizer["Price"] (@Localizer["Toman"])</label>
+                                                    <input name="Price" id="form-repeater-1-2" class="form-control price" />
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
+                                                <button type="button" class="btn btn-label-danger mt-4" data-repeater-delete>
+                                                    <i class="bx bx-x me-1"></i>
+                                                    <span class="align-middle">@Localizer["Delete"]</span>
+                                                </button>
+                                            </div>
+                                            <hr />
+                                        </div>
+                                    }
+
+                                </div>
+
+
+
+                                <div class="mb-0">
+                                    <button type="button" class="btn btn-primary" data-repeater-create>
+                                        <i class="bx bx-plus me-1"></i>
+                                        <span class="align-middle">@Localizer["Add"]</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- /Form Repeater -->
+
+                        <div class="col-12 col-lg-12">
+
+
+                            <div class="col-12 mt-4">
+                                <div class="row">
+                                    <div class="col-12 col-lg-3">
+                                        <div class="mb-4 form-check padding-top-2-percent">
+                                            <input class="form-check-input" id="role-1" asp-for="IsPublished">
+                                            <label class="form-check-label" asp-for="IsPublished" for="role-1"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 d-flex justify-content-start">
+                                    <button type="submit" class="btn btn-success">@Localizer["Submit"]</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="text-danger" asp-validation-summary="All"></div>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+</div>
+@section FooterReferences
+    {
+    @*<script asp-append-version="true" src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.min.js"></script>*@
+    @*<script asp-append-version="true" src="~/admin/js/UserModal.js"></script>*@
+    <script src="/admin/assets/vendor/libs/jquery-repeater/jquery-repeater.js"></script>
+    <script src="/admin/assets/js/forms-extras.js"> </script>
+    <script>
+        window.addEventListener("load", () => {
+            document.querySelectorAll("[data-repeater-create]").forEach(btn => btn.addEventListener("click", () => {
+                initCommon();
+            }))
+        })
+    </script>
+}

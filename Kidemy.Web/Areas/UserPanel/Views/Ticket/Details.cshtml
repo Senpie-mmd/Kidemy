@@ -1,0 +1,90 @@
+﻿@using Kidemy.Application.Convertors;
+@using Kidemy.Application.ViewModels.Ticket;
+@using Kidemy.Domain.Enums.Ticket;
+@model ClientSideTicketDetailsViewModel
+@{
+    ViewData["Title"] = Localizer["TicketDetails"];
+}
+
+@section HeaderReferences{
+    <link asp-append-version="true" href="/css/ticket.css" rel="stylesheet" />
+}
+
+<div class="card bg-transparent border rounded-3">
+    <!-- Card header -->
+    <div class="card-header bg-transparent border-bottom">
+        <h3 class="card-header-title mb-0 ff-vb fs-5">@Localizer["TicketDetails"]</h3>
+    </div>
+    <!-- Card body START -->
+    <div class="card-body">
+        <!-- Form -->
+        @if (Model.Status != TicketStatus.Closed)
+        {
+            <form asp-action="AddMessage" asp-area="UserPanel" asp-controller="Ticket" class="row g-4">
+                <input type="hidden" name="TicketId" value="@Model.Id" />
+                <div class="col-md-12">
+                    <label asp-for="Message" class="form-label"></label>
+                    <textarea asp-for="Message" class="form-control" rows="4"></textarea>
+                    <span class="text-danger" asp-validation-for="Message"></span>
+                </div>
+
+                <div class="d-sm-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary mb-0 loading-support">@Localizer["SendMessage"]</button>
+                </div>
+            </form>
+        }
+
+        <ul class="messages">
+            @foreach (var message in Model.Messages)
+            {
+                if (message.SenderId == Model.OwnerUserId)
+                {
+                    <li>
+                        <img src="@SiteTools.UserImagePath@ViewData["UserAvatar"]" />
+
+                        <h6>
+                            @Localizer["You"]
+                        </h6>
+                        <span>
+                            <div class="break-space message"><p>@Html.Raw(message.Message)</p></div>
+                            <small>@message.CreateDateOnUtc.ToUserShortDateTime()</small>
+                        </span>
+                    </li>
+                }
+                else
+                {
+                    <li class="usermessage">
+                        <img src="@SiteTools.UserImagePath@SiteTools.DefaultImageName">
+
+                        <h6>
+                            <text>@Localizer["Support"]</text>
+                        </h6>
+                        <span>
+                            <div class="message">@Html.Raw(message.Message)</div>
+                            <small>@message.CreateDateOnUtc.ToUserShortDateTime()</small>
+                        </span>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+    <!-- Card body END -->
+</div>
+
+@section FooterReferences{
+    <script>
+        window.addEventListener("load", () => {
+            document.querySelectorAll(".messages .message").forEach(message => message.innerHTML = message.innerHTML.replaceAll("&nbsp;", " "))
+
+            var request = new XMLHttpRequest();
+
+
+            request.open("POST", "/SeenTicketMessages/" + @Model.Id, true);
+            request.send();
+
+            var chatBody = document.querySelector(".messages");
+            chatBody.scrollTop = chatBody.scrollHeight
+
+        });
+    </script>
+}

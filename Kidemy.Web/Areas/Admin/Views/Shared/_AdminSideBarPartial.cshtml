@@ -1,0 +1,561 @@
+﻿<!-- Menu -->
+
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+    <div class="app-brand demo">
+        <span class="app-brand-logo flex-shrink-1 demo"></span>
+        <a href="/" class="app-brand-text demo menu-text fw-bolder ms-2">@Localizer["Kidemy"]</a>
+        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
+            <i class="bx bx-chevron-left bx-sm align-middle"></i>
+        </a>
+    </div>
+
+    <div class="menu-inner-shadow"></div>
+
+    <ul class="menu-inner py-1">
+        <!-- Page -->
+        <li class="menu-item">
+            <a asp-controller="Home" asp-action="Index" asp-area="Admin" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <div data-i18n="@Localizer["Dashboard"]">@Localizer["Dashboard"]</div>
+            </a>
+        </li>
+        <li class="menu-item" permission="ManageUsers||UserList||CreateUser">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-user"></i>
+                @Localizer["ManageUsers"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="UserList">
+                    <a asp-area="Admin" asp-controller="User" asp-action="List" class="menu-link">
+                        @Localizer["UserList"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="CreateUser">
+                    <a asp-area="Admin" asp-controller="User" asp-action="Create" class="menu-link">
+                        @Localizer["CreateUser"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="menu-item" permission="ManageRoles||RolesList||CreateRole">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-user-circle"></i>
+                @Localizer["ManageRoles"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="RolesList">
+                    <a asp-area="Admin" asp-controller="Role" asp-action="List" class="menu-link">
+                        @Localizer["RolesList"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="CreateRole">
+                    <a asp-area="Admin" asp-controller="Role" asp-action="Create" class="menu-link">
+                        @Localizer["CreateRole"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManageMasters||MasterList">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-user-pin"></i>
+                @Localizer["ManageMasters"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="MasterList">
+                    <a asp-area="Admin" asp-controller="Master" asp-action="List" class="menu-link">
+                        @Localizer["MasterList"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="BankAccountCardList">
+                    <a asp-area="Admin" asp-controller="BankAccountCard" asp-action="BankAccountCardList" class="menu-link">
+                        @Localizer["BankAccountCardList"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="ListOfWithdrawRequests">
+                    <a asp-area="Admin" asp-controller="WithdrawRequest" asp-action="List" class="menu-link">
+                        @Localizer["WithdrawRequestsList"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManageMastersNotifications||SendMastersNotifications||MastersNotificationsList">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-mail-send"></i>
+                @Localizer["ManageMastersNotifications"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item">
+                    <a asp-area="Admin" asp-controller="MasterNotification" asp-action="SendMasterNotification" class="menu-link">
+                        @Localizer["SendMastersNotifications"]
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a asp-area="Admin" asp-controller="MasterNotification" asp-action="MasterNotificationList" class="menu-link">
+                        @Localizer["MastersNotificationsList"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManageOrders||OrdersList">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons fas fa-shopping-basket"></i>
+                @Localizer["ManageOrders"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="OrdersList">
+                    <a asp-area="Admin" asp-controller="Order" asp-action="List" class="menu-link">
+                        @Localizer["OrdersList"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManageMastersContracts||MasterContractsList||CreateMasterContract">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-user-pin"></i>
+                @Localizer["ManageMastersContracts"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="MasterContractsList">
+                    <a asp-area="Admin" asp-controller="MasterContract" asp-action="List" class="menu-link">
+                        @Localizer["MasterContractsList"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="CreateMasterContract">
+                    <a asp-area="Admin" asp-controller="MasterContract" asp-action="Create" class="menu-link">
+                        @Localizer["CreateMasterContract"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="PendingContractsList">
+                    <a asp-area="Admin" asp-controller="MasterContract" asp-action="PendingContractsList" class="menu-link">
+                        @Localizer["PendingContractsList"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+
+        <li class="menu-item" permission="ManageTicket||TicketList||CreateTicket">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-comment"></i>
+                @Localizer["ManageTickets"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="TicketList">
+                    <a asp-area="Admin" asp-controller="Ticket" asp-action="List" class="menu-link">
+                        @Localizer["TicketsList"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="CreateTicket">
+                    <a asp-area="Admin" asp-controller="Ticket" asp-action="Create" class="menu-link">
+                        @Localizer["CreateTicket"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManageCourseCategories||CourseCategories||CreateNewCourseCategory">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class='menu-icon bx bx-category'></i>
+                @Localizer["CourseCategories"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="CourseCategories">
+                    <a asp-area="Admin" asp-controller="CourseCategory" asp-action="CategoriesList" class="menu-link">
+                        @Localizer["CourseCategoriesList"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="CreateNewCourseCategory">
+                    <a asp-area="Admin" asp-controller="CourseCategory" asp-action="CreateNewCategory" class="menu-link">
+                        @Localizer["CreateCourseCategory"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManageCourses||CoursesList||CreateNewCourse">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class='menu-icon bx bxs-videos'></i>
+                @Localizer["Courses"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="CoursesList">
+                    <a asp-area="Admin" asp-controller="Course" asp-action="CoursesList" class="menu-link">
+                        @Localizer["CoursesList"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="CreateNewCourse">
+                    <a asp-area="Admin" asp-controller="Course" asp-action="CreateNewCourse" class="menu-link">
+                        @Localizer["CreateNewCourse"]
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a asp-area="Admin" asp-controller="CourseQuestion" asp-action="NotConfirmedCourseQuestionAndAnswersList" class="menu-link" permission="NotConfirmedCourseQuestionAndAnswersList">
+                        @Localizer["NotConfirmedQuestionsAndAnswers"]
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a asp-area="Admin" asp-controller="CourseQuestion" asp-action="CourseQuestionsDoesNotAnsweredByTeacherAfter48Hours" class="menu-link" permission="CourseQuestionsDoesNotAnsweredByTeacherAfter48HoursList">
+                        @Localizer["CourseQuestionsDoesNotAnsweredByTeacherAfter48Hours"]
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        @Localizer["Comments"]
+                    </a>
+                    <ul class="menu-sub">
+                        <li class="menu-item">
+                            <a asp-area="Admin" asp-controller="CourseComment" asp-action="CommentsList" class="menu-link">
+                                @Localizer["AllCommentsList"]
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a asp-area="Admin" asp-controller="CourseComment" asp-action="CommentsReports" class="menu-link">
+                                @Localizer["ReportedComments"]
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManageCourseRequests||CourseRequestsList">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bxs-videos"></i>
+                @Localizer["ManageCourseRequests"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="CourseRequestsList">
+                    <a asp-area="Admin" asp-controller="CourseRequest" asp-action="List" class="menu-link">
+                        @Localizer["CourseRequestsList"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManageDiscount||DiscountList||CreateDiscount">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bxs-discount"></i>
+                @Localizer["ManageDiscount"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="DiscountList">
+                    <a asp-area="Admin" asp-controller="Discount" asp-action="List" class="menu-link">
+                        @Localizer["DiscountList"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="CreateDiscount">
+                    <a asp-area="Admin" asp-controller="Discount" asp-action="Create" class="menu-link">
+                        @Localizer["CreateDiscount"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManageVIPServices||VIPPlansList||CreateVIPPlan">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-id-card"></i>
+                @Localizer["ManageVIPServices"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="VIPPlansList">
+                    <a asp-action="List" asp-controller="VIPPlan" asp-area="Admin" class="menu-link">
+                        @Localizer["VIPPlansList"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="CreateVIPPlan">
+                    <a asp-action="Create" asp-controller="VIPPlan" asp-area="Admin" class="menu-link">
+                        @Localizer["CreateVIPPlan"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManageAdviser||AdviserList||AddAdviser">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon fa-solid fa-person-chalkboard"></i>
+                @Localizer["ManageAdviser"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="AdviserList">
+                    <a asp-action="List" asp-controller="Adviser" asp-area="Admin" class="menu-link">
+                        @Localizer["AdviserList"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="AddAdviser">
+                    <a asp-action="Create" asp-controller="Adviser" asp-area="Admin" class="menu-link">
+                        @Localizer["AddAdviser"]
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a asp-action="Filter" asp-controller="ConsultationRequest" asp-area="Admin" class="menu-link" permission="ConsultationRequestList">
+                        @Localizer["ConsultationRequestsList"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManageLinks||LinksList||CreateLink">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-link"></i>
+                @Localizer["ManageLinks"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="LinksList">
+                    <a asp-action="List" asp-controller="Link" asp-area="Admin" class="menu-link">
+                        @Localizer["LinksList"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="CreateLink">
+                    <a asp-action="Create" asp-controller="Link" asp-area="Admin" class="menu-link">
+                        @Localizer["CreateLink"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManagePages||PagesList||CreatePage">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-file"></i>
+                @Localizer["ManagePages"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="PagesList">
+                    <a asp-action="List" asp-controller="Page" asp-area="Admin" class="menu-link">
+                        @Localizer["PagesList"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="CreatePage">
+                    <a asp-action="Create" asp-controller="Page" asp-area="Admin" class="menu-link">
+                        @Localizer["CreatePage"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManageBlog||BlogsList||CreateBlog">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-book-open"></i>
+                @Localizer["ManageBlogs"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="PagesList">
+                    <a asp-action="List" asp-controller="Blog" asp-area="Admin" class="menu-link">
+                        @Localizer["BlogsList"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="CreatePage">
+                    <a asp-action="Create" asp-controller="Blog" asp-area="Admin" class="menu-link">
+                        @Localizer["CreateBlog"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManageSurvey||SurveyList||CreateSurvey">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-copy-alt"></i>
+                @Localizer["ManageSurvey"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="SurveyList">
+                    <a asp-area="Admin" asp-controller="Survey" asp-action="List" class="menu-link">
+                        @Localizer["SurveyList"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="CreateSurvey">
+                    <a asp-area="Admin" asp-controller="Survey" asp-action="Create" class="menu-link">
+                        @Localizer["CreateSurvey"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManageFAQs||FAQsList||CreateFAQ">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-question-mark"></i>
+                @Localizer["ManageFAQs"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="FAQsList">
+                    <a asp-area="Admin" asp-controller="FAQ" asp-action="List" class="menu-link">
+                        @Localizer["FAQsList"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="CreateFAQ">
+                    <a asp-area="Admin" asp-controller="FAQ" asp-action="Create" class="menu-link">
+                        @Localizer["CreateFAQ"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManageSliders||SlidersList||CreateSlider">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-slideshow"></i>
+                @Localizer["ManageSliders"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="SlidersList">
+                    <a asp-area="Admin" asp-controller="Slider" asp-action="List" class="menu-link">
+                        @Localizer["SlidersList"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="CreateSlider">
+                    <a asp-area="Admin" asp-controller="Slider" asp-action="Create" class="menu-link">
+                        @Localizer["CreateSlider"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManageBanners||BannersList||CreateBanner">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bxs-image"></i>
+                @Localizer["ManageBanners"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="BannersList">
+                    <a asp-area="Admin" asp-controller="Banner" asp-action="List" class="menu-link">
+                        @Localizer["BannersList"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="CreateBanner">
+                    <a asp-area="Admin" asp-controller="Banner" asp-action="Create" class="menu-link">
+                        @Localizer["CreateBanner"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManageContactUs||UpdateContactUs||ContactUsFormList">
+            <a href="javascript:void(0)" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-support"></i>
+                @Localizer["ManageContactUs"]
+                @*<partial name="_NewContactUsCount">*@
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="UpdateContactUs">
+                    <a asp-area="Admin" asp-controller="ContactUs" asp-action="UpdateContactUs" class="menu-link">
+                        @Localizer["ContactUs"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="ContactUsFormList">
+                    <a asp-area="Admin" asp-controller="ContactUs" asp-action="ContactUsFormList" class="menu-link">
+                        @Localizer["ContactUsFormList"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManageNewsletters||MembersList_Newsletter||DeleteMember_Newsletter">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-news"></i>
+                @Localizer["Newsletter"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="MembersList_Newsletter">
+                    <a asp-area="Admin" asp-controller="Newsletter" asp-action="MembersList" class="menu-link">
+                        @Localizer["NewsletterMemberList"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item" permission="ManageSocialMedia||SocialMediaList||CreateSocialMedia">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bxl-instagram"></i>
+                @Localizer["ManageSocialMedia"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="SocialMediaList">
+                    <a asp-area="Admin" asp-controller="SocialMedia" asp-action="List" class="menu-link">
+                        @Localizer["SocialMediaList"]
+                    </a>
+                </li>
+                <li class="menu-item" permission="CreateSocialMedia">
+                    <a asp-area="Admin" asp-controller="SocialMedia" asp-action="Create" class="menu-link">
+                        @Localizer["CreateSocialMedia"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="menu-item" permission="SmsProviderList">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-message-dots"></i>
+                @Localizer["ManageSmsProvider"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item">
+                    <a asp-action="List" asp-controller="SmsProvider" asp-area="Admin" class="menu-link">
+                        @Localizer["SmsProviderList"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="menu-item" permission="ManageSendNotification||SendNotification||NotificationList">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-mail-send"></i>
+                @Localizer["ManageSendNotification"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item">
+                    <a asp-area="Admin" asp-controller="Notification" asp-action="SendNotification" class="menu-link">
+                        @Localizer["SendNotification"]
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a asp-area="Admin" asp-controller="Notification" asp-action="NotificationList" class="menu-link">
+                        @Localizer["NotificationList"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="menu-item" permission="UpdateAboutUs||UpdateSiteSetting || DynamicTextsList">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-cog"></i>
+                @Localizer["Settings"]
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item" permission="UpdateSiteSetting">
+                    <a asp-action="Update" asp-controller="SiteSetting" asp-area="Admin" class="menu-link">
+                        @Localizer["SiteSetting"]
+                    </a>
+                </li>
+
+                <li class="menu-item">
+                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        @Localizer["AboutUs"]
+                    </a>
+                    <ul class="menu-sub">
+                        <li class="menu-item">
+                            <a asp-area="Admin" asp-controller="AboutUs" asp-action="Update" class="menu-link">
+                                @Localizer["UpdateAboutUs"]
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a asp-area="Admin" asp-controller="AboutUs" asp-action="ProgressBarList" class="menu-link">
+                                @Localizer["AboutUsProgressBarList"]
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a asp-area="Admin" asp-controller="AboutUs" asp-action="CreateProgressBar" class="menu-link">
+                                @Localizer["CreateAboutUsProgressBar"]
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="menu-item" permission="DynamicTextsList">
+                    <a asp-action="List" asp-controller="DynamicText" asp-area="Admin" class="menu-link">
+                        @Localizer["DynamicText"]
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</aside>
+<!-- / Menu -->

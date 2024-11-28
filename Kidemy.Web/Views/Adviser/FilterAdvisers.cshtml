@@ -1,0 +1,83 @@
+﻿@using Kidemy.Application.ViewModels.Consultation.Adviser
+@using System.Web
+@model ClientSideFilterAdvisersViewModel
+@{
+    ViewData["Title"] = Localizer["AdviserList"];
+}
+
+<form asp-area="" asp-controller="Adviser" asp-action="FilterAdvisers" id="filter-search" class="d-flex" data-method="get">
+    <input type="hidden" asp-for="Page" />
+</form>
+<section class="pb-0 py-lg-5">
+    <div class="container">
+        <div class="row">
+            <!-- Main content START -->
+            <div class="col-lg-10">
+                <div class="card shadow rounded-2 p-0">
+                    <!-- Tab contents START -->
+                    <div class="card-body p-4">
+                        <div class="tab-content pt-2" id="course-pills-tabContent">
+                            <!-- Content START -->
+                            <div id="partialViewContainer" class="row">
+                                <div class="col-12">
+                                    <h5 class="mb-4">@Localizer["AdviserList"]</h5>
+                                    @foreach (var item in Model?.Entities ?? new List<ClientSideAdviserViewModel>())
+                                    {
+                                        <div class="border p-2 p-sm-4 rounded-3 mb-4">
+                                            <ul class="list-unstyled mb-0">
+                                                <li class="comment-item">
+                                                    <div class="d-flex justify-content-between mb-3">
+                                                        <!-- Avatar -->
+                                                        <div class="d-flex">
+
+                                                            <div class="avatar avatar-xl flex-shrink-0">
+                                                                <a href="#"><img class="avatar-img rounded-circle" src=@($"{SiteTools.UserImagePath}{item.AdviserProfile}") alt="adviserProfile"></a>
+                                                            </div>
+                                                            <div class="ms-2">
+                                                                <!-- Comment by -->
+                                                                <div class=" p-3 rounded">
+                                                                    <div class="d-flex justify-content-center">
+                                                                        <div class="me-2">
+                                                                            <h6 class="mb-1 "> <a href="#!">  @item.AdviserUserName</a></h6>
+                                                                            <p class="mb-0 fw-normal text-justify large-text"> @item.AdviserBio</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        @if(User.Identity.IsAuthenticated)
+                                                        {
+
+                                                            <div class="desktop-element my-4">
+                                                                <a asp-area="UserPanel" asp-controller="Adviser" asp-action="SetAppointment" asp-route-adviserId="@item.Id" class="btn btn-primary btn-sm">@Localizer["ConsultationRequest"] </a>
+                                                            </div>
+
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="desktop-element my-4">
+                                                                <a href="/login?returnUrl=@HttpUtility.UrlEncode(Context.Request.Path)" class="btn btn-primary btn-sm">@Localizer["ConsultationRequest"] </a>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                    <div class="mobile-element">
+                                                        <a class="btn btn-primary btn-sm">@Localizer["ConsultationRequest"]</a>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="col-12">
+                                    <partial name="_Paging" model="Model.GetCurrentPaging()" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Content END -->
+                    </div>
+                </div>
+                <!-- Tab contents END -->
+            </div>
+        </div>
+    </div><!-- Row END -->
+</section>

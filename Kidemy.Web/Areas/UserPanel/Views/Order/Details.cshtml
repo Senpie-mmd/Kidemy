@@ -1,0 +1,85 @@
+﻿@using Kidemy.Application.ViewModels.Order;
+@model ClientSideOrderDetailsViewModel
+@{
+    ViewData["Title"] = Localizer["OrderDetails"];
+}
+
+<div class="col-xl-12 col-lg-12 col-md-12">
+    <div class="card bg-transparent border rounded-3">
+        <div class="card-header bg-transparent border-bottom">
+            <h3 class="mb-0 fs-5 ff-vb">@Localizer["OrderDetails"]</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-6 mt-4">
+                    <h5>@Localizer["PaidAmount"]: </h5>
+                    <span>@((Model.DiscountedTotalAmount ?? Model.TotalAmount).ToString("#,0")) @Localizer["Toman"]</span>
+                </div>
+
+                @if (Model.DiscountedTotalAmount > 0)
+                {
+                    <div class="col-6 mt-4">
+                        <h5>@Localizer["DiscountAmount"]: </h5>
+                        <span>@((Model.TotalAmount - Model.DiscountedTotalAmount)?.ToString("#,0")) @Localizer["Toman"]</span>
+                    </div>
+                }
+
+                <div class="col-6 mt-4">
+                    <h5>@Localizer["Status"]: </h5>
+                    @if (Model.IsPaid)
+                    {
+                        <span class="badge bg-success bg-opacity-10 text-success">@Localizer["IsPaid"]</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger bg-opacity-10 text-danger">@Localizer["Unsuccessful"]</span>
+                    }
+                </div>
+
+                <div class="col-6 mt-4">
+                    <h5>@Localizer["CreateDate"]: </h5>
+                    <span dir="ltr">@Model.CreatedDateOnUtc.ToUserShortDateTime()</span>
+                </div>
+            </div>
+            <div class="card-header ps-0 pb-0 mt-4 bg-transparent border-bottom">
+                <h3 class="mb-0 fs-5 ff-vb">@Localizer["OrderItems"]</h3>
+            </div>
+            <div class="card-body row pb-0">
+
+                @foreach (var item in Model.Items)
+                {
+                    <div class="col-12 mt-5 border-start border-end">
+                        <div class="row">
+                            <div class="col-3">
+                                <img class="img-fluid w-100 h-100" src="@SiteTools.CourseImagesPath@item.Course.ImageFileName" />
+                            </div>
+                            <div class="col-9">
+                                <div class="row">
+                                    <div class="col-6 mt-4 d-flex">
+                                        <h5 class="me-2">@Localizer["CourseTitle"]: </h5>
+                                        <a title="@item.Course.Title" class="course-title-list-item" asp-action="CourseDetails" asp-controller="Courses" asp-route-slug="@item.Course.Slug">@item.Course.Title</a>
+                                    </div>
+                                    <div class="col-6 mt-4 d-flex">
+                                        <h5 class="me-2">@Localizer["Price"]: </h5>
+                                        <span>@item.UnitPrice.ToString("#,0") @Localizer["Toman"]</span>
+                                    </div>
+                                    @if(item.DiscountedUnitPrice > 0)
+                                    {
+                                        <div class="col-6 mt-4 d-flex">
+                                            <h5 class="me-2">@Localizer["DiscountAmount"]: </h5>
+                                            <span class="text-success">@((item.UnitPrice - item.DiscountedUnitPrice)?.ToString("#,0")) @Localizer["Toman"]</span>
+                                        </div>
+                                    }
+                                    <div class="col-6 mt-4 d-flex">
+                                        <h5 class="me-2">@Localizer["PaidAmount"]: </h5>
+                                        <span>@((item.DiscountedUnitPrice ?? item.UnitPrice).ToString("#,0")) @Localizer["Toman"]</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

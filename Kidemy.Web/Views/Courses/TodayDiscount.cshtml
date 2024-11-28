@@ -1,0 +1,122 @@
+﻿@using Kidemy.Application.ViewModels.Course.ClientSideCourse.Courses
+@using Kidemy.Application.ViewModels.Course;
+@using Kidemy.Domain.Enums.Course;
+@using Kidemy.Domain.Statics
+@using Microsoft.Extensions.Localization
+@model ClientSideFilterCoursesViewModel
+@inject IStringLocalizer stringLocalizer;
+
+@{
+    ViewData["Title"] = Localizer["DiscountedCourses"];
+}
+
+<form asp-area="" asp-controller="Courses" asp-action="TodayDiscount" method="get" id="filter-search">
+    <input type="hidden" asp-for="Page" />
+
+    <section class="bg-blue align-items-center d-flex" style="background:url(assets/images/pattern/04.png) no-repeat center center; background-size:cover;">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="text-white fs-2">@ViewData["Title"]</h1>
+                    <div class="d-flex justify-content-center">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb breadcrumb-dark breadcrumb-dots mb-0">
+                                <li class="breadcrumb-item"><a href="/">@Localizer["MainPage"]</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row mb-4 align-items-center">
+                        <!-- Search bar -->
+                        <div class="col-xl-6">
+                            <div class="border rounded p-2">
+                                <div class="input-group input-borderless">
+                                    <input class="form-control me-1" type="search" placeholder="@Localizer["SearchCourse"]" asp-for="Title">
+                                    <button type="submit" class="btn btn-primary mb-0 rounded z-index-1"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Select option -->
+                        <div class="col-xl-3 mt-3 mt-xl-0">
+                            <div class="border rounded p-2 input-borderless">
+                                <select class="form-select form-select-sm js-choice border-0" aria-label=".form-select-sm">
+                                    <option value="">پربازدیدترین</option>
+                                    <option>بروزترین</option>
+                                    <option>پرفروش ترین</option>
+                                    <option>جدیدترین</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="col-12 col-xl-3 d-flex justify-content-between align-items-center mt-3 mt-xl-0">
+                            <!-- Advanced filter responsive toggler START -->
+                            <button class="btn btn-primary mb-0 d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
+                                <i class="fas fa-sliders-h me-1"></i> @Localizer["ShowFilter"]
+                            </button>
+                            <!-- Advanced filter responsive toggler END -->
+                            @*   <p class="mb-0 text-end">
+                            @Model.GetShownEntitiesPagesTitle(stringLocalizer)
+                            </p> *@
+                        </div>
+
+                    </div>
+                    @if (Model.Entities is not null && Model.Entities.Any())
+                    {
+                        <div class="row g-4">
+
+                            @foreach (var item in Model?.Entities ?? new List<ClientSideCourseViewModel>())
+                            {
+                                <div class="col-sm-6 col-xl-3">
+
+                                    <partial name="_CoursePartial" model="item" />
+                                </div>
+                            }
+
+                        </div>
+                        <div class="col-12">
+                            <partial name="_DiscountPaging" model="Model.GetCurrentPaging()" />
+                        </div>
+                    }
+                    else
+                    {
+                        <partial name="_NotFoundPartial" />
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+
+</form>
+
+
+
+
+@section FooterReferences
+{
+    <script asp-append-version="true">
+        function UnCheckAllBtn() {
+            document.getElementById("flexCheckDefault--1").checked = false;
+        }
+
+        function unCheckedAllOtherBtn() {
+            let allBtn = document.getElementById("flexCheckDefault--1");
+            if (allBtn.checked == true) {
+                let items = document.querySelectorAll(".map-JS-DOM");
+                items.forEach(item => {
+                    item.checked = false;
+                });
+            }
+        }
+    </script>
+}

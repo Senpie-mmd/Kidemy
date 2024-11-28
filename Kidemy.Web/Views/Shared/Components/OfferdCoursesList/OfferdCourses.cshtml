@@ -1,0 +1,110 @@
+﻿@using Kidemy.Application.ViewModels.Course.ClientSideCourse.CourseDetail
+@using Kidemy.Domain.Enums.Course
+@model List<ClientSideMastersOtherCoursesViewModel>
+
+@if (Model?.Any() ?? false)
+{
+    <section class="pt-0">
+        <div class="container">
+            <div class="row mb-4">
+                <h2 class="mb-0 fs-4">@Localizer["OfferdCourses"]</h2>
+            </div>
+
+            <div class="row">
+                <div class="tiny-slider arrow-round arrow-blur arrow-hover">
+                    <div class="tiny-slider-inner" data-autoplay="false" data-arrow="true" data-edge="2" data-dots="false" data-items="3" data-items-lg="2" data-items-sm="1">
+                        @foreach (var item in Model ?? new List<ClientSideMastersOtherCoursesViewModel>())
+                        {
+                            <div class="pb-4">
+                                <div class="card p-2 border">
+                                    <div class="rounded-top overflow-hidden">
+                                        <a asp-area="" asp-controller="Courses" asp-action="CourseDetails" asp-route-slug="@item.slug" class="card-overlay-hover">
+                                            <img src="@SiteTools.CourseImagesPath@item.ImageFileName" class="card-img-top" alt="course image">
+                                        </a>
+                                        <!-- Hover element -->
+                                        @if (item.Type == CourseType.Mercenary)
+                                        {
+                                            <div class="card-img-overlay w-25 h-25 ms-auto">
+                                                <div class="card-element-hover d-flex justify-content-end">
+                                                    <a href="javascript:void(0)" data-courseid="@item.Id" class="icon-md bg-white rounded-circle text-center add-to-cart">
+                                                        <i class="fas fa-shopping-cart text-danger"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Badge and icon -->
+                                        <div class="d-flex justify-content-between">
+                                            <!-- Rating and info -->
+                                            <ul class="list-inline hstack gap-2 mb-0 height-42">
+                                                <!-- Info -->
+                                                @if (item.Students > 0)
+                                                {
+                                                    <li class="list-inline-item d-flex justify-content-center align-items-center">
+                                                        <div class="icon-md bg-orange bg-opacity-10 text-orange rounded-circle"><i class="fas fa-user-graduate"></i></div>
+                                                        <span class="h6 fw-light ms-2 mb-0">@item.Students</span>
+                                                    </li>
+                                                }
+                                                @if (item.Score > 0)
+                                                {
+                                                    <li class="list-inline-item d-flex justify-content-center align-items-center">
+                                                        <div class="icon-md bg-warning bg-opacity-15 text-warning rounded-circle"><i class="fas fa-star"></i></div>
+                                                        <span class="h6 fw-light ms-2 mb-0">@item.Score</span>
+                                                    </li>
+                                                }
+                                            </ul>
+                                            <!-- Avatar -->
+                                            <div class="avatar avatar-sm">
+                                                <img class="avatar-img rounded-circle" src="@SiteTools.UserImagePath@item.MasterAvatarFileName" alt="avatar">
+                                            </div>
+                                        </div>
+                                        <!-- Divider -->
+                                        <hr>
+                                        <!-- Title -->
+                                        <h5 class="card-title fw-normal">
+                                            <a asp-area="" asp-controller="Courses" asp-action="CourseDetails" asp-route-slug="@item.slug">@item.Title</a>
+                                        </h5>
+                                        <!-- Badge and Price -->
+                                        <div class="d-flex justify-content-between align-items-center height-28">
+                                            <a asp-area="" asp-controller="Courses" asp-action="CoursesList" asp-route-CategoryIds="@item.CategoryId" class="badge bg-info bg-opacity-10 text-info">
+                                                <i class="fas fa-circle small fw-bold me-2"></i>
+                                                @item.CategoryTitle
+                                            </a>
+                                            <!-- Price -->
+                                            @if (item.Type is CourseType.Mercenary)
+                                            {
+                                                if (item.DiscountedPrice is null)
+                                                {
+                                                    <h3 class="text-success mb-0 fs-5">@item.Price?.ToString("#,0") @Localizer["Toman"]</h3>
+                                                }
+                                                else
+                                                {
+                                                    <h5 class="text-success mb-0">
+                                                        <span class="text-decoration-line-through text-dark font-size-small">@item.Price?.ToString("#,0")</span>
+                                                        @item.DiscountedPrice?.ToString("#,0")
+                                                    </h5>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (item.Type == CourseType.Free)
+                                                {
+                                                    <h3 class="text-success mb-0 fs-5">@item.Type.GetEnumName()</h3>
+                                                }
+                                                else
+                                                {
+                                                    <h3 class="text-info mb-0 fs-5">@item.Type.GetEnumName()</h3>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}

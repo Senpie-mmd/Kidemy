@@ -1,0 +1,93 @@
+﻿@using Kidemy.Application.ViewModels.Order;
+@model AdminSideOrderDetailsViewModel
+
+<div class="row mb-3">
+    <div id="FilterUsers" class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["OrderId"]: @Model.Id</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="me-2">@Localizer["UserFullName"]:</label>
+                        <a asp-action="Profile" asp-controller="User" asp-area="Admin" asp-route-id="@Model.UserId">@Model.UserName</a>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="me-2">@Localizer["CreateDate"]:</label>
+                        <span dir="ltr">@Model.CreatedDateOnUtc.ToUserShortDateTime()</span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="me-2">@Localizer["Status"]:</label>
+                        <span class="badge @(!Model.IsPaid ? "bg-label-danger" : "bg-label-success")">
+                            @(Model.IsPaid ? Localizer["IsPaid"] : Localizer["Unsuccessful"])
+                        </span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="me-2">@Localizer["PaidAmount"]:</label>
+                        @((Model.DiscountedTotalAmount ?? Model.TotalAmount).ToString("#,0")) @Localizer["Toman"]
+                    </div>
+                    @if (Model.DiscountedTotalAmount > 0)
+                    {
+                        <div class="col-md-6 offset-6 mb-3">
+                            <label class="me-2">@Localizer["DiscountAmount"]:</label>
+                            @((Model.TotalAmount - Model.DiscountedTotalAmount)?.ToString("#,0")) @Localizer["Toman"]
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div id="FilterUsers" class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["OrderItems"]</h5>
+            </div>
+            @if (Model != null && Model.Items != null && Model.Items.Any())
+            {
+                var counter = 0;
+                <div class="card-body row justify-content-around">
+                    @foreach (var item in Model.Items)
+                    {
+                        <div class="card mb-3 col-12 col-lg-5">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <img class="img-thumbnail w-100 rounded" src="@(SiteTools.CourseImagesPath + item.Course.ImageFileName)" />
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <label class="me-2">@Localizer["CourseTitle"]:</label>
+                                        <span>@item.Course.Title</span>
+                                    </div>
+
+                                    <div class="col-12 mb-3">
+                                        <label class="me-2">@Localizer["Price"]:</label>
+                                        @item.UnitPrice.ToString("#,0") @Localizer["Toman"]
+                                    </div>
+                                    @if (item.DiscountedUnitPrice > 0)
+                                    {
+                                        <div class="col-12 mb-3">
+                                            <label class="me-2">@Localizer["DiscountAmount"]:</label>
+                                            @((item.UnitPrice - item.DiscountedUnitPrice)?.ToString("#,0")) @Localizer["Toman"]
+                                        </div>
+                                    }
+                                    <div class="col-12 mb-3">
+                                        <label class="me-2">@Localizer["PaidAmount"]:</label>
+                                        @((item.DiscountedUnitPrice ?? item.UnitPrice).ToString("#,0")) @Localizer["Toman"]
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        counter++;
+                    }
+                </div>
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+</div>

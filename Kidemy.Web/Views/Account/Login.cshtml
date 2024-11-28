@@ -1,0 +1,70 @@
+﻿@using Kidemy.Application.ViewModels.User;
+@using Kidemy.Application.ViewModels.User.ClientSide;
+@model LoginViewModel
+@{
+    Layout = "_AccountLayout";
+    ViewData["Title"] = Localizer["Login"];
+}
+
+<div class="row my-5">
+    <div class="col-sm-10 col-xl-8 m-auto">
+        <!-- Title -->
+        <span class="mb-0 fs-1">👋</span>
+        <div class="d-flex">
+            <h1 class="fs-4">@Localizer["LoginToAccount"]</h1>
+            <a class="d-flex text-primary align-item-center ms-auto" href="/"><span class="me-2">@Localizer["BackToHome"]</span> <i class="fa fa-home" aria-hidden="true"></i></a>
+        </div>
+
+        <p class="mb-4">@Localizer["Nice to see you! Please login with your account."]</p>
+
+        <!-- Form START -->
+        <form asp-action="Login" asp-controller="Account" method="post">
+            <!-- Email -->
+            <div class="mb-4">
+                <label class="form-label">@Localizer["Mobile"]</label>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i class="bi bi-phone-fill"></i></span>
+                    <input type="tel" class="form-control border-0 bg-light rounded-end ps-1" asp-for="Mobile" maxlength="11" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" class="form-control" placeholder="@Localizer["EnterYourMobile"]" autocomplete="off" autofocus>
+                </div>
+                <span class="text-danger" asp-validation-for="Mobile"></span>
+                <span></span>
+            </div>
+            <!-- Password -->
+            <div class="mb-4 form-static">
+                <label class="form-label">@Localizer["Password"]</label>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i class="fas fa-lock"></i></span>
+                    <input type="password" asp-for="Password" placeholder="@Localizer["Password"]" autocomplete="off" class="form-control border-0 bg-light rounded-end ps-1">
+                </div>
+                <span class="text-danger" asp-validation-for="Password"></span>
+
+                <div id="passwordHelpBlock" class="form-text">
+                    @Localizer["Your password must be at least 8 characters long"]
+                </div>
+            </div>
+            <!-- Check box -->
+            <div class="mb-4 d-flex justify-content-between mb-4">
+                <div class="form-check">
+                    <input asp-for="RememberMe" type="checkbox" class="form-check-input">
+                    <label asp-for="RememberMe" class="form-check-label">@Localizer["RememberMe"]</label>
+                </div>
+                <div class="text-primary-hover">
+                    <a asp-action="ForgotPassword" class="text-secondary">
+                        @Localizer["ForgotYourPassword"]
+                    </a>
+                </div>
+            </div>
+
+            <div class="align-items-center mt-0">
+                <div class="d-grid">
+                    <button class="btn btn-primary mb-0 loading-support" type="submit">@Localizer["Login"]</button>
+                </div>
+            </div>
+        </form>
+        <!-- Form END -->
+        <!-- Sign up link -->
+        <div class="mt-4 text-center">
+            <span>@Localizer["DontHaveAccount"] <a asp-action="Register">@Localizer["Register"]</a></span>
+        </div>
+    </div>
+</div>

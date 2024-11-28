@@ -1,0 +1,12 @@
+﻿@using Kidemy.Application.ViewModels.Link;
+@model List<ClientSideLinkViewModel> ;
+
+@if (Model is not null && Model.Any())
+{
+    @foreach (var item in Model)
+    {
+        <li class="nav-item">
+            <a class="nav-link" href="@item.Address"> @item.Title</a>
+        </li>
+    }
+}

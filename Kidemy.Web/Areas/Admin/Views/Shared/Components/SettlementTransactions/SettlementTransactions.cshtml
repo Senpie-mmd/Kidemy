@@ -1,0 +1,54 @@
+@using Kidemy.Application.Convertors
+@using Kidemy.Application.ViewModels.SettlementTransaction
+@model AdminSideFilterSettlementTransactionsViewModel
+
+<div class="col-md-12 accordion mb-3">
+    <div class="card accordion-item">
+        <div class="card-header accordion-header">
+            <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#SettlementTransaction" aria-expanded="false" aria-controls="SettlementTransaction">
+                <h5>@Localizer["SettlementTransactions"]</h5>
+            </button>
+        </div>
+        <div class="accordion-collapse collapse table-responsive mb-4 text-nowrap text-center" id="SettlementTransaction">
+            @if (Model?.Entities?.Any() ?? false)
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>@Localizer["Id"]</th>
+                            <th>@Localizer["CreateDate"]</th>
+                            <th>@Localizer["TransactionDate"]</th>
+                            <th>@Localizer["AccountNumber"]</th>
+                            <th>@Localizer["TrackingCode"]</th>
+                            <th>@Localizer["Price"]</th>
+                            <th>@Localizer["Operation"]</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        @foreach (var item in Model.Entities)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td dir="ltr">@item.CreateDateUTC.ToUserDate()</td>
+                                <td dir="ltr">@item.TransactionDate.ToUserLongDateTimeWithoutSecond()</td>
+                                <td>@item.AccountNumber</td>
+                                <td>@item.TrackingCode</td>
+                                <td>@item.Price.ToString("#,0") @Localizer["Toman"]</td> 
+                                <td>
+                                    <a class="text-warning" asp-area="Admin" asp-controller="SettlementTransaction" asp-action="EditSettlementTransaction" asp-route-id="@item.Id" data-ajax="true" data-method="get" data-ajax-begin="open_waiting()" data-ajax-success="close_waiting()"
+                                       data-ajax-mode="replace" data-ajax-update="SettlementTransactionBody" data-ajax-complete="openModal" title="@Localizer["Edit"]">
+                                        <i class="bx bx-edit-alt me-1"></i> 
+                                    </a> 
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+</div>

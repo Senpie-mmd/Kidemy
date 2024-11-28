@@ -1,0 +1,249 @@
+﻿
+/*trans*/
+
+.trans .colpad {
+    margin: 0;
+    padding: 0;
+}
+
+.transcard {
+    padding: 10px;
+    border: 1px solid var(--color-light);
+    margin: 10px 0;
+    border-radius: 8px;
+    display: block;
+    position: relative;
+}
+
+    .transcard .btn {
+        border: 1px solid var(--color-primary) !important;
+        margin: 15px;
+    }
+
+    .transcard > b {
+        display: block;
+        padding: 10px 10px 0;
+        font-size: 18px;
+    }
+
+    .transcard.red > p {
+        color: #e11d48;
+    }
+
+    .transcard.green > p {
+        color: #10b981;
+    }
+
+    .transcard > p {
+        display: block;
+        padding: 4px 10px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        margin: 0;
+        font-size: 13px;
+        background: var(--color-light);
+        border-radius: 6px 0 8px 0;
+    }
+
+    .transcard > b > small {
+        display: block;
+        padding: 0;
+        font-size: 18px;
+        margin: 6px 0;
+    }
+
+    .transcard ul {
+        list-style: none;
+        margin: 0;
+        padding: 0 10px;
+        position: relative;
+    }
+
+        .transcard ul li {
+            width: 100%;
+            margin: 0;
+            display: block;
+            font-weight: normal;
+            font-size: 13px;
+            position: relative;
+            text-align: left;
+            border-top: 1px solid var(--color-light3);
+            padding: 5px;
+            color: var(--color-black);
+        }
+
+            .transcard ul li > label {
+                float: right;
+                margin: 0;
+                font-weight: normal;
+                color: var(--color-gray);
+                padding: 0;
+            }
+
+.dashboard_wrap {
+    padding-inline: 10% !important;
+    padding-top: 5%;
+}
+
+
+.asset {
+    padding: 20px;
+    border-radius: 15px;
+    background: var(--color-light);
+    display: flex;
+    position: relative;
+    align-items: center;
+    flex-direction: row-reverse;
+}
+
+.walletside {
+    padding: 5px;
+}
+
+    .walletside .asset b {
+        margin: 0;
+        display: block;
+        font-size: 40px;
+        font-weight: bold;
+        text-align: left;
+        display: flex;
+        width: 100%;
+        position: relative;
+        direction: ltr;
+        line-height: 80px !important;
+    }
+
+    .walletside .asset p {
+        text-align: right;
+        color: var(--color-black);
+        margin: 0;
+        font-weight: bold;
+        max-width: 70px;
+    }
+
+.title2 {
+    padding: 5px 15px 5px 140px;
+    display: flex;
+    align-items: center;
+    min-height: 65px;
+    position: relative;
+    z-index: 9;
+}
+
+#maincontent {
+    padding: 0 25px;
+    width: 100%;
+}
+
+.wallet-ballance-title {
+    max-width: 100px !important;
+}
+
+.form-group {
+    padding: 0;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.price-unit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+    margin-bottom: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    text-align: center;
+    white-space: nowrap;
+    background-color: unset;
+    border: unset;
+    border-left: 0;
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    position: absolute;
+    top: 20%;
+    left: 0;
+    align-self: center;
+    align-items: center;
+}
+
+.pd0 {
+    padding: 0 !important;
+}
+
+.no-wrap {
+    white-space: nowrap;
+}
+
+.text-center {
+    text-align: center;
+}
+
+
+.td-break-text-200 {
+    max-width: 200px !important;
+    white-space: normal;
+}
+
+.td-break-text-300 {
+    max-width: 300px !important;
+    white-space: normal;
+}
+
+.td-break-text-400 {
+    max-width: 400px !important;
+    white-space: normal;
+}
+
+.td-break-text-500 {
+    max-width: 500px !important;
+    white-space: normal;
+}
+
+.td-break-text-600 {
+    max-width: 600px !important;
+    white-space: normal;
+}
+
+.fontpassword {
+    position: relative;
+}
+
+    .fontpassword i {
+        position: absolute;
+        left: 15px;
+        top: 40px;
+        color: gray;
+    }
+
+.multi-option {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    position: relative;
+}
+
+.multi-option a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.ltr{
+    direction: ltr;
+}
+
+.course-title-list-item {
+    width: 50%;
+    overflow: hidden;
+    text-wrap: nowrap;
+}
+
+html[dir=rtl] .choices, html[dir=rtl] select option, html[dir=rtl] .choices__input {
+    unicode-bidi: unset !important;
+}

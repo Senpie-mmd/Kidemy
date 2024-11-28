@@ -1,0 +1,42 @@
+﻿@using Kidemy.Application.ViewModels.Notification;
+@using Kidemy.Web.Areas.Admin.Models;
+@model AdminSideUpdateNotificationViewModel
+@{
+    ViewData["Title"] = Localizer["UpdateNotification"];
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card p-lg-5">
+            <form asp-controller="Notification" asp-action="UpdateNotification" method="post"
+                  asp-area="Admin" id="sendEmail-form" onsubmit="checkEditorInSendEmail(this)">
+                <input type="hidden" value="@Model.Id" asp-for="Id" />
+
+                <div class="card-body">
+                    <div class="row">
+
+                        <div class="col-12 col-lg-8">
+                            <div class="form-group mb-4">
+                                <label asp-for="Subject" class="form-label"></label>
+                                <input type="text" asp-for="Subject" class="form-control" id="subject" />
+                            </div>
+                            <div class="form-group mb-4">
+                                <label asp-for="Message" class="form-label"></label>
+                                <textarea asp-for="Message" rows="6" id="message" class="form-control"></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 d-flex justify-content-start">
+                                    <button type="submit" class="btn btn-success">@Localizer["Edit"]</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="text-danger" id="summary" asp-validation-summary="All"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

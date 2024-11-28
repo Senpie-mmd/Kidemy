@@ -1,0 +1,9 @@
+﻿@using Kidemy.Domain.Statics;
+@{
+    Layout = "_Layout";
+}
+
+<script>
+    const languageIsEn = @((Thread.CurrentThread.CurrentCulture.Name == "en-US").ToString().ToLower());
+    const courseImagesPath = `@SiteTools.CourseImagesPath`;
+</script>

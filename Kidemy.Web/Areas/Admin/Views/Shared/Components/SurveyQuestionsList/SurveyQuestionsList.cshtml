@@ -1,0 +1,60 @@
+﻿@using Kidemy.Application.ViewModels.Survey;
+@using Kidemy.Domain.Enums.Survey;
+@using Kidemy.Application.ViewModels.Survey.SurveyQuestionModels;
+@model FilterSurveyQuestionViewModel
+
+
+<div class="col-md-12" id="survey-question-list">
+    <div class="card p-lg-5">
+        <div class="card-header d-flex justify-content-between">
+            <h4>@Localizer["SurveyQuestionList"]</h4>
+            <a permission="CreateSurveyQuestion" class="btn btn-primary" href="javascript:void(0)" onclick="showSurveyQuestionModal('@Url.Action("CreateSurveyQuestion", "Survey", new { area = "Admin", surveyId = Model.SurveyId })','@Localizer["CreateSurveyQuestion"]')" alt="@Localizer["CreateQuestion"]"><i class="bx bx-plus"></i></a>
+        </div>
+        @if (Model != null && Model.Entities != null && Model.Entities.Any())
+        {
+            @foreach (var item in Model.Entities)
+            {
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between row">
+                        <div class="col-12 col-md-6 d-flex">
+                            <h5 class="me-3">@Localizer["TypeOfQuestion"]: </h5>
+                            <p>@item.Type.GetEnumName()</p>
+                        </div>
+                        <div class="col-12 col-md-6 d-flex">
+                            <h5 class="me-3">@Localizer["Priority"]: </h5>
+                            <p>@item.Priority</p>
+                        </div>
+                        <div class="col-12 d-flex mt-3 break-space">
+                            <h5 class="me-3">@Localizer["TitleOfQuestion"]: </h5>@item.Title
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(item.Options))
+                        {
+                            <div class="col-12 mt-3">
+                                <h5 class="me-3">@Localizer["Options"]: </h5>
+                                @foreach (var option in item.Options.Split(","))
+                                {
+                                    <p class="mx-3">- @option</p>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div>
+                        <div class="mb-3 me-3" style="text-align: left">
+                            <a permission="UpdateSurveyQuestion" class="btn btn-warning" href="javascript:void(0)" onclick="showSurveyQuestionModal('@Url.Action("UpdateSurveyQuestion", "Survey", new { area = "Admin", id = item.Id })','@Localizer["UpdateSurveyQuestion"]')"><i class="bx bx-edit"></i></a>
+                            <a permission="DeleteSurveyQuestion" class="btn btn-danger" href="javascript:void(0)" onclick="confirmDeleteAjax('@Url.Action("DeleteSurveyQuestionAjax", "Survey", new { area = "Admin" })', @item.Id)"><i class="bx bx-trash"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+            <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+        }
+        else
+        {
+            <partial name="_NotFoundPartial" />
+        }
+    </div>
+</div>
+
+<script asp-append-version="true" src="/admin/js/survey.js"></script>

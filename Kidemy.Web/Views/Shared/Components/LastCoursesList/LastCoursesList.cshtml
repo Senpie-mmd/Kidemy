@@ -1,0 +1,63 @@
+﻿@using Kidemy.Application.ViewModels.Course.ClientSideCourse.Courses
+@using Kidemy.Domain.Enums.Course
+@model List<ClientSideLastCoursesViewModel>
+
+
+@if (Model?.Any() ?? false)
+{
+    <div class="card card-body shadow p-4 mb-4">
+        <h4 class="mb-3 fs-5">@Localizer["LastCourses"]</h4>
+        @foreach (var item in Model ?? new List<ClientSideLastCoursesViewModel>())
+        {
+            <div class="row gx-3 mb-3">
+                <a asp-area="" asp-controller="Courses" asp-action="CourseDetails" asp-route-slug="@item.Slug" class="col-4">
+                    <img class="rounded" src="@SiteTools.CourseImagesPath@item.ImageFileName" alt="">
+                </a>
+                <div class="col-8">
+                    <h6 class="mb-0 fw-normal"><a asp-area="" asp-controller="Courses" asp-action="CourseDetails" asp-route-slug="@item.Slug">@item.Title</a></h6>
+                    <ul class="list-group list-group-borderless mt-1 d-flex justify-content-between">
+                        <li class="list-group-item px-0 d-flex justify-content-between">
+                            @if (item.Type == CourseType.Mercenary)
+                            {
+                                @if (item.AppliedDiscount is null)
+                                {
+                                    <span class="text-success">
+                                        @item.Price?.ToString("#,0") @Localizer["Toman"]
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-success">
+                                        @item.DiscountedPrice?.ToString("#,0") @Localizer["Toman"]
+                                    </span>
+                                }
+                            }
+                            else
+                            {
+                                if (item.Type == CourseType.Free)
+                                {
+                                    <span class="text-success">
+                                        @Localizer["Free"]
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-info">
+                                        @Localizer["ForVIPMembers"]
+                                    </span>
+                                }
+                            }
+                            @if (item.AvrageScore is not null && item.AvrageScore > 0)
+                            {
+                                <span class="h6 fw-light">
+                                    @item.AvrageScore?.ToString().Replace(",", ".")
+                                    <i class="fas fa-star text-warning ms-1"></i>
+                                </span>
+                            }
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        }
+    </div>
+}

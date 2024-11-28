@@ -1,0 +1,17 @@
+﻿@using Kidemy.Application.ViewModels.Page;
+@model List<ClientSidePageViewModel>
+
+@if (Model is not null && Model.Any())
+{
+    <div class="col-6 col-md-3">
+        <h5 class="mb-2 mb-md-4">@Localizer["OtherPages"]</h5>
+        <ul class="nav flex-column">
+            @foreach (var item in Model)
+            {
+                <li class="nav-item">
+                    <a class="nav-link" asp-action="Details" asp-controller="Page" asp-area="" asp-route-slug="@item.Slug"> @item.Title</a>
+                </li>
+            }
+        </ul>
+    </div>
+}

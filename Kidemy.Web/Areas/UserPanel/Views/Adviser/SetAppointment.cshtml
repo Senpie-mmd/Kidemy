@@ -1,0 +1,115 @@
+﻿@using Kidemy.Application.ViewModels.Consultation.Adviser
+@using Kidemy.Application.ViewModels.Consultation.AdviserAvailableDate
+@using Kidemy.Application.ViewModels.Consultation.AdviserConsultationType
+@using Kidemy.Application.ViewModels.Consultation.ConsultationRequest
+@model UpsertConsultationRequestViewModel
+@{
+    ViewData["Title"] = Localizer["SetAppointment"];
+
+    var adviser = ViewBag.Adviser as ClientSideAdviserViewModel;
+}
+
+
+
+<div class="pt-4 pt-sm-5">
+    <div class="container">
+        <div class="row g-4 g-md-5 justify-content-between">
+
+            <div class="col-lg-6 mb-5 w-100 mt-0">
+                <div class=" rounded-3 p-4 p-sm-5 position-relative">
+
+                    <!-- Title -->
+                    <h3 class="mb-3  fs-5 ff-vb">@Localizer["SetAppointmentTo"] @adviser.AdviserUserName </h3>
+
+                    <!-- Form START -->
+                    <form asp-controller="Adviser" asp-area="UserPanel" asp-action="SetAppointment" method="post" class="row g-3 position-relative">
+                        <!-- First name -->
+                        <input type="hidden" asp-for="AdviserId" value="@adviser.Id" />
+                        <input type="hidden" asp-for="RequestedByUserId" value="@User.GetUserId()" />
+
+                       
+                            <div class="col-md-6 ">
+                            <label asp-for="SelectedDateId" class="form-label  text-opacity-50">@Localizer["SelectionOfConsultationPeriod"] <span class="text-danger">*</span></label>
+                                <select asp-for=SelectedDateId id="inputState2" class="form-select ">
+                                @foreach (var date in adviser?.AdviserAvailableDates ?? new List<ClientSideAdviserAvailableDateViewModel>())
+                                {
+                                    <option value="@date.Id">
+                                        @Localizer["Day"] @if(date.DayOfWeek == DayOfWeek.Friday)
+                                        {
+                                            @Localizer["Friday"]
+                                        }
+                                        else if (date.DayOfWeek == DayOfWeek.Saturday)
+                                        {
+                                            @Localizer["Saturday"]
+                                        }
+                                        else if (date.DayOfWeek == DayOfWeek.Sunday)
+                                        {
+                                            @Localizer["Sunday"]
+                                        }
+                                         else if (date.DayOfWeek == DayOfWeek.Monday)
+                                        {
+                                            @Localizer["Monday"]
+                                        }
+                                         else if (date.DayOfWeek == DayOfWeek.Tuesday)
+                                        {
+                                            @Localizer["Tuesday"]
+                                        }
+                                        else if (date.DayOfWeek == DayOfWeek.Wednesday)
+                                        {
+                                            @Localizer["Wednesday"]
+                                        }
+                                        else if (date.DayOfWeek == DayOfWeek.Thursday)
+                                        {
+                                            @Localizer["Thursday"]
+                                        }
+                                        - @Localizer["From"]
+                                        <span dir="rtl">@date.StartTime.Value.ToString("hh\\:mm")</span>
+                                        @Localizer["To"]
+                                        <span dir="rtl">@date.EndTime.Value.ToString("hh\\:mm")</span>
+                                    </option>
+                                }
+                                </select>
+                            </div>
+
+                        
+                        <div class="col-md-6 ">
+                            <label asp-for="AdviserConsultationTypeId" class="form-label  text-opacity-50">@Localizer["ChoosingTheDurationAndAmountOfConsultation"]  <span class="text-danger">*</span></label>
+                            <select asp-for=AdviserConsultationTypeId id="inputState2" class="form-select ">
+                                @foreach (var type in adviser?.AdviserConsultationTypes ?? new List<ClientSideAdviserConsultationTypeViewModel>())
+                                {
+                                    <option value="@type.Id">  @type.Title  - @((decimal.Parse(type.Price.GetValueOrDefault().ToString())).ToString("#,0")) @Localizer["Toman"]</option>
+                                }
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-12 ">
+                            <label asp-for="Topic" class="form-label  text-opacity-50">@Localizer["Topic"] <span class="text-danger">*</span></label>
+                            <input asp-for="Topic" class="form-control" id="firstName">
+                            <span class="text-danger" asp-validation-for="Topic"></span>
+                        </div>
+
+                        <!-- Last name -->
+                        <div class="col-12 ">
+                            <label asp-for="Description" class="form-label  text-opacity-50">@Localizer["Description"] <span class="text-danger">*</span></label>
+                            <textarea asp-for=Description class="form-control" id="autoheighttextarea" rows="auto" placeholder="@Localizer["PleaseInsertShortDescriptionAboutYourTopic"] ..."></textarea>
+                            <span class="text-danger" asp-validation-for="Description"></span>
+                        </div>
+
+                        <!-- Button -->
+                        <div class="col-12 ">
+                            <div class="d-grid">
+                                <button class="btn btn-lg btn-primary">@Localizer["Request"]</button>
+                            </div>
+                            <p class="mb-0  text-opacity-50 small">@Localizer["RequiredFieldWith"] <span class="text-danger fw-bold">*</span> @Localizer["ItIsRequiredToCompleteTheCourseApplication"].</p>
+                        </div>
+                    </form>
+                    <!-- Form END -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section FooterReferences {
+    <script asp-append-version="true" src="/assets/js/auto-textarea.js"></script>
+}

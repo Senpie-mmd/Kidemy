@@ -1,0 +1,101 @@
+﻿@using Kidemy.Application.ViewModels.CourseRequest;
+@using Kidemy.Domain.Statics
+
+@model AdminSideCoureRequestDetailsViewModel;
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="row mt-4">
+                    <div class="col-12 col-lg-12">
+                        <div class="form-group mb-4">
+                            <span>@Localizer["Title"] : </span>
+                            @Model.Title
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12">
+                        <div class="form-group mb-4">
+                            <span>@Localizer["Votes"] : </span>
+                            @Model.VoteCount
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12">
+                        <div class="form-group mb-4">
+                            <span>@Localizer["CreateDate"] : </span>
+                            @Model.CreatedDateOnUTC.ToUserShortDateTime()
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12">
+                        <div class="form-group mb-4">
+                            <span>@Localizer["RequiredSkills"] : </span>
+                            @Model.SelectedTags
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12">
+                        <div class="form-group mb-4">
+                            <span>@Localizer["PreferedMasterName"] : </span>
+                            @Model.PreferedMasterName
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12">
+                        <div class="form-group mb-4">
+                            <span>@Localizer["Description"] : </span>
+                            @Model.Description
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["MasterVolunteersInfo"]</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.MasterVolunteersInfo != null && Model.MasterVolunteersInfo != null && Model.MasterVolunteersInfo.Any())
+                {
+                    @foreach (var item in Model.MasterVolunteersInfo)
+                    {
+                        <div class="row m-4">
+                            <div class="col-md-12 mb-3">
+                                <div class="row mt-4">
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-group mb-4">
+                                            <span>@Localizer["FullName"] : </span>
+                                         <a asp-action="Profile" asp-controller="User" asp-area="Admin" asp-route-id="@item.MasterId">
+                                                @item.MasterName
+                                         </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-group mb-4">
+                                            <span>@Localizer["Mobile"] : </span>
+                                            @item.Mobile
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-group mb-4">
+                                            <span>@Localizer["CreateDate"] : </span>
+                                            @item.CreatedDateOnUtc.ToUserShortDateTime()
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-12">
+                                        <div class="form-group  mb-4">
+                                            <span>@Localizer["Description"] : </span>
+                                            @item.MasterDescription
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                    }
+                }
+                else
+                {
+                    <partial name="_NotFoundPartial" />
+                }
+            </div>
+        </div>
+    </div>
+</div>

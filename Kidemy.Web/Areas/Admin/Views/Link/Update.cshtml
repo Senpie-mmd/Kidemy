@@ -1,0 +1,58 @@
+﻿@using Kidemy.Application.ViewModels.Link;
+@using Kidemy.Domain.Enums.Link;
+@using Kidemy.Domain.Statics;
+
+@model AdminSideUpsertLinkViewModel
+@{
+    ViewData["Title"] = Localizer["UpdateLink"];
+}
+
+<form asp-action="Update" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card p-lg-5">
+                <div class="card-body">
+                    <div class="row">
+                        @await Component.InvokeAsync("Localized", Model)
+                    </div>
+                    <div class="row">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label type="text" class="form-label" asp-for="Address"></label>
+                                <textarea asp-for="Address" class="form-control" type="text" placeholder="@Localizer["Address"]">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-12">
+                            <div class="form-group mb-4">
+                                <label asp-for="LinkType" class="form-label"></label>
+                                <select asp-for="LinkType" class="form-select me-2 ">
+                                    @foreach (var linkType in Enum.GetValues(typeof(LinkType)).Cast<LinkType>())
+                                    {
+                                        if (Model.LinkType == linkType)
+                                        {
+                                            <option value="@linkType" selected="">@linkType.GetEnumName()</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@linkType">@linkType.GetEnumName()</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-start">
+                                <button type="submit" class="btn btn-warning">@Localizer["Edit"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div asp-validation-summary="All" class="text-danger mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

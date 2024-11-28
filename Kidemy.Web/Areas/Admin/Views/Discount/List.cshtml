@@ -1,0 +1,152 @@
+@using Kidemy.Application.Convertors;
+@using Kidemy.Domain.Enums.Discount;
+@model Kidemy.Application.ViewModels.Discount.AdminSide.AdminSideFilterDiscountViewModel
+@{
+    ViewData["Title"] = Localizer["DiscountsList"];
+}
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["Filter"]</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="Discount" asp-action="List" method="get" id="filter-search" class="d-flex">
+                    <input type="hidden" asp-for="Page" />
+                    <div class="row w-100">
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="Title" class="form-label"></label>
+                            <input type="search" asp-for="Title" class="form-control me-2" placeholder="@Localizer["Title"]" aria-label="Search">
+                        </div>
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="Code" class="form-label"></label>
+                            <input type="search" asp-for="Code" class="form-control me-2" placeholder="@Localizer["DiscountCode"]" aria-label="Search">
+                        </div>
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="IsActive"></label>
+                            <select asp-for="IsActive" class="form-select ">
+                                <option value="">@Localizer["All"]</option>
+                                <option value="True">@Localizer["IsActive"]</option>
+                                <option value="False">@Localizer["Inactive"]</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="Type"></label>
+                            <select asp-for="Type" class="form-select" asp-items="@Html.GetEnumSelectList<DiscountType>()">
+                                <option value="">@Localizer["Select"]</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-6 col-md-6">
+                            <button class="btn btn-outline-primary w-25" type="submit">@Localizer["Search"]</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="FilterUsers" class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["DiscountsList"]</h5>
+            </div>
+            @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                <div class="table-responsive mb-4 text-nowrap text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["Title"]</th>
+                                <th>@Localizer["Code"]</th>
+                                <th>@Localizer["DiscountType"]</th>
+                                <th>@Localizer["DiscountValue"]</th>
+                                <th>@Localizer["Status"]</th>
+                                <th>@Localizer["StartDateTimeOnUtc"]</th>
+                                <th>@Localizer["EndDateTimeOnUtc"]</th>
+                                <th>@Localizer["Operation"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in Model.Entities)
+                            {
+                                <tr>
+                                    <td>@(string.IsNullOrWhiteSpace(item.Title) ? "-" : item.Title)</td>
+                                    <td>
+                                        @if (string.IsNullOrWhiteSpace(item.Code))
+                                        {
+                                            <span>@Localizer["AutoUse"]</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@item.Code</span>
+                                        }
+                                    </td>
+                                    <td>@item.Type.GetEnumName()</td>
+                                    <td>
+                                        @if (item.IsPercentage)
+                                        {
+                                            <span>%@item.Value.Value.ToString("#,0")</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@item.Value.Value.ToString("#,0") @Localizer["Toman"]</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.IsActive)
+                                        {
+                                            <span class="badge bg-success">@Localizer["IsActive"]</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">@Localizer["Inactive"]</span>
+
+                                        }
+                                    </td>
+                                    <td class="ltr">
+                                        @if (item.StartDateTimeOnUtc != null)
+                                        {
+                                            <span>@item.StartDateTimeOnUtc.Value.ToUserShortDateTime()</span>
+                                        }
+                                        else
+                                        {
+                                            <span>-</span>
+                                        }
+                                    </td>
+                                    <td class="ltr">
+                                        @if (item.EndDateTimeOnUtc != null)
+                                        {
+                                            <span>@item.EndDateTimeOnUtc.Value.ToUserShortDateTime()</span>
+                                        }
+                                        else
+                                        {
+                                            <span>-</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a class="text-info" asp-area="Admin" asp-controller="Discount" asp-action="DiscountLimitationList" asp-route-discountId="@item.Id" title="@Localizer["DiscountLimitationList"]">
+                                            <i class="bx bx-detail me-1"></i>
+                                        </a>
+                                        <a class="text-warning" asp-area="Admin" asp-controller="Discount" asp-action="Update" asp-route-id="@item.Id" id="editBtn-@item.Id" title="@Localizer["Edit"]">
+                                            <i class="bx bx-edit-alt me-1"></i>
+                                        </a>
+                                        <a class="text-danger" href="javascript:void(0)" onclick="DeleteConfirm('@Url.Action("Delete", "Discount", new { area = "Admin", id = @item.Id })')" id="deleteBtn-@item.Id" title="@Localizer["Delete"]">
+                                            <i class="bx bx-trash me-1"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+
+</div>

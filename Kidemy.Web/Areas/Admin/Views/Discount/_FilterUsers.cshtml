@@ -1,0 +1,141 @@
+@using Kidemy.Application.Services.Interfaces;
+@using Kidemy.Application.ViewModels.Role;
+@using Kidemy.Application.ViewModels.User;
+@using Kidemy.Application.ViewModels.User.AdminSide;
+@model FilterUsersViewModel
+
+<div id="SearchUserModalBox">
+    <div id="filternig">
+        <form asp-action="FilterUsers" asp-controller="Discount" asp-area="Admin" id="filter-for-discount-form" data-ajax="true" data-method="get" data-ajax-begin="open_waiting()" data-ajax-success="close_waiting();onSearchModalShowed()"
+              data-ajax-mode="replace" data-ajax-update="#SearchUserModalBox">
+
+            <input type="hidden" asp-for="Page" id="PartialPageId" />
+            <div class="row w-100">
+                <div class="mb-3 col-6 col-md-6">
+                    <label asp-for="FirstName" class="form-label"></label>
+                    <input type="search" asp-for="FirstName" class="form-control me-2" placeholder="@Localizer["FirstName"]" aria-label="Search">
+                </div>
+                <div class="mb-3 col-6 col-md-6">
+                    <label asp-for="LastName" class="form-label"></label>
+                    <input type="search" asp-for="LastName" class="form-control me-2" placeholder="@Localizer["LastName"]" aria-label="Search">
+                </div>
+                <div class="mb-3 col-6 col-md-6">
+                    <label asp-for="Mobile" class="form-label"></label>
+                    <input type="search" asp-for="Mobile" class="form-control me-2" placeholder="@Localizer["Mobile"]" aria-label="Search">
+                </div>
+                <div class="mb-3 col-6 col-md-6">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input type="search" asp-for="Email" class="form-control me-2" placeholder="@Localizer["Email"]" aria-label="Search">
+                </div>
+                <div class="mb-3 col-6 col-md-6">
+                    <label class="form-label">@Localizer["Status"]</label>
+                    <select asp-for="Status" class="form-select me-2 ">
+                        <option value="">@Localizer["Select"]</option>
+                        <option value="@UserStatus.IsBan">@Localizer["blocked"]</option>
+                        <option value="@UserStatus.Inactive">@Localizer["Inactive"]</option>
+                        <option value="@UserStatus.Active">@Localizer["Active"]</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-6 col-md-6">
+                        <button class="btn btn-outline-primary w-25" type="submit">@Localizer["Search"]</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+    <div id="FilterUsers">
+        <div class="card">
+            @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                <div class="card-header d-flex">
+                    <button class="btn btn-success btn-sm ms-auto" onclick="SelectUsers()">@Localizer["Save"]</button>
+                </div>
+
+                <div class="table-responsive mb-4 text-nowrap text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["FirstName"]</th>
+                                <th>@Localizer["LastName"]</th>
+                                <th>@Localizer["Email"]</th>
+                                <th>@Localizer["Mobile"]</th>
+                                <th>@Localizer["Operation"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in Model.Entities)
+                            {
+                                var userFullName = string.IsNullOrWhiteSpace(item.FirstName) && string.IsNullOrWhiteSpace(item.LastName)
+                                ? item.Mobile : $"{item.FirstName} {item.LastName}";
+
+                                <tr>
+                                    <td>@(string.IsNullOrEmpty(item.FirstName) ? "-" : item.FirstName)</td>
+                                    <td>@(string.IsNullOrEmpty(item.LastName) ? "-" : item.LastName)</td>
+                                    <td><strong>@(string.IsNullOrEmpty(item.Email) ? "-" : item.Email)</strong></td>
+                                    <td>@(string.IsNullOrEmpty(item.Mobile) ? "-" : item.Mobile)</td>
+                                    <td>
+                                        @{
+                                            var userName = "-";
+                                            if (!string.IsNullOrEmpty(item.FirstName) || !string.IsNullOrEmpty(item.LastName))
+                                            {
+                                                userName = $"{item.FirstName} {item.LastName}";
+                                            }
+                                            else
+                                            {
+                                                userName = item.Mobile;
+                                            }
+                                        }
+                                        <input type="checkbox" class="form-check-input" id="user-@item.Id" name="userId" value="@item.Id" username="@userName" />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <nav aria-label="Page navigation ">
+                    <ul class="pagination justify-content-center mt-3">
+                        @if (Model.StartPage < Model.Page)
+                        {
+                            <li class="page-item prev">
+                                <a class="page-link cursor-pointer" onclick="FillPartialPageId(@(Model.Page - 1))">
+                                    <i class="tf-icon bx bx-chevron-left"></i>
+                                </a>
+                            </li>
+                        }
+                        @for (int i = Model.StartPage; i <= Model.EndPage; i++)
+                        {
+                            if (Model.Page == i)
+                            {
+                                <li class="page-item active">
+                                    <a class="page-link cursor-pointer" data-page="0" href="javascript:void(0);">@i</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item">
+                                    <a class="page-link cursor-pointer" onclick="FillPartialPageId(@(i))">@i</a>
+                                </li>
+                            }
+                        }
+                        @if (Model.EndPage > Model.Page)
+                        {
+                            <li class="page-item next">
+                                <a class="page-link cursor-pointer" onclick="FillPartialPageId(@(Model.Page + 1))">
+                                    <i class="tf-icon bx bx-chevron-right"></i>
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
+                </nav>
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+</div>

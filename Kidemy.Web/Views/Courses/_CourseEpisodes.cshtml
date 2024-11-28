@@ -1,0 +1,93 @@
+﻿@using Kidemy.Domain.Enums.Course;
+@using Kidemy.Domain.Shared;
+@using Kidemy.Application.ViewModels.Course.ClientSideCourse.CourseDetail;
+@model ClientSideCourseWithVideosViewModel
+@{
+    var userCanPlayAllVideosOfCourse = ViewData["UserCanPlayAllVideosOfCourse"] as bool? ?? false;
+    var userHasCourse = ViewData["UserHasCourse"] as bool? ?? false;
+}
+@if (Model?.Videos?.Count() > 0)
+{
+    int counter = 0;
+    foreach (var videoGroup in Model.Videos.Where(video => video.IsPublished).GroupBy(video => video.VideoCategoryTitle).OrderBy(group => group.Min(video => video.Priority)))
+    {
+        counter++;
+
+        <div class="accordion accordion-icon accordion-bg-light" id="accordionExample--@counter">
+            <div class="accordion-item mb-3">
+                <h6 class="accordion-header font-base" id="heading--@counter">
+                    <button class="accordion-button fw-bold collapsed rounded d-sm-flex d-inline-block" type="button" data-bs-toggle="collapse" data-bs-target="#collapse--@counter" aria-expanded="false" aria-controls="collapse--@counter">
+                        @videoGroup.Key
+                        <span class="small ms-0 ms-sm-2">(@videoGroup.Count() @Localizer["Video"])</span>
+                    </button>
+                </h6>
+                <div id="collapse--@counter" class="accordion-collapse collapse" aria-labelledby="heading--@counter" data-bs-parent="#accordionExample--@counter">
+                    <div class="accordion-body mt-3">
+                        @foreach (var video in videoGroup.OrderBy(n => n.Priority))
+                        {
+                            var canPlay = userCanPlayAllVideosOfCourse || video.IsFree;
+                            var videoPath = canPlay ? $"/course/video/{Model.Id}/{video.Id}.mp4" : "javascript:void(0)";
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="position-relative d-flex align-items-center">
+                                    <a onclick="@(canPlay ? "javascript:void(0)" : $"showError('{Localizer["ToAccessShouldBuyTheCourse"].Value}')")" href="@videoPath" class="@(canPlay ? "glightbox3" : "") course-add-for-user-btn light btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static" >
+                                        <i class="fas fa-play me-0"></i>
+                                    </a>
+                                    <span class="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-100px w-sm-200px w-md-400px">
+                                        @video.Title
+                                        @if (Model.Type != CourseType.Free && video.IsFree)
+                                        {
+                                            <span class="text-truncate ms-2 mb-0 h6 fw-light text-success">@Localizer["Free"]</span>
+                                        }
+                                    </span>
+                                </div>
+                                <p class="mb-0">
+                                    @if(canPlay)
+                                    {
+                                        <a title="@Localizer["DownloadVideo"]" href="/course/download-video/@Model.Id/@video.Id" class="course-add-for-user-btn light btn btn-success-soft btn-round btn-sm mb-0">
+                                            <i class="fas fa-download me-0"></i>
+                                        </a>
+                                        @if (video.HasAttachmentFile)
+                                        {
+                                            <a title="@Localizer["DownloadAttachmentFile"]" href="/course/download-attachment/@Model.Id/@video.Id" class="course-add-for-user-btn light btn btn-success-soft btn-round btn-sm mb-0">
+                                                <i class="fas fa-file me-0"></i>
+                                            </a>
+                                        }
+                                    }
+                                    @video.VideoLength
+                                </p>
+                            </div>
+                            <hr>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <p class="alert alert-info">@Localizer[ErrorMessages.ItemNotFoundError]</p>
+}
+
+<script>
+    GLightbox({
+        selector: '.glightbox3',
+        preload: false
+    });
+</script>
+
+@if(Model.Type == CourseType.Free && userHasCourse == false)
+{
+    <script>
+        document.querySelectorAll(".course-add-for-user-btn").forEach(btn => {
+            btn.addEventListener("click", async (e) => {
+                var data = new FormData();
+                data.append("courseId", @Model.Id);
+                addAntiforgeryTokenToFormData(data);
+
+                await fetch("@Url.Action("AddFreeCourseToUserCourses", "Courses", new {Area = ""})", { method: "POST", body: data })
+            })
+        })
+    </script>
+}

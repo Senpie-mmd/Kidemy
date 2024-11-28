@@ -1,0 +1,76 @@
+@using Kidemy.Domain.Enums;
+@using Kidemy.Domain.Enums.Discount;
+@model Kidemy.Application.ViewModels.Discount.AdminSide.AdminSideUpsertDiscountViewModel
+@{
+    ViewData["Title"] = Localizer["UpdateDiscount"];
+}
+
+<form asp-area="Admin" asp-controller="Discount" asp-action="Update" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-12">
+            <div class="card p-lg-5">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <label asp-for="Title"></label>
+                            <input asp-for="Title" class="form-control" />
+                        </div>
+                        <div class="col-12 col-md-6 mb-4">
+                            <label asp-for="Code"></label>
+                            <input asp-for="Code" class="form-control" />
+                        </div>
+                        <div class="col-12 col-md-6 mb-4">
+                            <label asp-for="Value"></label>
+                            <input asp-for="Value" class="form-control price" />
+                        </div>
+                        <div class="col-12 col-md-6 mb-4">
+                            <div class="mb-4 form-check padding-top-2-percent">
+                                <input asp-for="AutoUse" type="checkbox" class="form-check-input" />
+                                <label class="form-check-label" asp-for="AutoUse"></label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 mb-4">
+                            <div class="mb-4 form-check padding-top-2-percent">
+                                <input type="checkbox" asp-for="IsPercentage" class="form-check-input" />
+                                <label class="form-check-label" asp-for="IsPercentage"></label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 mb-4">
+                            <label asp-for="Type"></label>
+                            <select asp-for="Type" class="form-select" asp-items="@Html.GetEnumSelectList<DiscountType>()">
+                                <option value="">@Localizer["Select"]</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 mb-4">
+                            <label asp-for="StartDateTime"></label>
+                            <input autocomplete="off" asp-for="StartDateTime" class="form-control persianDateTime" />
+                        </div>
+                        <div class="col-12 col-md-6 mb-4">
+                            <label asp-for="EndDateTime"></label>
+                            <input autocomplete="off" asp-for="EndDateTime" class="form-control persianDateTime" />
+                        </div>
+                    </div>
+                    <div class="col-12 mb-4">
+                        <div class="mb-4 form-check padding-top-2-percent">
+                            <input asp-for="IsActive" type="checkbox" class="form-check-input" />
+                            <label class="form-check-label" asp-for="IsActive"></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-start">
+                            <button type="submit" class="btn btn-success">@Localizer["Save"]</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="text-danger" asp-validation-summary="All"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section FooterReferences
+{
+    <script asp-append-version="true" src="/admin/js/discount.js"></script>
+}

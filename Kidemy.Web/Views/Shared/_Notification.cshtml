@@ -1,0 +1,91 @@
+﻿@if (TempData["ErrorMessage"] != null)
+{
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: '@TempData["ErrorMessage"]',
+            confirmButtonText: '@Localizer["Ok"]'
+        });
+    </script>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: '@TempData["SuccessMessage"]',
+            confirmButtonText: '@Localizer["Ok"]'
+        });
+    </script>
+}
+
+
+@if (TempData["InfoMessage"] != null)
+{
+    <script>
+
+        Swal.fire({
+            icon: 'info',
+            title: '@TempData["InfoMessage"]',
+            confirmButtonText: '@Localizer["Ok"]'
+        });
+
+    </script>
+}
+
+
+@if (TempData["WarningMessage"] != null)
+{
+    <script>
+
+        Swal.fire({
+            icon: 'warning',
+            title: '@TempData["WarningMessage"]',
+            confirmButtonText: '@Localizer["Ok"]'
+        });
+    </script>
+}
+@if (TempData["TemporarySuccessMessage"] != null)
+{
+    <script>
+        Swal.fire({
+            position: 'top-start',
+            icon: 'success',
+            title: '@TempData["TemporarySuccessMessage"]',
+            showConfirmButton: false,
+            timer: 2000
+        })
+    </script>
+}
+
+@if (TempData["TemporaryErrorMessage"] != null)
+{
+    <script>
+        Swal.fire({
+            position: 'top-start',
+            icon: 'error',
+            title: '@TempData["TemporaryErrorMessage"]',
+            showConfirmButton: false,
+            timer: 2000
+        })
+    </script>
+}
+
+@if (TempData["ToastrSuccessMessage"] != null)
+{
+    <script>
+
+        toastr.success('@TempData["ToastrSuccessMessage"]', Success));
+
+    </script>
+}
+
+@if (TempData["ToastrErrorMessage"] != null)
+{
+    <script>
+
+        toastr.error('@TempData["ToastrErrorMessage"]', Error));
+
+    </script>
+}

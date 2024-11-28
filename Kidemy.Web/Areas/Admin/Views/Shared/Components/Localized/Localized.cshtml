@@ -1,0 +1,97 @@
+@using System.ComponentModel.DataAnnotations;
+@using Barnamenevisan.Localizing.Attributes;
+@using Barnamenevisan.Localizing.ViewModels;
+@using Kidemy.Domain.Statics;
+@model List<LocalizedViewModel>
+@{
+    var languages = SiteTools.SupportedCultures?.Select(c => c.Name).Distinct().Where(l => l != SiteTools.DefaultCultureName);
+    var properties = Model[0]?.GetType().GetProperties().Where(p => p.Name != nameof(LocalizedViewModel.CultureName));
+    var languageCounter = 0;
+    var generatedGroups = new List<string>();
+}
+
+@if (Model != null)
+{
+    <div class="nav-align-top mb-4">
+        <ul class="nav nav-pills mb-3" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-top-global" aria-controls="navs-pills-top-global" aria-selected="true">
+                    @Localizer[SiteTools.DefaultCultureName]
+                </button>
+            </li>
+
+            @foreach (var language in languages)
+            {
+                <li class="nav-item" role="presentation">
+                    <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-top-@language" aria-controls="navs-pills-top-@language" aria-selected="false" tabindex="-1">
+                        @Localizer[language]
+                    </button>
+                </li>
+            }
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade active show" id="navs-pills-top-global" role="tabpanel">
+                <div class="row">
+                    @foreach (var property in properties)
+                    {
+                        var propertyDisplayName = property.CustomAttributes?.FirstOrDefault(x => x.AttributeType == typeof(DisplayAttribute))?.NamedArguments?.FirstOrDefault(a => a.MemberName == "Name").TypedValue.Value?.ToString();
+                        var propertyTemplate = property.CustomAttributes?.FirstOrDefault(x => x.AttributeType == typeof(UIHintAttribute))?.ConstructorArguments?.FirstOrDefault().Value?.ToString() ?? "String";
+                        var value = ViewBag.LocalizableModel.GetType().GetProperty(property.Name)?.GetValue(ViewBag.LocalizableModel)?.ToString() ?? "";
+                        var groupName = property.CustomAttributes?.FirstOrDefault(x => x.AttributeType == typeof(GroupAttribute))?.ConstructorArguments?.FirstOrDefault().Value?.ToString() ?? "";
+
+                        @if (!string.IsNullOrWhiteSpace(groupName) && !generatedGroups.Contains(groupName))
+                        {
+                            generatedGroups.Add(groupName);
+
+                            <h5 class="mb-1 mt-3 p-0">@Localizer[groupName]</h5>
+                            <hr />
+                        }
+
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label for="@property.Name">@Localizer[propertyDisplayName]</label>
+                                @Html.EditorFor(a => value, propertyTemplate, property.Name, new {htmlAttributes = new { @Class = "form-control"} })
+                                <span asp-validation-for="@properties" class="text-danger"></span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            @foreach (var language in languages)
+            {
+                generatedGroups.Clear();
+                <div class="tab-pane fade" id="navs-pills-top-@language" role="tabpanel">
+                    <div class="row">
+                        @foreach (var property in properties)
+                        {
+                            var propertyDisplayName = property.CustomAttributes?.FirstOrDefault(x => x.AttributeType == typeof(DisplayAttribute))?.NamedArguments?.FirstOrDefault(a => a.MemberName == "Name").TypedValue.Value?.ToString();
+                            var propertyTemplate = property.CustomAttributes?.FirstOrDefault(x => x.AttributeType == typeof(UIHintAttribute))?.ConstructorArguments?.FirstOrDefault().Value?.ToString() ?? "String";
+                            var value = Model.Count > languageCounter ? (property.GetValue(Model[languageCounter])?.ToString() ?? "") : "";
+                            var groupName = property.CustomAttributes?.FirstOrDefault(x => x.AttributeType == typeof(GroupAttribute))?.ConstructorArguments?.FirstOrDefault().Value?.ToString() ?? "";
+
+                            @if (!string.IsNullOrWhiteSpace(groupName) && !generatedGroups.Contains(groupName))
+                            {
+                                generatedGroups.Add(groupName);
+
+                                <h5 class="mb-1 mt-3 p-0">@Localizer[groupName]</h5>
+                                <hr />
+                            }
+
+                            <div class="col-12">
+                                <div class="mb-4">
+                                    <label for="@($"LocalizedModels_{languageCounter}__{property.Name}")">@Localizer[propertyDisplayName]</label>
+                                    @Html.EditorFor(a => value, propertyTemplate, $"LocalizedModels[{languageCounter}].{property.Name}", new {htmlAttributes = new { @Class = "form-control"} })
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                </div>
+
+                <input type="hidden" name="@($"LocalizedModels[{languageCounter}].{nameof(LocalizedViewModel.CultureName)}")" value="@language" />
+
+                languageCounter++;
+            }
+        </div>
+    </div>
+}

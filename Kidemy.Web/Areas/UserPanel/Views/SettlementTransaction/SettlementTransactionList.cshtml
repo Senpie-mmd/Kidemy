@@ -1,0 +1,82 @@
+﻿@using Kidemy.Application.Convertors
+
+@model Kidemy.Application.ViewModels.SettlementTransaction.ClientSideFilterSettlementTransactionViewModel
+
+@{
+    ViewData["Title"] = Localizer["MySettlementTransactions"];
+}
+<!-- Row -->
+
+<form asp-area="UserPanel" asp-controller="SettlementTransaction" asp-action="SettlementTransactionList" method="get" id="filter-search" class="d-none">
+    <input type="hidden" asp-for="Page">
+    <input type="hidden" asp-for="Page" />
+    <input type="hidden" asp-for="UserId" />
+</form>
+
+<div class="col-xl-12 col-lg-12 col-md-12">
+
+    <div class="card bg-transparent border rounded-3">
+        <!-- Card header START -->
+        @if (Model?.Entities?.Any() ?? false)
+        {
+            <div class="card-header bg-transparent border-bottom">
+                <h3 class="mb-0 fs-5 ff-vb">@Localizer["MySettlementTransactions"]</h3>
+            </div>
+            <div class="card-body">
+                <div class="row g-3 align-items-center justify-content-between mb-4">
+                </div>
+                <div class="table-responsive border-0">
+                    <table class="table table-dark-gray align-middle p-4 mb-0 table-hover text-center">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="border-0 rounded-start">@Localizer["Id"]</th>
+                                <th scope="col" class="border-0">@Localizer["CreateDate"]</th>
+                                <th scope="col" class="border-0">@Localizer["TransactionDate"]</th>
+                                <th scope="col" class="border-0"> @Localizer["AccountNumber"]</th>
+                                <th scope="col" class="border-0">@Localizer["CardNumber"]</th>
+                                <th scope="col" class="border-0">@Localizer["TrackingCode"]</th>
+                                <th scope="col" class="border-0 rounded-end">@Localizer["Price"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Entities)
+                            {
+                               
+
+                                <tr>
+                                    <td>
+                                        <h6 class="mt-2 mt-lg-0 mb-0 fw-normal"><a href="#">@item.Id</a></h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="mt-2 mt-lg-0 mb-0 fw-normal"><a href="#">@item.CreateDateUTC.ToUserShortDateTime()</a></h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="mt-2 mt-lg-0 mb-0 fw-normal"><a href="#">@item.TransactionDate.ToUserShortDateTime()</a></h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="mt-2 mt-lg-0 mb-0 fw-normal">@item.AccountNumber<a href="#"></a></h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="mt-2 mt-lg-0 mb-0 fw-normal">@item.CardNumber<a href="#"></a></h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="mt-2 mt-lg-0 mb-0 fw-normal">@item.TrackingCode<a href="#"></a></h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="mt-2 mt-lg-0 mb-0 fw-normal">@item.Price.ToString("#,0") @Localizer["Toman"]<a href="#"></a></h6>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <partial name="_UserPanelPaging" model="Model.GetCurrentPaging()" />
+        }
+        else
+        {
+            <partial name="_NotFoundPartial" />
+        }
+    </div>
+</div>

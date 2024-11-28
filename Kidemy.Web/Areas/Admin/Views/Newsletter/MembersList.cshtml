@@ -1,0 +1,91 @@
+﻿@using Kidemy.Application.Convertors;
+@using Kidemy.Application.ViewModels.Newsletter;
+@model FilterNewsletterViewModel
+@{
+    ViewData["Title"] = Localizer["NewsletterMemberList"];
+}
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["Filter"]</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="Newsletter" asp-action="MembersList" method="post" id="filter-search" class="d-flex">
+                    <input type="hidden" asp-for="Page" />
+                    <div class="row w-100">
+                        <div class="mb-3 col-12 col-md-6">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input type="search" asp-for="Email" class="form-control me-2" placeholder="@Localizer["Email"]" aria-label="Search">
+                        </div>
+                        <div class="mb-3 col-12 col-md-6">
+                            <label asp-for="Ip" class="form-label"></label>
+                            <input type="search" asp-for="Ip" class="form-control me-2" placeholder="ip" aria-label="Search">
+                        </div>
+                        <div>
+                            <div class="mb-3 col-6 col-md-6">
+                                <button class="btn btn-outline-primary w-25" type="submit">@Localizer["Search"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="FilterUsers" class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["NewsletterMemberList"]</h5>
+            </div>
+            @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                <div class="table-responsive mb-4 text-nowrap text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>@Localizer["Email"]</th>
+                                <th>@Localizer["Ip"]</th>
+                                <th>@Localizer["CreateDate"]</th>
+                                <th>@Localizer["Operation"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @{
+                                int counter = 0;
+                                foreach (var item in Model.Entities)
+                                {
+                                    counter += 1;
+                                    <tr>
+                                        <td>@counter</td>
+                                        <td class="text-break-cst word-break-custome">
+                                            <strong>@item.Email</strong>
+                                        </td>
+                                        <td>
+                                            <strong>@item.UserIp</strong>
+                                        </td>
+                                        <td>
+                                            <strong>@item.CreateDate.ToUserDate()</strong>
+                                        </td>
+                                        <td>
+                                            <a permission="DeleteMember_Newsletter" class="text-danger" href="javascript:void(0)" onclick="DeleteConfirm('@Url.Action("DeleteMemberFromNewsletter", "Newsletter", new { area = "Admin", id = @item.Id })')" id="deleteBtn-@item.Id" title="@Localizer["Delete"]">
+                                                <i class="bx bx-trash me-1"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+</div>

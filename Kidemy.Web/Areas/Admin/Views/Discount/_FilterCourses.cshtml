@@ -1,0 +1,138 @@
+@using Kidemy.Application.ViewModels.Course.AdminSideCourse.Courses;
+@using Kidemy.Application.ViewModels.Course;
+@using Kidemy.Domain.Enums.Course;
+@model AdminSideFilterCourseViewModel
+
+<div id="SearchCourseModalBox">
+    <div id="filternig">
+        <form asp-area="Admin" asp-controller="Discount" asp-action="FilterCourses" id="filter-for-discount-form" data-ajax="true" data-method="get" data-ajax-begin="open_waiting()" data-ajax-success="close_waiting();onSearchModalShowed()"
+              data-ajax-mode="replace" data-ajax-update="#SearchCourseModalBox">
+            <input type="hidden" asp-for="Page" id="PartialPageId" />
+
+            <div class="row w-100">
+                <div class="mb-3 col-6 col-md-6">
+                    <label asp-for="Title" class="form-label"></label>
+                    <input type="search" asp-for="Title" class="form-control me-2" placeholder="@Localizer["Title"]" aria-label="Search">
+                </div>
+
+                <div class="mb-3 col-6 col-md-6">
+                    <label asp-for="Level" class="form-label"></label>
+                    <select type="search" asp-for="Level" class="form-control me-2" asp-items="@Html.GetEnumSelectList<CourseLevel>()" aria-label="Search">
+                        <option>@Localizer["Select"]</option>
+                    </select>
+                </div>
+
+                <div class="mb-3 col-6 col-md-6">
+                    <label asp-for="CourseStatus" class="form-label"></label>
+                    <select type="search" asp-for="CourseStatus" class="form-control me-2" asp-items="@Html.GetEnumSelectList<CourseStatus>()" aria-label="Search">
+                        <option>@Localizer["Select"]</option>
+                    </select>
+                </div>
+
+                <div class="mb-3 col-6 col-md-6">
+                    <label asp-for="PriceType" class="form-label"></label>
+                    <select type="search" asp-for="PriceType" class="form-control me-2" asp-items="@Html.GetEnumSelectList<CoursePriceTypeForView>()" aria-label="Search">
+                    </select>
+                </div>
+
+                <div class="mb-3 col-7 col-md-7">
+                    <button class="btn btn-outline-primary w-25" type="submit">@Localizer["Search"]</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="FilterCourses">
+        <div class="card">
+            @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                <div class="card-header d-flex">
+                    <button class="btn btn-success btn-sm ms-auto" onclick="SelectCourses()">@Localizer["Save"]</button>
+                </div>
+                <div class="card-body px-0">
+                    <div class="table-responsive mb-4 text-nowrap text-center">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>@Localizer["Title"]</th>
+                                    <th>@Localizer["CourseLevel"]</th>
+                                    <th>@Localizer["CourseStatus"]</th>
+                                    <th>@Localizer["Price"]</th>
+                                    <th>@Localizer["Slug"]</th>
+                                    <th>@Localizer["Operation"]</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-border-bottom-0">
+                                @foreach (var item in Model?.Entities ?? new List<AdminSideCourseViewModel>())
+                                {
+                                    <tr>
+                                        <td>@Model.Counter</td>
+                                        <td>@item.Title</td>
+                                        <td>@item.Level.GetEnumName()</td>
+                                        <td>@item.Status.GetEnumName()</td>
+                                        <td>
+                                            @if (item.Price == 0)
+                                            {
+                                                <span class="text-success">@Localizer["Free"]</span>
+                                            }
+                                            else
+                                            {
+                                                @item.Price?.ToString("#,0") @Localizer["Toman"]
+                                            }
+                                        </td>
+                                        <td>@item.Slug</td>
+                                        <td>
+                                            <input type="checkbox" class="form-check-input" id="course-@item.Id" name="courseId" value="@item.Id" title="@item.Title" />
+                                        </td>
+                                    </tr>
+
+                                    Model.Counter++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <nav aria-label="Page navigation ">
+                        <ul class="pagination justify-content-center mt-3">
+                            @if (Model.StartPage < Model.Page)
+                            {
+                                <li class="page-item prev">
+                                    <a class="page-link cursor-pointer" onclick="FillPartialPageId(@(Model.Page - 1))">
+                                        <i class="tf-icon bx bx-chevron-left"></i>
+                                    </a>
+                                </li>
+                            }
+                            @for (int i = Model.StartPage; i <= Model.EndPage; i++)
+                            {
+                                if (Model.Page == i)
+                                {
+                                    <li class="page-item active">
+                                        <a class="page-link cursor-pointer" data-page="0" href="javascript:void(0);">@i</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link cursor-pointer" onclick="FillPartialPageId(@(i))">@i</a>
+                                    </li>
+                                }
+                            }
+                            @if (Model.EndPage > Model.Page)
+                            {
+                                <li class="page-item next">
+                                    <a class="page-link cursor-pointer" onclick="FillPartialPageId(@(Model.Page + 1))">
+                                        <i class="tf-icon bx bx-chevron-right"></i>
+                                    </a>
+                                </li>
+                            }
+
+                        </ul>
+                    </nav>
+                </div>
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+﻿@using Kidemy.Application.ViewModels.InPersonCourse
+@using Kidemy.Domain.Enums.Course
+@model ClientSideInPersonCourseViewModel
+
+<div class="card shadow h-100">
+
+    <a asp-area="" asp-controller="Courses" asp-action="CourseDetails" asp-route-slug="@Model.Slug">
+        <img src="@SiteTools.InPersonCourseImagesPath@Model.AttachmentFileName" class="card-img-top image-size" alt="course image">
+    </a>
+
+    <div class="card-body pb-0">
+
+        <h5 class="card-title fw-normal height-40 course-title-in-papular-courses">
+            <a asp-area="" asp-controller="InPersonCourse" asp-action="InPersonCourseDetails" asp-route-slug="@Model.Slug">@Model.Title</a>
+        </h5>
+        <p class="mb-2 text-truncate-2 height-45">@Model.Description</p>
+
+    </div>
+</div>

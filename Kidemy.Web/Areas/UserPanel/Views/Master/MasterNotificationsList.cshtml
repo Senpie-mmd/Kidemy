@@ -1,0 +1,58 @@
+﻿@using Kidemy.Application.ViewModels.MasterNotification;
+@using Kidemy.Web.Areas.Admin.Models;
+
+@model List<ClientSideMasterNotificationViewModel>
+
+@{
+    ViewData["Title"] = Localizer["MasterNotification"];
+    string fileName;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["MasterNotifications"]</h5>
+            </div>
+ 
+
+            @if (Model != null && Model != null && Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <div class="card-body mb-4 bg-light">
+                        <h6>@item.CreateDate.ToUserShortDateTime()</h6>
+
+                        <div class="mt-4 mb-4 w-100 h-50">
+                            @if (item.FileNameSuffix == ".MP3" || item.FileNameSuffix == ".WAV" || item.FileNameSuffix == "FLAC" || item.FileNameSuffix == ".AAC" || item.FileNameSuffix == ".OGG" || item.FileNameSuffix == ".M4A" || item.FileNameSuffix == ".WMA")
+                            {
+                                <audio controls>
+                                    <source src="@SiteTools.MasterNotificationVideosPath@item.DemoVideoFileName" type="audio/mp3" download>
+                                </audio>
+                            }
+                            @if (item.FileNameSuffix == ".MP4" || item.FileNameSuffix == ".WebM" || item.FileNameSuffix == ".AVI" || item.FileNameSuffix == ".MKV" || item.FileNameSuffix == ".MOV" || item.FileNameSuffix == ".FLV")
+                            {
+                                <video width="640" height="360" controls>
+                                    <source src="@SiteTools.MasterNotificationVideosPath@item.DemoVideoFileName" type="video/mp4" download>
+                                </video>
+                            }
+                            @if (item.FileNameSuffix == ".JPG" || item.FileNameSuffix == ".JPEG" || item.FileNameSuffix == ".PNG")
+                            {
+                                <img src="@SiteTools.MasterNotificationVideosPath@item.DemoVideoFileName" alt="Description of the image" download>
+                            }
+
+                        </div>
+
+                        <p>@(string.IsNullOrEmpty(item.Message) ? "-" : item.Message)</p>
+                    </div>
+
+
+                }
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+</div>

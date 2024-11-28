@@ -1,0 +1,157 @@
+﻿@using Kidemy.Application.Convertors
+@using Kidemy.Application.ViewModels.Course.AdminSideCourse.CourseQuestionAnswer
+@using Kidemy.Application.ViewModels.Course.ClientSideCourse.CourseQuestion
+
+@model AdminSideFilterCourseQuestionAnswerViewModel
+@{
+    ViewData["Title"] = Localizer["ShowMessages"];
+    var question = (ClientSideCourseQuestionViewModel)ViewBag.Question;
+}
+
+@section FooterReferences{
+
+    <script>
+        async function ConfrimCourseQuestion(url) {
+            Swal.fire({
+                html: `<b>${await jsLocalizer("ConfrimCourseQuestionAnswer")}</b>`,
+                showDenyButton: true,
+                confirmButtonText: await jsLocalizer("Yes"),
+                denyButtonText: await jsLocalizer("No")
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var formData = {};
+                    addAntiforgeryToken(formData);
+
+                    $.ajax({
+                        type: 'post',
+                        url: url,
+                        data: formData,
+                        success: async function (response) {
+                            window.location.reload();
+                        },
+                        error: async function (response) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: await jsLocalizer("Error.e"),
+                                confirmButtonText: await jsLocalizer("Ok"),
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["ShowMessages"]</h5>
+            </div>
+            <div class=" px-lg-5 shadow-sm p-3 ms-5 me-5 rounded">
+                <div class="col-12 col-lg-12">
+                    <div class="form-group mb-4">
+                        <span>@Localizer["UserName"]: </span>
+                        @question.UserName
+                    </div>
+                </div>
+                <div class="col-12 col-lg-12">
+                    <div class="form-group mb-4">
+                        <span>@Localizer["QuestionTitle"]: </span>
+                        @question.Title
+                    </div>
+                </div>
+                <div class="col-12 col-lg-12">
+                    <div class="form-group mb-4">
+                        <span>@Localizer["QuestionDescription"]: </span>
+                        @question.Description
+                    </div>
+                </div>
+                <div class="col-12 col-lg-12">
+                    <div class="form-group mb-4">
+                        <span>@Localizer["CreateDate"]: </span>
+                        @question.CreateDate.ToUserDate()
+                    </div>
+                </div>
+            </div>
+            <div class="card-body px-lg-5">
+                <div class="row mt-4">
+                    <div class="light-sytle">
+                        <div class="app-chat">
+                            <div class="col app-chat-history" style="height: fit-content">
+                                <div class="chat-history-wrapper">
+                                    <div class="chat-history-body rounded shadow-sm scroll-ticket-detail ">
+                                        <ul class="list-unstyled chat-history mb-0">
+                                            @foreach (var message in Model.Entities)
+                                            {
+                                                if (message.AnsweredById == question.AskedById)
+                                                {
+                                                    <li class="message chat-message-right">
+                                                        <div class="d-flex overflow-hidden">
+                                                            <div class="chat-message-wrapper flex-grow-1">
+                                                                <div class="message-text ms-5 me-3 mb-2 text-break min-width-150">
+                                                                    @Html.Raw(message.Answer)
+                                                                    <span class="text-end d-block mt-1 me-3">
+                                                                        <small dir="ltr">@(message.CreateDate.ToUserShortDateTime())</small>
+                                                                    </span>
+                                                                    @if (!@message.IsConfirmed)
+                                                                    {
+                                                                        <a class="text-warning pointer" href="javascript:void(0)" title="@Localizer["ConfirmQuestionAnswer"]" onclick="ConfrimCourseQuestion(`@Url.Action("ConfrimCourseQuestionAnswer", "CourseQuestion" , new { area="Admin" , id=message.Id })`)">
+                                                                            <i class='bx bx-check-shield'></i>
+                                                                        </a>
+                                                                    }
+                                                                    <a class="text-danger" href="javascript:void(0)" title="@Localizer["Delete"]" onclick="DeleteConfirm('@Url.Action("DeleteQuestionAnswer", "CourseQuestion", new { area = "Admin", id = @message.Id })')" id="deleteBtn-@message.Id" title="@Localizer["Delete"]">
+                                                                        <i class="bx bx-trash me-1"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+
+                                                }
+                                                else
+                                                {
+                                                    <li class="message-right">
+                                                        <div class="d-flex m-3 mb-0 overflow-hidden">
+                                                            <div class="chat-message-wrapper flex-grow-1">
+                                                                <small>@message.UserName</small>
+                                                                <div class="message-text-second min-width-150">
+                                                                    @Html.Raw(message.Answer)
+                                                                    <span class=" d-block mt-1 ">
+                                                                        <small dir="ltr">@(message.CreateDate.ToUserShortDateTime())</small>
+                                                                    </span>
+                                                                    @if (!@message.IsConfirmed)
+                                                                    {
+                                                                        <a class="text-warning pointer" href="javascript:void(0)" title="@Localizer["ConfirmQuestionAnswer"]" onclick="ConfrimCourseQuestion(`@Url.Action("ConfrimCourseQuestionAnswer", "CourseQuestion" , new { area="Admin" , id=message.Id })`)">
+                                                                            <i class='bx bx-check-shield'></i>
+                                                                        </a>
+                                                                    }
+                                                                    <a class="text-danger" href="javascript:void(0)" title="@Localizer["Delete"]" onclick="DeleteConfirm('@Url.Action("DeleteQuestionAnswer", "CourseQuestion", new { area = "Admin", id = message.Id })')" id="deleteBtn-@message.Id" title="@Localizer["Delete"]">
+                                                                        <i class="bx bx-trash me-1"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="card-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/jquery.min.js"></script>
+

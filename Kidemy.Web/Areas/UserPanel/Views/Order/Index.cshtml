@@ -1,0 +1,80 @@
+﻿@using Kidemy.Application.ViewModels.Order;
+@model ClientSideFilterOrderViewModel
+@{
+    ViewData["Title"] = Localizer["MyOrders"];
+}
+
+<form asp-area="UserPanel" asp-controller="Order" asp-action="Index" method="get" id="filter-search" class="d-none">
+    <input type="hidden" asp-for="Page">
+</form>
+
+<div class="col-xl-12 col-lg-12 col-md-12">
+
+    <div class="card bg-transparent border rounded-3">
+        <!-- Card header START -->
+        @if (Model?.Entities?.Any() ?? false)
+        {
+            <div class="card-header bg-transparent border-bottom">
+                <h3 class="mb-0 fs-5 ff-vb">@Localizer["MyOrders"]</h3>
+            </div>
+            <div class="card-body">
+                <div class="row g-3 align-items-center justify-content-between mb-4">
+                </div>
+                <div class="table-responsive border-0">
+                    <table class="table table-dark-gray align-middle p-4 mb-0 table-hover text-center">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="border-0 rounded-start">@Localizer["OrderId"]</th>
+                                <th scope="col" class="border-0">@Localizer["TotalAmount"]</th>
+                                <th scope="col" class="border-0">@Localizer["Status"]</th>
+                                <th scope="col" class="border-0">@Localizer["CreatedDateOnUtc"]</th>
+                                <th scope="col" class="border-0 rounded-end">@Localizer["Operation"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Entities)
+                            {
+                                <tr>
+                                    <td>
+                                        <h6 class="mt-2 mt-lg-0 mb-0 fw-normal"><a href="javascript:void(0)">@item.Id</a></h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="mt-2 mt-lg-0 mb-0 fw-normal">
+                                            @item.TotalAmount.ToString("#,0") @Localizer["Toman"]
+                                        </h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="mt-2 mt-lg-0 mb-0 fw-normal">
+                                            @if (item.IsPaid)
+                                            {
+                                                <span class="badge bg-success bg-opacity-10 text-success">@Localizer["IsPaid"]</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger bg-opacity-10 text-danger">@Localizer["Unsuccessful"]</span>
+                                            }
+                                        </h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="mt-2 mt-lg-0 mb-0 fw-normal ltr">@item.CreatedDateOnUtc.ToUserShortDateTime()</h6>
+                                    </td>
+                                    <td>
+                                        <a asp-action="Details" asp-controller="Order" asp-area="UserPanel" asp-route-id="@item.Id" class="btn btn-primary-soft me-1 mb-1 mb-md-0">
+                                            @Localizer["Details"]
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <partial name="_UserPanelPaging" model="Model.GetCurrentPaging()" />
+        }
+        else
+        {
+            <partial name="_NotFoundPartial" />
+        }
+    </div>
+</div>

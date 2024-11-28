@@ -1,0 +1,49 @@
+﻿@using Kidemy.Application.ViewModels.VIPPlan;
+@using Kidemy.Domain.Statics;
+
+@model AdminSideUpsertVIPPlanViewModel
+@{
+    ViewData["Title"] = Localizer["UpdateVIPPlan"];
+}
+
+<form asp-action="Update" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card p-lg-5">
+                <div class="card-body">
+                    <div class="row">
+                        <input type="hidden" asp-for="Id" />
+                        @await Component.InvokeAsync("Localized", Model)
+                        <div class="col-12 col-lg-12">
+                            <div class="mb-4">
+                                <label class="form-label" asp-for="DurationDay"></label>
+                                <input asp-for="DurationDay" class="form-control number" />
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-12">
+                            <div class="mb-4">
+                                <label class="form-label" asp-for="Price"></label>
+                                <input class="form-control price" name="Price" value="@(Model.Price.ToString("#,0"))" />
+                                  
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-12">
+                            <div class="mb-4 form-check padding-top-2-percent">
+                                <input class="form-check-input" type="checkbox" asp-for="IsPublished">
+                                <label class="form-check-label" asp-for="IsPublished"></label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-start">
+                                <button type="submit" class="btn btn-warning">@Localizer["Edit"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div asp-validation-summary="All" class="text-danger mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

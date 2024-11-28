@@ -1,0 +1,130 @@
+﻿@using Kidemy.Application.ViewModels.Consultation.ConsultationRequest
+@using Kidemy.Domain.Enums.Consultation
+@using Kidemy.Domain.Events.Consultation.ConsultationRequest
+@model AdminSideFilterConsultationRequestViewModel
+@{
+    ViewData["Title"] = Localizer["ConsultationRequestsList"];
+}
+
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["Filter"]</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="ConsultationRequest" asp-action="Filter" method="get" id="filter-search">
+                    <input type="hidden" asp-for="Page" />
+                    <div class="row">
+
+                        <div class="mb-3 col-12 col-md-6">
+                            <label asp-for="State" class="form-label"></label>
+                            <select asp-for="State" class="form-select me-2 " asp-items="@Html.GetEnumSelectList<FilterConsultationRequestState>()">                               
+                            </select>
+                        </div>
+
+                        <div class="mb-3 col-12 col-md-6">
+                        </div>
+
+                        <div class="mb-3 col-md-6 col-sm-12 align-items-end d-flex">
+                            <button class="btn btn-outline-primary w-50" type="submit">@Localizer["Search"]</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="FilterUsers" class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["ConsultationRequestsList"]</h5>
+            </div>
+            @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                <div class="table-responsive mb-4 text-nowrap text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>@Localizer["AdviserUserName"]</th>
+                                <th>@Localizer["RequestedByUserName"]</th>
+                                <th>@Localizer["Topic"]</th>
+                                <th>@Localizer["State"]</th>
+                                <th>@Localizer["FixedTime"]</th>
+                                <th>@Localizer["Operation"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in Model.Entities)
+                            {
+                                <tr>
+                                    <td> @Model.Counter</td>
+                                    <td>
+                                        <a class="text-primary" asp-action="Profile" asp-controller="User" asp-area="Admin" asp-route-id="@item.AdviserUserId">
+                                            @(string.IsNullOrEmpty(item.AdviserUserName) ? "-" : item.AdviserUserName)
+                                        </a>
+                                        
+                                    </td>
+                                    <td>
+                                        <a class="text-primary" asp-action="Profile" asp-controller="User" asp-area="Admin" asp-route-id="@item.RequestedByUserId">
+                                            @(string.IsNullOrEmpty(item.RequestedByUserName) ? "-" : item.RequestedByUserName)
+                                        </a>
+                                    </td>
+                                    <td>@(item.Topic == null ? "-" : item.Topic)</td>
+                                    <td>@(item.state == null ? "-" : item.state.GetEnumName())</td>
+                                    <td>
+                                        @Localizer["DayAndHour"]
+                                        @if (item.FixedTime == null)
+                                        {
+                                            @Localizer["NotArrange"];
+                                        }
+                                        else
+                                        {
+                                            @item.FixedTime.Value.ToUserDate()  <space></space>  @item.FixedTime.Value.ToUserTimeHourMinute()
+                                        }
+                                        
+                                    </td>
+                                        
+                                    <td>
+                                        <a class="text-warning" asp-area="Admin" asp-controller="ConsultationRequest" asp-action="SetTime" asp-route-id="@item.Id" id="@Localizer["Edit"]">
+                                            <i class="fa-solid fa-calendar-days me-1"></i>
+                                        </a>
+
+                                        @if (item.state == ConsultationRequestState.WaitingForEvent)
+                                        {
+                                            <a class="text-primary" href="javascript:void(0)" onclick="FinishedConsultationRequest('@Url.Action("Finished", "ConsultationRequest", new { area = "Admin", id = @item.Id })')" id="deleteBtn-@item.Id" title="@Localizer["Cancele"]">
+                                                <i class="fa-solid fa-person-circle-check me-1"></i>
+                                            </a>
+                                        }
+                                      
+                                        @if (item.state != ConsultationRequestState.Canceled)
+                                        {
+                                            <a class="text-danger" href="javascript:void(0)" onclick="CanceleConsultationRequest('@Url.Action("Cancele", "ConsultationRequest", new { area = "Admin", id = @item.Id })')" id="deleteBtn-@item.Id" title="@Localizer["Cancele"]">
+                                                <i class="fa-regular fa-rectangle-xmark me-1"></i>
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                                Model.Counter++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+
+</div>
+
+@section FooterReferences {
+    <script src="~/admin/js/canceleconsultationrequest.js"></script>
+}
+
+
+

@@ -1,0 +1,67 @@
+﻿@using Kidemy.Application.ViewModels.Page;
+@using Kidemy.Domain.Enums.Page;
+@using Kidemy.Domain.Statics;
+
+@model AdminSideUpsertPageViewModel
+@{
+    ViewData["Title"] = Localizer["CreatePage"];
+}
+
+<form asp-action="Create" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card p-lg-5">
+                <div class="card-body">
+                    <div class="row">
+                        @await Component.InvokeAsync("Localized", Model)
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-lg-12">
+                            <div class="mb-4">
+                                <label type="text" class="form-label" asp-for="Slug"></label>
+                                <input type="text" asp-for="Slug" class="form-control" id="slug" />
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-12">
+                            <div class="form-group mb-4">
+                                <label asp-for="LinkPlace" class="form-label"></label>
+                                <select asp-for="LinkPlace" class="form-select me-2 ">
+                                    @foreach (var linkPlace in Enum.GetValues(typeof(LinkPlace)).Cast<LinkPlace>())
+                                    {
+                                        if (Model.LinkPlace == linkPlace)
+                                        {
+                                            <option value="@linkPlace" selected="">@linkPlace.GetEnumName()</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@linkPlace">@linkPlace.GetEnumName()</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-12">
+                            <div class="mb-4 form-check padding-top-2-percent">
+                                <input class="form-check-input" type="checkbox" asp-for="IsPublished">
+                                <label class="form-check-label" asp-for="IsPublished"></label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-start">
+                                <button type="submit" class="btn btn-success">@Localizer["Submit"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div asp-validation-summary="All" class="text-danger mt-3"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+@section FooterReferences {
+    <script src="~/admin/js/AutoCompleteSlug.js"></script>
+}

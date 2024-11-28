@@ -1,0 +1,145 @@
+﻿@using Kidemy.Application.ViewModels.Course.ClientSideCourse.Courses
+@using Kidemy.Application.ViewModels.DynamicText
+@using Kidemy.Domain.Enums.Course
+@model List<ClientSideHomePageOfferedCoursesViewModel>
+@{
+    var dynamicText = ViewData["DynamicText"] as ClientSideDynamicTextViewModel ?? new ClientSideDynamicTextViewModel();
+}
+
+@if (Model is not null && Model.Any())
+{
+    <section class="pb-5 pt-0 pt-lg-5">
+        <div class="container">
+            <!-- Title -->
+            <div class="row mb-4">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="fs-3">@Localizer["RecommendedCoursesOfTheFestival"]</h2>
+                    <p class="mb-0">
+                        @(dynamicText != null ? dynamicText.Text : "")
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Slider START -->
+                <div class="tiny-slider arrow-round arrow-blur arrow-hover">
+                    <div class="tiny-slider-inner pb-1" data-autoplay="true" data-arrow="true" data-edge="2" data-dots="false" data-items="3" data-items-lg="2" data-items-sm="1">
+                        <!-- Card item START -->
+                        @foreach (var item in Model ?? new List<ClientSideHomePageOfferedCoursesViewModel>())
+                        {
+                            <div>
+                                <div class="card action-trigger-hover border bg-transparent">
+                                    <!-- Image -->
+                                    <a asp-area="" asp-controller="Courses" asp-action="CourseDetails" asp-route-slug="@item.Slug">
+                                        <img src="@SiteTools.CourseImagesPath@item.ImageFileName" class="card-img-top" alt="course image">
+                                    </a>
+                                    <!-- Ribbon -->
+                                    @if (item.Type == CourseType.Free)
+                                    {
+                                        <div class="ribbon mt-3"><span>@Localizer["Free"]</span></div>
+                                    }
+                                    <!-- Card body -->
+                                    <div class="card-body pb-0">
+                                        <!-- Badge and favorite -->
+                                        <div class="d-flex justify-content-between mb-3">
+                                            <span class="hstack gap-2">
+                                                <a asp-area="" asp-controller="Courses" asp-action="CoursesList" asp-route-CategoryIds="@item.CategoryId" class="badge bg-primary bg-opacity-10 text-primary">@item.CategoryName</a>
+                                                <a asp-area="" asp-controller="Courses" asp-action="CoursesList" asp-route-Level="@item.Level" class="badge text-bg-dark">@item.Level.GetEnumName()</a>
+                                            </span>
+                                            <a title="@Localizer["AddToFavourite"]" href="javascript:void(0)" onclick="favourite('@Url.Action("FavouriteCourse", "Courses", new { courseId = item.Id })')" class="h6 fw-light mb-0"><i id="like-@item.Id" class="far fa-solid fa-heart"></i></a>
+                                        </div>
+                                        <!-- Title -->
+                                        <h5 class="card-title fw-normal height-41">
+                                            <a asp-area="" asp-controller="Courses" asp-action="CourseDetails" asp-route-slug="@item.Slug">@item.Title</a>
+                                        </h5>
+                                        <!-- Rating -->
+                                        <div class="d-flex justify-content-between mb-2 height-23">
+                                            @if (item.Score > 0)
+                                            {
+                                                <div class="hstack gap-2">
+                                                    <p class="text-warning m-0">
+                                                        @item.Score
+                                                        <i class="fas fa-star text-warning ms-1"></i>
+                                                    </p>
+                                                    <span class="small">(@item.CommentsCount)</span>
+                                                </div>
+                                            }
+                                            @if (item.StudentsCount > 0)
+                                            {
+                                                <div class="hstack gap-2">
+                                                    <p class="h6 fw-light mb-0 m-0">@item.StudentsCount</p>
+                                                    <span class="small">(@Localizer["Student"])</span>
+                                                </div>
+                                            }
+                                        </div>
+                                        <!-- Time -->
+                                        <div class="hstack gap-3">
+                                            <span class="h6 fw-light mb-0">
+                                                <i class="far fa-clock text-danger me-2"></i>
+                                                @(new TimeSpan(item.VideosLengths.Sum(n => n.Ticks)))
+                                            </span>
+                                            <span class="h6 fw-light mb-0">
+                                                <i class="fas fa-table text-orange me-2"></i>
+                                                @item.VideosCount
+                                                @Localizer["Video"]
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <!-- Card footer -->
+                                    <div class="card-footer pt-0 bg-transparent">
+                                        <hr>
+                                        <!-- Avatar and Price -->
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <!-- Avatar -->
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar avatar-sm">
+                                                    <img class="avatar-img rounded-1" src="@SiteTools.UserImagePath@item.MasterImageFileName" alt="avatar">
+                                                </div>
+                                                <p class="mb-0 ms-2">
+                                                    <a asp-area="" asp-controller="Master" asp-action="MasterDetails" asp-route-id="@item.MasterId" class="h6 fw-light mb-0">@item.MasterFullName</a>
+                                                </p>
+                                            </div>
+                                            <!-- Price -->
+                                            <div>
+                                                @if (item.Type == CourseType.Free)
+                                                {
+                                                    <h5 class="text-success mb-0">@item.Type.GetEnumName()</h5>
+                                                }
+                                                else if (item.Type == CourseType.VIP)
+                                                {
+                                                    <h5 class="text-info mb-0">@item.Type.GetEnumName()</h5>
+                                                }
+                                                else
+                                                {
+                                                    @if (item.AppliedDiscount is null)
+                                                    {
+                                                        <h5 class="text-success mb-0 item-show">@item.Price?.ToString("#,0") @Localizer["Toman"]</h5>
+                                                    }
+                                                    else
+                                                    {
+                                                        <h5 class="text-success mb-0 item-show">
+                                                            <span class="text-decoration-line-through text-dark font-size-small">@item.Price?.ToString("#,0")</span>
+                                                            @item.DiscountedPrice?.ToString("#,0")
+                                                        </h5>
+                                                    }
+
+                                                }
+
+                                                @if (item.Type == CourseType.Mercenary)
+                                                {
+                                                    <a href="javascript:void(0)" data-courseid="@item.Id" class="btn btn-sm btn-success-soft item-show-hover add-to-cart">
+                                                        <i class="fas fa-shopping-cart me-2"></i>
+                                                        @Localizer["AddToCart"]
+                                                    </a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}

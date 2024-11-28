@@ -1,0 +1,75 @@
+﻿@using Kidemy.Application.Convertors
+@using Kidemy.Application.ViewModels.Course.AdminSideCourse.CourseQuestion
+@using Kidemy.Application.ViewModels.Course.ClientSideCourse.CourseQuestion
+@using Kidemy.Domain.Enums.Course
+@model AdminSideFilterCourseQuestionViewModel
+
+
+<div class="card h-100">
+    <div class="card-header d-inline-flex">
+        <h5>@Localizer["AdminDashboardCourseQuestionsDoesNotAnsweredByTeacherAfter48Hours"]</h5>
+
+        <a asp-action="CourseQuestionsDoesNotAnsweredByTeacherAfter48Hours" asp-controller="CourseQuestion" asp-area="Admin"   class="ms-auto">
+            @Localizer["All"]
+        </a>
+
+    </div>
+    @if (Model != null && Model.Entities != null && Model.Entities.Any())
+    {
+        <div class="table-responsive mb-4 text-nowrap text-center">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>@Localizer["CourseTitle"]</th>
+                        <th>@Localizer["TeacherUserName"]</th>
+                        <th>@Localizer["QuestionTitle"]</th>
+                        <th>@Localizer["Operation"]</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    @foreach (var item in Model.Entities)
+                    {
+                        <tr>
+                            <td>@Model.Counter</td>
+                            <td>
+                                <strong>@item.CourseTitle</strong>
+                            </td>
+                            <td>
+                                <strong>@item.MasterFirstName<space></space> @item.MasterLastName</strong>
+                            </td>
+                            <td>
+                                <strong>@item.Title</strong>
+                            </td>
+                            <td>
+                                <strong>@item.CreateDate.ToUserDate()</strong>
+                            </td>
+                            <td>
+                                <a class="text-warning" asp-area="Admin" asp-controller="CourseQuestion" title="@Localizer["QuestionMessages"]" asp-action="ShowMessages" asp-route-QuestionId="@item.Id" id="@Localizer["CourseQuestionsMessages"]">
+                                    <i class="bx bxs-chat me-1"></i>
+                                </a>
+
+                                @if (!item.IsConfirmed)
+                                {
+                                    <a class="text-warning pointer" href="javascript:void(0)" title="@Localizer["ConfirmQuestion"]" onclick="ConfrimCourseQuestion(`@Url.Action("ConfrimCourseQuestion", "CourseQuestion" , new { area="Admin" , id=@item.Id })`)">
+                                        <i class='bx bx-check-shield'></i>
+                                    </a>
+                                }
+                                <a class="text-danger" href="javascript:void(0)" title="@Localizer["Delete"]" onclick="DeleteConfirm('@Url.Action("Delete", "CourseQuestion", new { area = "Admin", id = @item.Id })')" id="deleteBtn-@item.Id" title="@Localizer["Delete"]">
+                                    <i class="bx bx-trash me-1"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                        Model.Counter++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <partial name="_NotFoundPartial" />
+    }
+</div>
+

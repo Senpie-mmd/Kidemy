@@ -1,0 +1,73 @@
+﻿@using Kidemy.Application.ViewModels.ContactUs;
+@using Kidemy.Domain.Enums.ContactUs;
+@model FilterContactUsFormViewModel
+
+<div class="card h-100">
+    <div class="card-header d-inline-flex">
+        <h5>لیست فرم های ارتباط با ما</h5>
+
+        <a asp-action="ContactUsFormList" asp-controller="ContactUs" asp-area="Admin" class="ms-auto">
+           همه
+        </a>
+
+    </div>
+    @if (Model != null && Model.Entities != null && Model.Entities.Any())
+    {
+        <div class="table-responsive mb-4 text-nowrap text-center">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>نام و نام خانوادگی</th>
+                        <th>ایمیل</th>
+                        <th>توضیحات</th>
+                        <th>وضعیت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    @foreach (var item in Model.Entities)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@item.FullName</strong>
+                            </td>
+
+
+
+                            <td> @(string.IsNullOrWhiteSpace(item.Email) ? "-" : item.Email)</td>
+
+                            <td class="td-break-text-500">
+                                @item.Description
+                            </td>
+                            @switch (item.State)
+                            {
+                                case ContactUsFormState.NotAnswered:
+                                    <td>
+                                        <span class="badge bg-label-danger">@item.State.GetEnumName()</span>
+                                    </td>
+                                    break;
+
+                                case ContactUsFormState.Answered:
+                                    <td>
+                                        <span class="badge bg-label-success"> @item.State.GetEnumName()</span>
+                                    </td>
+                                    break;
+                            }
+                            <td>
+                                <a class=" @(item.State==ContactUsFormState.Answered?"text-info":"text-warning")" asp-area="Admin" asp-controller="ContactUs" asp-action="ContactUsFormReply" asp-route-id="@item.Id" id="editBtn-@item.Id" title="@(item.State==ContactUsFormState.Answered?"جزئیات":"پاسخ")">
+                                    <i class="@(item.State==ContactUsFormState.Answered?"fa fa-eye":"fa-solid fa-reply") fa-fw me-1"></i>
+                                </a>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <partial name="_NotFoundPartial" />
+    }
+</div>
+

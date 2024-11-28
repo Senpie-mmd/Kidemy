@@ -1,0 +1,44 @@
+﻿@using Kidemy.Application.Convertors;
+@using Kidemy.Application.ViewModels.Wallet;
+@using Kidemy.Domain.Enums.Wallet;
+@model WalletTransactionDetailsViewModel
+@{
+    ViewData["Title"] = Localizer["PaymentFailed"];
+}
+
+<section class="pt-5">
+    <div class="container">
+        <div class="row border display-flex">
+            <div class="col-4 text-center">
+                <!-- Image -->
+                <i class="display-1 fas fa-thumbs-down text-danger"></i>
+                <!-- Subtitle -->
+                <h2 class="text-danger mb-3">@Localizer["PaymentFailed"]</h2>
+                <!-- info -->
+                <div class="itemrow row">
+                    <div class="col-12 d-flex mb-2">
+                        <span class="me-auto">@Localizer["RefId"]:</span>
+                        <span>@(Model.RefId?.RemoveFristZerosTheRefId() ?? "-")</span>
+                    </div>
+                    <div class="col-12 d-flex mb-2">
+                        <span class="me-auto">@Localizer["Date"]:</span>
+                        <span>@Model.CreatedDateOnUtc.ToUserDate()</span>
+                    </div>
+                    <div class="col-12 d-flex mb-2">
+                        <span class="me-auto">@Localizer["Hours"]:</span>
+                        <span>@Model.CreatedDateOnUtc.ToUserShortTime()</span>
+                    </div>
+                </div>
+                <!-- Button -->
+                @if (Model.TransactionCase == WalletTransactionCase.PayOrder)
+                {
+                    <a asp-controller="Order" asp-action="Details" asp-area="UserPanel" asp-route-id="@Model.OrderId" class="btn btn-primary mt-4 mb-3">@Localizer["OrderDetails"]</a>
+                }
+                else if (Model.TransactionCase == WalletTransactionCase.ChargeWallet)
+                {
+                    <a asp-controller="Wallet" asp-action="Index" asp-area="UserPanel" class="btn btn-primary mt-4 mb-3">@Localizer["BackToWallet"]</a>
+                }
+            </div>
+        </div>
+    </div>
+</section>

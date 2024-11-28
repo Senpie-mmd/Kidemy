@@ -1,0 +1,24 @@
+﻿@using Kidemy.Domain.Enums.Course;
+@using Kidemy.Application.ViewModels.Course.ClientSideCourse.Comments
+@model ClientSideCreateCommentViewModel
+
+<div class="mt-2">
+    <h5 class="mb-4">@Localizer["AddComment"]</h5>
+    <form class="row g-3" onsubmit="submitForm('#createCommentForm')" id="createCommentForm" method="post" asp-area="" asp-controller="Courses" asp-action="CreateComments">
+        <input type="hidden" asp-for="CourseSlug" />
+        <div class="col-12 bg-light-input">
+            <label asp-for="Score"></label>
+            <select asp-items="@Html.GetEnumSelectList<CourseCommentsScore>()" asp-for="Score" class="form-select js-choice">
+            </select>
+            <span asp-validation-for="Score"></span>
+        </div>
+        <div class="col-12 bg-light-input">
+            <label asp-for="Message"></label>
+            <textarea class="form-control" asp-for="Message" rows="3"></textarea>
+            <span asp-validation-for="Message"></span>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary mb-0">@Localizer["SubmitComment"]</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,33 @@
+﻿@using Kidemy.Application.ViewModels.FAQ;
+
+@model AdminSideUpsertFAQViewModel
+@{
+    ViewData["Title"] = Localizer["UpdateFAQ"];
+}
+
+<form asp-action="Update" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card p-lg-5">
+                <div class="card-body">
+                    <div class="row">
+                        @await Component.InvokeAsync("Localized", Model)
+                    </div>
+                    <div class="row">
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-start">
+                                <button type="submit" class="btn btn-success">@Localizer["Submit"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div asp-validation-summary="All" class="text-danger mt-3"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+

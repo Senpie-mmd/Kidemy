@@ -1,0 +1,92 @@
+﻿@using Kidemy.Application.ViewModels.MasterContract;
+@using Kidemy.Application.ViewModels.UploadedMasterContract;
+@using Kidemy.Domain.Enums.Master;
+@model List<ClientSideMasterContractDetailsViewModel>
+
+@{
+    ViewData["Title"] = Localizer["MastersContracts"];
+    var uploadedMasterContracts = ViewData["UploadedMasterContracts"] as List<ClientSideUploadedMasterContractDetailsViewModel>;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["MastersContracts"]</h5>
+            </div>
+            @if (Model != null && Model != null && Model.Any())
+            {
+                <div class="table-responsive mb-4 text-nowrap text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["Title"]</th>
+                                <th>@Localizer["Status"]</th>
+                                <th>@Localizer["Operation"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in Model)
+                            {
+                                var uploaded = uploadedMasterContracts.FirstOrDefault(u => u.MasterContractId == item.Id);
+
+                                <tr>
+                                    <td>@(string.IsNullOrEmpty(item.Title) ? "-" : item.Title)</td>
+                                    @if (uploaded is null)
+                                    {
+                                        <td>@Localizer["PendingUpload"]</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@uploaded.Status.GetEnumName()</td>
+                                    }
+                                    @if (uploaded is null || uploaded.Status == UploadedMasterContractStatus.PendingUpload)
+                                    {
+                                        <td>
+                                            
+                                            <form enctype="multipart/form-data" asp-action="UploadedMasterContract" asp-controller="Master" method="post" id="uploadFormId">
+                                                <input hidden asp-for="@item.Id" name="MasterContractId" />
+                                                <a class="btn btn-info mt-2" asp-area="UserPanel" asp-controller="Master" asp-action="DownloadMasterContract" asp-route-fileMasterContractName="@item.FileName">
+                                                      @Localizer["DownloadSampleContract"]
+                                                </a>
+                                                <label for="uploadImage-@item.Id">
+                                                    <button type="button" class="btn btn-info mt-2">@Localizer["ContractUpload"]</button>
+                                                </label>
+                                                <input id="uploadImage-@item.Id" ImageInput="1" type="file" accept=".pdf, .xls, .xlsx" class="my-file-input d-none" asp-for="@item.File" name="File" />
+                                            </form>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll(".my-file-input").forEach(file => {
+        file.addEventListener("change", (e) => {
+            e.target.form.submit();
+        });
+    })
+
+    document.querySelectorAll(`[for*="uploadImage"]`).forEach(button => {
+        if (button != null) {
+            button.addEventListener("click", function () {
+                let file = document.getElementById(button.getAttribute("for"))
+                file.click();
+            });
+        }
+    })
+</script>

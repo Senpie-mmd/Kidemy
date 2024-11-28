@@ -1,0 +1,38 @@
+﻿@using Kidemy.Application.ViewModels.BankAccountCard
+@model BankAccountCardViewModel
+
+@if(Model is not null)
+{
+    <div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="row mt-4">
+                    <div class="col-12 col-lg-12">
+                        <div class="form-group mb-4">
+                            <span>@Localizer["CardNumber"]: </span>
+                            @Model.CardNumber
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12">
+                        <div class="form-group mb-4">
+                            <span>@Localizer["ShabaNumber"]: </span>
+                            @Model.ShabaNumber
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12">
+                        <div class="form-group mb-4">
+                            <span>@Localizer["AccountNumber"]: </span>
+                            @Model.AccountNumber
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+else
+{
+    <partial name="_NotFoundPartial" />
+}

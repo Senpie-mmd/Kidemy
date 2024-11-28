@@ -1,0 +1,76 @@
+﻿@using Kidemy.Application.ViewModels.Master;
+@model FilterForClientSideMasterViewModel
+@{
+    ViewData["Title"] = Localizer["MastersList"];
+}
+
+<section class="pt-4">
+    <div class="container">
+        <div class="row mb-4 align-items-center">
+            <div class="col-sm-12 col-xl-12">
+                <form asp-area="" asp-controller="Master" asp-action="MasterList" method="get" id="filter-search" class="d-flex">
+                    <input type="hidden" asp-for="Page" />
+                    <div class="row w-100">
+                        <div class="mb-3 col-6 col-md-6">
+                            <input type="search" asp-for="FullName" class="form-control" placeholder="@Localizer["FullName"]" aria-label="Search">
+                        </div>
+
+                        <div class="mb-3 col-6 col-md-6">
+                            <button class="btn btn-outline-primary w-25" type="submit">@Localizer["Search"]</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                @foreach (var item in Model.Entities)
+                {
+                    <div class="col-lg-10 col-xl-6">
+                        <div class="card shadow p-2">
+                            <div class="row g-0">
+
+                                <div class="col-md-4">
+                                    <a asp-area="" asp-controller="Master" asp-action="MasterDetails" asp-route-id="@item.Id">
+                                        <img src="@SiteTools.UserImagePath@item.AvatarName" class="rounded-3 master-image">
+                                    </a>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <div class="card-body">
+
+                                        <div class="d-sm-flex justify-content-sm-between mb-2 mb-sm-3">
+                                            <div>
+                                                <h5 class="card-title mb-0">
+                                                    <a asp-area="" asp-controller="Master" asp-action="MasterDetails" asp-route-id="@item.Id">
+                                                        @(string.IsNullOrEmpty(item.FirstName) ? "-" : item.FirstName) @(string.IsNullOrEmpty(item.LastName) ? "-" : item.LastName)
+                                                    </a>
+                                                </h5>
+
+                                            </div>
+                                        </div>
+
+                                        <p class="text-truncate-2 mb-3">@item.Bio</p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+
+        </div>
+
+
+    </div>
+</section>

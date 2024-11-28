@@ -1,0 +1,100 @@
+﻿@using Kidemy.Application.ViewModels.Course.ClientSideCourse.CourseDetail
+@model ClientSideFilterCourseForUserPanelViewModel
+
+<div class="card bg-transparent border rounded-3">
+    <!-- Card header START -->
+    <div class="d-flex card-header bg-transparent border-bottom justify-content-between">
+        <h3 class="mb-0 fs-5 ff-vb">@Localizer["MyMercenaryCourses"]</h3>
+        @if (Model is not null && Model.Entities is not null && Model.Entities.Any() && Model.Entities.Count() > 5)
+        {
+            <a class="me-3" asp-area="UserPanel" asp-controller="Course" asp-action="MercenaryCoursesList">@Localizer["SeeAll"]</a>
+        }
+    </div>
+    <!-- Card header END -->
+    <!-- Card body START -->
+    <div class="card-body">
+
+        @if (Model?.Entities?.Any() ?? false)
+        {
+            <!-- Search and select START -->
+            <div class="row g-3 align-items-center justify-content-between mb-4">
+                <!-- Content -->
+                <!-- Select option -->
+                @*         <div class="col-md-3">
+            <!-- Short by filter -->
+            <form>
+            <div class="choices" data-type="select-one" tabindex="0" role="combobox" aria-autocomplete="list" aria-haspopup="true" aria-expanded="false"><div class="choices__inner"><select class="form-select js-choice border-0 z-index-9 bg-transparent choices__input" aria-label=".form-select-sm" hidden="" tabindex="-1" data-choice="active"><option value="" data-custom-properties="[object Object]">مرتب سازی</option></select><div class="choices__list choices__list--single"><div class="choices__item choices__placeholder choices__item--selectable" data-item="" data-id="1" data-value="" data-custom-properties="[object Object]" aria-selected="true">مرتب سازی</div></div></div><div class="choices__list choices__list--dropdown" aria-expanded="false"><input type="search" name="search_terms" class="choices__input choices__input--cloned" autocomplete="off" autocapitalize="off" spellcheck="false" role="textbox" aria-autocomplete="list" aria-label="مرتب سازی" placeholder=""><div class="choices__list" role="listbox"><div id="choices--x0m3-item-choice-5" class="choices__item choices__item--choice is-selected choices__placeholder choices__item--selectable is-highlighted" role="option" data-choice="" data-id="5" data-value="" data-select-text="Press to select" data-choice-selectable="" aria-selected="true">مرتب سازی</div><div id="choices--x0m3-item-choice-1" class="choices__item choices__item--choice choices__item--selectable" role="option" data-choice="" data-id="1" data-value="پربازدیدترین" data-select-text="Press to select" data-choice-selectable="">پربازدیدترین</div><div id="choices--x0m3-item-choice-2" class="choices__item choices__item--choice choices__item--selectable" role="option" data-choice="" data-id="2" data-value="پرفروش ترین" data-select-text="Press to select" data-choice-selectable="">پرفروش ترین</div><div id="choices--x0m3-item-choice-3" class="choices__item choices__item--choice choices__item--selectable" role="option" data-choice="" data-id="3" data-value="جدیدترین" data-select-text="Press to select" data-choice-selectable="">جدیدترین</div><div id="choices--x0m3-item-choice-4" class="choices__item choices__item--choice choices__item--selectable" role="option" data-choice="" data-id="4" data-value="رایگان" data-select-text="Press to select" data-choice-selectable="">رایگان</div></div></div></div>
+            </form>
+            </div> *@
+            </div>
+            <!-- Search and select END -->
+            <!-- Course list table START -->
+
+            <div class="table-responsive border-0">
+                <table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
+                    <!-- Table head -->
+                    <thead>
+                        <tr>
+                            <th scope="col" class="border-0 rounded-start">@Localizer["Title"]</th>
+                            <th scope="col" class="border-0">@Localizer["LastUpdatedDate"]</th>
+                            <th scope="col" class="border-0 rounded-end">@Localizer["Operation"]</th>
+                        </tr>
+                    </thead>
+
+                    <!-- Table body START -->
+                    <tbody>
+                        @foreach (var item in Model.Entities)
+                        {
+                            <!-- Table item -->
+                            <tr>
+                                <!-- Table data -->
+                                <td>
+                                    <div class="d-flex align-items-center ">
+                                        <!-- Image -->
+                                        <div class="w-100px">
+                                            <img src="@SiteTools.CourseImagesPath@item.ImageName" class="rounded" alt="">
+                                        </div>
+                                        <div class="mb-0 ms-2">
+                                            <!-- Title -->
+                                            <h6 class="fw-normal">
+                                                <a asp-area="" asp-controller="Courses" asp-action="CourseDetails" asp-route-slug="@item.Slug">
+
+                                                    @item.Title
+
+                                                </a>
+                                            </h6>
+                                            <!-- Info -->
+
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <!-- Table data -->
+                                <td>
+                                    @item.UpdatedDateOnUTC.ToUserDate()
+                                </td>
+                                <td>
+                                    <a asp-area="" asp-controller="Courses" asp-action="CourseDetails" asp-route-slug="@item.Slug"><i class="bi bi-play-circle me-1"></i>@Localizer["View"]</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <!-- Table body END -->
+                </table>
+            </div>
+
+            <!-- Course list table END -->
+            <!-- Pagination START -->
+
+            <partial name="_UserPanelPaging" model="Model.GetCurrentPaging()" />
+
+            <!-- Pagination END -->
+        }
+        else
+        {
+            <partial name="_NotFoundPartial" />
+        }
+    </div>
+    <!-- Card body START -->
+</div>
+

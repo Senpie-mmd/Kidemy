@@ -1,0 +1,131 @@
+﻿@using Kidemy.Application.ViewModels.Wallet;
+@using Kidemy.Domain.Enums.Wallet;
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Kidemy.Application.Convertors
+@model FilterWalletTransactionViewModel
+
+@{
+    ViewData["Title"] = Localizer["Transactions"];
+}
+<!-- Row -->
+
+<form asp-area="UserPanel" asp-controller="Wallet" asp-action="TransactionsList" method="get" id="filter-search" class="d-none">
+    <input type="hidden" asp-for="Page">
+</form>
+
+<div class="col-xl-12 col-lg-12 col-md-12">
+
+    <div class="card bg-transparent border rounded-3">
+        <!-- Card header START -->
+        @if (Model?.Entities?.Any() ?? false)
+        {
+            <div class="card-header bg-transparent border-bottom">
+                <h3 class="mb-0 fs-5 ff-vb">@Localizer["TransactionsList"]</h3>
+            </div>
+            <div class="card-body">
+                <div class="row g-3 align-items-center justify-content-between mb-4">
+                </div>
+                <div class="table-responsive border-0">
+                    <table class="table table-dark-gray align-middle p-4 mb-0 table-hover text-center">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="border-0 rounded-start">@Localizer["TransactionId"]</th>
+                                <th scope="col" class="border-0">@Localizer["TransactionType"]</th>
+                                <th scope="col" class="border-0">@Localizer["Price"]</th>
+                                <th scope="col" class="border-0">
+                                    @Localizer["Status"]</th>
+                                <th scope="col" class="border-0">@Localizer["Description"]</th>
+                                <th scope="col" class="border-0">@Localizer["Date"]</th>
+                                <th scope="col" class="border-0 rounded-end">@Localizer["RefId"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Entities)
+                            {
+                                var description = item.Description;
+                                if (item.TransactionCase != WalletTransactionCase.AdminActivity)
+                                {
+                                    switch (item.TransactionType, item.TransactionCase)
+                                    {
+                                        case (WalletTransactionType.Deposit, WalletTransactionCase.PayOrder):
+                                            description = string.Format(Localizer["ChargeToPayOrder"].Value.ToString(), item.OrderId);
+                                            break;
+                                        case (WalletTransactionType.Withdraw, WalletTransactionCase.PayOrder):
+                                            description = string.Format(Localizer["WithdrawToPayOrder"].Value.ToString(), item.OrderId);
+                                            break;
+                                        case (WalletTransactionType.Deposit, WalletTransactionCase.ChargeWallet):
+                                            description = Localizer["ChargeWallet"].Value.ToString();
+                                            break;
+                                        case (WalletTransactionType.Deposit, WalletTransactionCase.UndoTransaction):
+                                            description = Localizer["UndoTransaction"].Value.ToString();
+                                            break;
+                                        case (WalletTransactionType.Withdraw, WalletTransactionCase.WithdrawRequest):
+                                            description = Localizer["WithdrawRequest"].Value.ToString();
+                                            break;
+                                        case (WalletTransactionType.Withdraw, WalletTransactionCase.VIPPlan):
+                                            description = Localizer["WithdrawToVIPPlan"].Value.ToString();
+                                            break;
+                                        case (WalletTransactionType.Deposit, WalletTransactionCase.VIPPlan):
+                                            description = Localizer["ChargeToVIPPlan"].Value.ToString();
+                                            break;
+                                        case (WalletTransactionType.Deposit, WalletTransactionCase.CourseCommission):
+                                            description = Localizer["ChargeForCourseCommission"].Value.ToString();
+                                            break;
+                                        case (WalletTransactionType.Withdraw, WalletTransactionCase.ConsultationRequest):
+                                            description = Localizer["WithdrawToPayConsulationRequest"].Value.ToString();
+                                            break;
+                                        case (WalletTransactionType.Deposit, WalletTransactionCase.ConsultationRequest):
+                                            description = Localizer["ChargeToPayConsulationRequest"].Value.ToString();
+                                            break;
+                                        case (WalletTransactionType.Deposit, WalletTransactionCase.ReturnConsultationRequestMoney):
+                                            description = Localizer["ReturnConsultationRequestMoney"].Value.ToString();
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+
+                                <tr>
+                                    <td>
+                                        <h6 class="mt-2 mt-lg-0 mb-0 fw-normal"><a href="#">@item.Id</a></h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="mt-2 mt-lg-0 mb-0 fw-normal">
+                                            <span class="@((item.TransactionType==WalletTransactionType.Deposit)? "text-success":"text-danger")">
+                                                @item.TransactionType.GetEnumName()
+                                            </span>
+                                        </h6>
+                                    </td>
+                                    <td>
+                                        @item.Amount.ToString("#,0") @Localizer["Toman"]
+                                    </td>
+                                    <td class="text-center text-sm-start">
+                                        @if (item.IsSuccess)
+                                        {
+                                            <span class="badge bg-success bg-opacity-10 text-success">@Localizer["Successful"]</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger bg-opacity-10 text-danger">@Localizer["Unsuccessful"]</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <h6 class="mt-2 mt-lg-0 mb-0 fw-normal">@description<a href="#"></a></h6>
+                                    </td>
+                                    <td class="ltr">@item.CreatedDateOnUtc.ToUserShortDateTime()</td>
+                                    <td>@(item.RefId?.RemoveFristZerosTheRefId() ?? "-")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <partial name="_UserPanelPaging" model="Model.GetCurrentPaging()" />
+        }
+        else
+        {
+            <partial name="_NotFoundPartial" />
+        }
+    </div>
+</div>

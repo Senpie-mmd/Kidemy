@@ -1,0 +1,127 @@
+@using Kidemy.Domain.Enums;
+@using Kidemy.Domain.Enums.Discount;
+@model Kidemy.Application.ViewModels.Discount.AdminSide.AdminSideUpsertDiscountLimitationViewModel
+
+<form asp-area="Admin" asp-controller="Discount" asp-action="CreateDiscountLimitation" method="post" enctype="multipart/form-data" id="discount-limitation-form">
+    <input type="hidden" asp-for="DiscountId" />
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-md-6 mb-4 pe-0">
+                            <label asp-for="Type"></label>
+                            <select asp-for="Type" id="discount-limitation-type" class="form-select" asp-items="@Html.GetEnumSelectList<DiscountLimitationType>()">
+                                <option value="">@Localizer["Select"]</option>
+                            </select>
+                        </div>
+                        <div id="limitations">
+                            <div class="col-12 col-md-6 mb-4 d-none" id="usagecount">
+                                <label asp-for="UsageCount.Count"></label>
+                                <input asp-for="UsageCount.Count" type="number" class="form-control" />
+                            </div>
+                            <div class="col-12 mb-4 d-none" id="users">
+                                <div class="card-header px-0">
+                                    <div>
+                                        <button class="btn btn-primary btn-sm" onclick="ShowSearchUserModal()" type="button">@Localizer["Add"]</button>
+                                    </div>
+                                </div>
+                                <div class="card-body px-0">
+                                    <div class="table-responsive mb-4 text-nowrap text-center">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>@Localizer["UserName"]</th>
+                                                    <th>@Localizer["Operation"]</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="table-border-bottom-0">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-4 d-none" id="courses">
+                                <div class="card-header px-0">
+                                    <div>
+                                        <button class="btn btn-primary btn-sm" onclick="ShowSearchCourseModal()" type="button">@Localizer["Add"]</button>
+                                    </div>
+                                </div>
+                                <div class="card-body px-0">
+                                    <div class="table-responsive mb-4 text-nowrap text-center">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>@Localizer["Title"]</th>
+                                                    <th>@Localizer["Operation"]</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="table-border-bottom-0">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-4 d-none" id="categories">
+                                <div class="card-header px-0">
+                                    <div>
+                                        <button class="btn btn-primary btn-sm" onclick="ShowSearchCategoryModal()" type="button">@Localizer["Add"]</button>
+                                    </div>
+                                </div>
+                                <div class="card-body px-0">
+                                    <div class="table-responsive mb-4 text-nowrap text-center">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>@Localizer["Title"]</th>
+                                                    <th>@Localizer["Operation"]</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="table-border-bottom-0">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-start">
+                                <button type="submit" class="btn btn-success">@Localizer["Save"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="text-danger" asp-validation-summary="All"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script asp-append-version="true" src="/admin/js/discountlimitationmodal.js"></script>
+<script asp-append-version="true">
+    document.getElementById("discount-limitation-type").addEventListener("change", (e) => {
+        switch (e.target.value) {
+            case "@((int)DiscountLimitationType.UsageCount)":
+                document.querySelector("#limitations .show")?.classList?.replace("show", "d-none");
+                document.getElementById("usagecount").classList.replace("d-none", "show");
+                break;
+            case "@((int)DiscountLimitationType.User)":
+                document.querySelector("#limitations .show")?.classList?.replace("show", "d-none");
+                document.getElementById("users").classList.replace("d-none", "show");
+                break;
+            case "@((int)DiscountLimitationType.Course)":
+                document.querySelector("#limitations .show")?.classList?.replace("show", "d-none");
+                document.getElementById("courses").classList.replace("d-none", "show");
+                break;
+            case "@((int)DiscountLimitationType.Category)":
+                document.querySelector("#limitations .show")?.classList?.replace("show", "d-none");
+                document.getElementById("categories").classList.replace("d-none", "show");
+                break;
+            default:
+                document.querySelector("#limitations .show")?.classList?.replace("show", "d-none");
+                break;
+        }
+    });
+</script>

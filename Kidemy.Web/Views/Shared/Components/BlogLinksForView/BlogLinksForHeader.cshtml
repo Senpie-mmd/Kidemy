@@ -1,0 +1,13 @@
+﻿@using Kidemy.Application.ViewModels.Blog;
+@model List<BlogLinksForClientSideViewModel>
+
+
+@if (Model is not null && Model.Any())
+{
+    foreach (var item in Model)
+    {
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Blog" asp-action="Blog" id="pagesMenu" aria-haspopup="true" aria-expanded="false" asp-route-slug="@item.slug">@item.Title</a>
+        </li>
+    }
+}

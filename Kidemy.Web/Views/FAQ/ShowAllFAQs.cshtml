@@ -1,0 +1,39 @@
+﻿@using Kidemy.Application.ViewModels.FAQ;
+@using System.Text.RegularExpressions;
+@model List<ClientSideFAQViewModel>
+
+@{
+    ViewData["Title"] = Localizer["FAQ"];
+}
+
+<div class="container">
+    <div class="row g-4 g-md-5">
+        <div class="col-lg-12">
+            <h3 class="mb-4 fs-5">@Localizer["FAQs"]</h3>
+            <div class="accordion accordion-icon accordion-bg-light" id="accordionExample2">
+                @if (Model != null && Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <div class="accordion-item mb-3">
+                            <h6 class="accordion-header font-base" id="heading-1">
+                                <button data-bs-target="#@Regex.Replace(item.Title, @"\s", string.Empty)" class="accordion-button fw-bold rounded d-inline-block collapsed" type="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="@Regex.Replace(item.Title, @"\s", string.Empty)">
+                                    @item.Title
+                                </button>
+                            </h6>
+                            <div id="@Regex.Replace(item.Title, @"\s", string.Empty)" class="accordion-collapse collapse" aria-labelledby="@Regex.Replace(item.Title, @"\s", string.Empty)" data-bs-parent="#accordionExample2" style="">
+                                <div class="accordion-body mt-3">
+                                    @Html.Raw(item.Answer)
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <partial name="_NotFoundPartial" />
+                }
+            </div>
+        </div>
+    </div>
+</div>

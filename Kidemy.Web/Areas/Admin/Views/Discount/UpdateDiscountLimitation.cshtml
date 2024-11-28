@@ -1,0 +1,160 @@
+@using Kidemy.Domain.Enums;
+@using Kidemy.Domain.Enums.Discount;
+@model Kidemy.Application.ViewModels.Discount.AdminSide.AdminSideUpsertDiscountLimitationViewModel
+
+<form asp-area="Admin" asp-controller="Discount" asp-action="UpdateDiscountLimitation" method="post" enctype="multipart/form-data" id="discount-limitation-form">
+    <input type="hidden" asp-for="DiscountId" />
+    <input type="hidden" asp-for="Type" />
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-md-6 mb-4 pe-0">
+                            <label asp-for="Type"></label>:
+                            <span>@Model.Type.GetEnumName()</span>
+                        </div>
+                        <div id="limitations">
+                            @if (Model.Type is DiscountLimitationType.UsageCount)
+                            {
+                                <div class="col-12 col-md-6 mb-4" id="usagecount">
+                                    <label asp-for="UsageCount.Count"></label>
+                                    <input asp-for="UsageCount.Count" type="number" class="form-control" />
+                                </div>
+                            }
+                            else if (Model.Type is DiscountLimitationType.User)
+                            {
+                                <div class="col-12 mb-4" id="users">
+                                    <div class="card-header px-0">
+                                        <div>
+                                            <button class="btn btn-primary btn-sm" onclick="ShowSearchUserModal()" type="button">@Localizer["Add"]</button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body px-0">
+                                        <div class="table-responsive mb-4 text-nowrap text-center">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>@Localizer["UserName"]</th>
+                                                        <th>@Localizer["Operation"]</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="table-border-bottom-0">
+                                                    @foreach (var item in Model.Users)
+                                                    {
+                                                        <tr for="@item.UserId">
+                                                            <td>@item.UserName</td>
+                                                            <td>
+                                                                <a class="text-danger" href="javascript:void(0)" title="@Localizer["Delete"]" onclick="DeleteUser('@item.UserId')">
+                                                                    <i class="bx bx-trash me-1"></i>
+                                                                </a>
+                                                            </td>
+
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else if (Model.Type is DiscountLimitationType.Course)
+                            {
+                                <div class="col-12 mb-4" id="courses">
+                                    <div class="card-header px-0">
+                                        <div>
+                                            <button class="btn btn-primary btn-sm" onclick="ShowSearchCourseModal()" type="button">@Localizer["Add"]</button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body px-0">
+                                        <div class="table-responsive mb-4 text-nowrap text-center">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>@Localizer["Title"]</th>
+                                                        <th>@Localizer["Operation"]</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="table-border-bottom-0">
+                                                    @foreach (var item in Model.Courses)
+                                                    {
+                                                        <tr for="@item.CourseId">
+                                                            <td>@item.CourseTitle</td>
+                                                            <td>
+                                                                <a class="text-danger" href="javascript:void(0)" title="@Localizer["Delete"]" onclick="DeleteCourse('@item.CourseId')">
+                                                                    <i class="bx bx-trash me-1"></i>
+                                                                </a>
+                                                            </td>
+
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else if (Model.Type is DiscountLimitationType.Category)
+                            {
+                                <div class="col-12 mb-4" id="categories">
+                                    <div class="card-header px-0">
+                                        <div>
+                                            <button class="btn btn-primary btn-sm" onclick="ShowSearchCategoryModal()" type="button">@Localizer["Add"]</button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body px-0">
+                                        <div class="table-responsive mb-4 text-nowrap text-center">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>@Localizer["Title"]</th>
+                                                        <th>@Localizer["Operation"]</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="table-border-bottom-0">
+                                                    @foreach (var item in Model.Categories)
+                                                    {
+                                                        <tr for="@item.CategoryId">
+                                                            <td>@item.CategoryTitle</td>
+                                                            <td>
+                                                                <a class="text-danger" href="javascript:void(0)" title="@Localizer["Delete"]" onclick="DeleteCategory('@item.CategoryId')">
+                                                                    <i class="bx bx-trash me-1"></i>
+                                                                </a>
+                                                            </td>
+
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-start">
+                                <button type="submit" class="btn btn-success">@Localizer["Save"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="text-danger" asp-validation-summary="All"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script asp-append-version="true" src="/admin/js/discountlimitationmodal.js"></script>
+<script asp-append-version="true">
+    if ('@(Model.Type is DiscountLimitationType.User)' == 'True') {
+        selectedUserIds = [@string.Join(", ", Model.Users.Select(u => u.UserId))]
+    }
+    else if ('@(Model.Type is DiscountLimitationType.Category)' == 'True') {
+        selectedCategoryIds = [@string.Join(", ", Model.Categories.Select(u => u.CategoryId))]
+    }
+    else if ('@(Model.Type is DiscountLimitationType.Course)' == 'True') {
+        selectedCourseIds = [@string.Join(", ", Model.Courses.Select(u => u.CourseId))]
+    }
+</script>

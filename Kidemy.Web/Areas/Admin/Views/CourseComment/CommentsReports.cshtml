@@ -1,0 +1,80 @@
+﻿@using Kidemy.Application.ViewModels.Course.ClientSideCourse.CourseCommentReport
+@using Kidemy.Domain.Enums.Course
+@model AdminSideFilterCourseCommentReportViewModel
+
+@{
+    ViewData["Title"] = Localizer["ReportedComments"];
+}
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["Search"]</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="CourseComment" id="filter-search" method="get" asp-action="CommentsReports" class="d-flex">
+                    <input type="hidden" asp-for="Page" />
+                    <div class="row w-100">
+
+                        <div class="form-group mb-3 col-6 col-md-6">
+                            <label asp-for="IsCheckedByAdmin" class="form-label"></label>
+                            <select asp-for="IsCheckedByAdmin" class="form-select me-2 select2">
+                                <option>@Localizer["All"]</option>
+                                <option value="true">@Localizer["Checked"]</option>
+                                <option value="false">@Localizer["UnChecked"]</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="FromDate" class="form-label"></label>
+                            <input type="text" class="form-control persianDate" asp-for="FromDate" autocomplete="off">
+                        </div>
+
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="ToDate" class="form-label"></label>
+                            <input type="text" class="form-control persianDate" asp-for="ToDate" autocomplete="off">
+                        </div>
+
+                        <div class="mb-3 col-7 col-md-7">
+                            <button class="btn btn-outline-primary w-25" type="submit">@Localizer["Search"]</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div id="LoadComments" class="col-md-12">
+        @if (Model != null && Model.Entities != null && Model.Entities.Any())
+        {
+            @foreach (var item in Model?.Entities ?? new List<AdminSideComentReportViewModel>())
+            {
+                <p class="p-3 shadow rounded">
+                    @Localizer["ReportedBy"]: @item.ReportedByFullName -- <span dir="ltr">@item.ReportedDate</span> --
+                    @if (item.IsCheckedByAdmin == true)
+                    {
+                        <span class="alert alert-success p-2">@Localizer["Checked"]</span>
+                    }
+                    else
+                    {
+                        <span class="alert alert-danger p-2">@Localizer["UnChecked"]</span>
+                    }
+                    <br />
+                    @Localizer["Message"]:
+                    <br />
+                    @item.Message
+                    <br />
+                    <br />
+                    <a class="btn btn-info" permission="ReportedCommentsList" asp-area="Admin" asp-controller="CourseComment" asp-route-reportId="@item.Id"
+                       asp-action="ViewComment" asp-route-commentId="@item.ReportedCommentId">@Localizer["Check"]</a>
+                </p>
+            }
+            <partial name="_Paging" model="@Model.GetCurrentPaging()" />
+        }
+        else
+        {
+            <partial name="_NotFoundPartial" />
+        }
+    </div>
+</div>

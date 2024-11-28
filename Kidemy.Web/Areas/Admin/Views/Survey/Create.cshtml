@@ -1,0 +1,41 @@
+﻿@using Kidemy.Application.ViewModels.Survey;
+@using Kidemy.Application.ViewModels.Survey.SurveyModels;
+@model AdminSideUpsertSurveyViewModel
+@{
+    ViewData["Title"] = Localizer["CreateSurvey"];
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card p-lg-5">
+            <form asp-action="Create" asp-controller="Survey" asp-area="Admin" method="post">
+                <div class="card-body">
+                    <div class="row">
+                        @await Component.InvokeAsync("Localized", Model)
+
+                        <div class="col-12 col-lg-12">
+                            <div class="col-md-12 mb-4">
+                                <div class="form-group form-check">
+                                    <input type="checkbox" asp-for="IsPublished" class="form-check-input" />
+                                    <label asp-for="IsPublished" class="form-check-label">@Localizer["IsPublished"]</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-12">
+                            <div class="row">
+                                <div class="col-12 d-flex justify-content-start">
+                                    <button type="submit" class="btn btn-success">@Localizer["Submit"]</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="text-danger" asp-validation-summary="All"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

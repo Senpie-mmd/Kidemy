@@ -1,0 +1,10 @@
+﻿@using Kidemy.Application.ViewModels.SiteSetting;
+@using Kidemy.Domain.Statics;
+@{
+    var siteSetting = ViewData["SiteSetting"] as SiteSettingDetailsViewModel;
+}
+
+<a class="navbar-brand" href="/">
+    <img class="light-mode-item navbar-brand-item" src="@SiteTools.SiteSettingImagePath@siteSetting.LogoName" alt="logo">
+    <img class="dark-mode-item navbar-brand-item" src="@SiteTools.SiteSettingImagePath@siteSetting.LogoName" alt="logo">
+</a>

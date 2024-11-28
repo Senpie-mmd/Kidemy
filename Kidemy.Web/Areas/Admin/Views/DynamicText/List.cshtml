@@ -1,0 +1,91 @@
+﻿@using Kidemy.Application.ViewModels.DynamicText;
+@using Kidemy.Domain.Enums.DynamicText;
+@model FilterDynamicTextViewModel
+@{
+    ViewData["Title"] = Localizer["DynamicTextsList"];
+}
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["Search"]</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="DynamicText" asp-action="List" method="post" id="filter-search" class="d-flex">
+                    <input type="hidden" asp-for="Page" />
+                    <div class="row w-100">
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="Position" class="form-label"></label>
+                            <select asp-for="Position" class="form-select me-2 ">
+                                <option value="">@Localizer["All"]</option>
+                                @foreach (var position in Enum.GetValues(typeof(DynamicTextPosition)).Cast<DynamicTextPosition>())
+                                {
+                                    if (Model.Position == position)
+                                    {
+                                        <option value="@position" selected="">@position.GetEnumName()</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@position">@position.GetEnumName()</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3 col-7 col-md-7">
+                            <button class="btn btn-outline-primary w-25" type="submit">@Localizer["Search"]</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div id="FilterUsers" class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["DynamicTextsList"]</h5>
+            </div>
+            @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                <div class="table-responsive mb-4 text-nowrap text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>@Localizer["Text"]</th>
+                                <th>@Localizer["DynamicTextPosition"]</th>
+                                <th>@Localizer["Operation"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in Model.Entities)
+                            {
+                                <tr>
+
+                                    <td>@Model.Counter</td>
+                                    <td>@item.Text</td>
+                                    <td>
+                                        <strong>@item.Position.GetEnumName()</strong>
+                                    </td>
+                                    <td>
+                                        <a class="text-warning" asp-area="Admin" asp-controller="DynamicText" asp-action="Update" asp-route-id="@item.Id" id="@Localizer["Edit"]">
+                                            <i class="bx bx-edit-alt me-1"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+
+                                Model.Counter++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+</div>

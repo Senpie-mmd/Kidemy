@@ -1,0 +1,84 @@
+﻿@using Kidemy.Application.ViewModels.Slider;
+@using Kidemy.Domain.Enums.Slider;
+@using Kidemy.Domain.Statics;
+
+@model AdminSideUpdateSliderViewModel
+@{
+    ViewData["Title"] = Localizer["UpdateSlider"];
+}
+
+<form asp-action="Update" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card p-lg-5">
+                <div class="card-body">
+                    <div class="row">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="ImageName" />
+                        @await Component.InvokeAsync("Localized", Model)
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-lg-12">
+                            <div class="form-group mb-4">
+                                <label asp-for="SliderPlace" class="form-label"></label>
+                                <select asp-for="SliderPlace" class="form-select me-2 ">
+                                    @foreach (var sliderPlace in Enum.GetValues(typeof(SliderPlace)).Cast<SliderPlace>())
+                                    {
+                                        if (Model.SliderPlace == sliderPlace)
+                                        {
+                                            <option value="@sliderPlace" selected="">@sliderPlace.GetEnumName()</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@sliderPlace">@sliderPlace.GetEnumName()</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-12">
+                            <div class="form-group mb-4">
+                                <label asp-for="URL" class="form-label"></label>
+                                <input asp-for="URL" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-12">
+                            <div class="form-group mb-4">
+                                <label asp-for="Priority" class="form-label"></label>
+                                <input asp-for="Priority" class="form-control number" min="1" />
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-12">
+                            <div class="mb-4 form-check padding-top-2-percent">
+                                <input class="form-check-input" type="checkbox" asp-for="IsPublished">
+                                <label class="form-check-label" asp-for="IsPublished"></label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-start">
+                                <button type="submit" class="btn btn-success">@Localizer["Edit"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div asp-validation-summary="All" class="text-danger mt-3"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4 mb-md-0">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mt-4 mb-4">
+                        <h6 class="fs-6 mb-2">@Localizer["PleaseUplodaImage"]</h6>
+                        <img src="@SiteTools.SliderImagePath@Model.ImageName" class="w-100 rounded-2 mb-3" ImageFile="1" />
+                        <label for="uploadImage" class=" w-100">
+                            <button type="button" class="btn btn-info  w-100" id="uploadBtn">@Localizer["Upload"]</button>
+                        </label>
+                        <input class="d-none" type="file" id="uploadImage" ImageInput="1" accept="image/*" asp-for="Image" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

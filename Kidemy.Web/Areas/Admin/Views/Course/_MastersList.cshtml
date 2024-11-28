@@ -1,0 +1,102 @@
+﻿@model FilterForAdminSideMasterViewModel
+@using Kidemy.Domain.Enums.Master
+@using Kidemy.Application.ViewModels.Master;
+
+@{
+    ViewData["Title"] = Localizer["MasterList"];
+
+    string GetStatusColor(MasterStatus status)
+    {
+        var statusColorMapping = new Dictionary<MasterStatus, string>();
+        statusColorMapping.Add(MasterStatus.Confirmed, "success");
+        statusColorMapping.Add(MasterStatus.Pending, "warning");
+        statusColorMapping.Add(MasterStatus.NonConfirmed, "danger");
+
+        statusColorMapping.TryGetValue(status, out string result);
+        return result;
+    }
+}
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["Search"]</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="Master" asp-action="List" method="get" class="d-flex" id="FilterMastersForm">
+                    <input type="hidden" asp-for="Page" />
+                    <div class="row w-100">
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="FirstName" class="form-label"></label>
+                            <input type="search" asp-for="FirstName" class="form-control me-2" placeholder="@Localizer["FirstName"]" aria-label="Search">
+                        </div>
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="LastName" class="form-label"></label>
+                            <input type="search" asp-for="LastName" class="form-control me-2" placeholder="@Localizer["LastName"]" aria-label="Search">
+                        </div>
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="Mobile" class="form-label"></label>
+                            <input type="search" asp-for="Mobile" class="form-control me-2" placeholder="@Localizer["Mobile"]" aria-label="Search">
+                        </div>
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="NationalIDNumber" class="form-label"></label>
+                            <input type="search" asp-for="NationalIDNumber" class="form-control me-2" placeholder="@Localizer["NationalIDNumber"]" aria-label="Search">
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-6 col-md-6">
+                                <button class="btn btn-outline-primary w-25" type="submit" onclick="searchForm(this)">@Localizer["Search"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="FilterMasters" class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["MasterList"]</h5>
+            </div>
+            @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                <div class="table-responsive mb-4 text-nowrap text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["FirstName"]</th>
+                                <th>@Localizer["LastName"]</th>
+                                <th>@Localizer["Mobile"]</th>
+                                <th>@Localizer["NationalIDNumber"]</th>
+                                <th>@Localizer["Status"]</th>
+                                <th>@Localizer["Details"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in Model.Entities)
+                            {
+                                <tr>
+                                    <td>@(string.IsNullOrEmpty(item.FirstName) ? "-" : item.FirstName)</td>
+                                    <td>@(string.IsNullOrEmpty(item.LastName) ? "-" : item.LastName)</td>
+                                    <td>@(string.IsNullOrEmpty(item.Mobile) ? "-" : item.Mobile)</td>
+                                    <td>@(string.IsNullOrEmpty(item.NationalIDNumber) ? "-" : item.NationalIDNumber)</td>
+                                    <td>
+                                        <strong class="badge bg-label-@(GetStatusColor(item.Status))">@item.Status.GetEnumName()</strong>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-outline-primary" onclick="chooseMaster('@item.Id', '@item.FirstName @item.LastName')">@Localizer["Select"]</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+</div>

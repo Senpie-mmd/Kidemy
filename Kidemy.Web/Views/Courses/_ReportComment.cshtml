@@ -1,0 +1,17 @@
+﻿@using Kidemy.Application.ViewModels.Course.ClientSideCourse.CourseDetail
+@model ClientSideReportCommentViewModel
+
+<form class="row g-3" method="post" id="reportCommentForm"
+      asp-area="" asp-controller="Courses" asp-action="ReportComment">
+    <input type="hidden" asp-for="CommentId" id="commentIdInput" />
+
+    <div class="col-12 bg-light-input">
+        <label asp-for="Message"></label>
+        <textarea class="form-control" asp-for="Message" rows="3"></textarea>
+        <span asp-validation-for="Message"></span>
+    </div>
+
+    <div class="col-12">
+        <button type="submit" onclick="submitReportCommentForm('#reportCommentForm')" class="btn btn-primary mb-0">@Localizer["Report"]</button>
+    </div>
+</form>

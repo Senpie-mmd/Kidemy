@@ -1,0 +1,79 @@
+﻿@using Kidemy.Application.ViewModels.Master;
+@model ClientSideRegisterMasterViewModel
+
+@{
+    ViewData["Title"] = Localizer["MasterInformation"];
+}
+
+<form method="post" asp-action="AddMaster" asp-controller="Master" asp-area="UserPanel" enctype="multipart/form-data">
+    <div class="card bg-transparent border rounded-3">
+        <div class="card-header bg-transparent border-bottom">
+            <h3 class="card-header-title mb-0 ff-vb fs-5">@Localizer["MasterInformation"]</h3>
+        </div>
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <div class="mb-4">
+                        <label asp-for="FatherName"></label>
+                        <input type="text" asp-for="FatherName" class="form-control " />
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="mb-4">
+                        <label asp-for="NationalIDNumber"></label>
+                        <input asp-for="NationalIDNumber" class="form-control number" />
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="mb-4">
+                        <label asp-for="IdentificationNumber"></label>
+                        <input type="text" asp-for="IdentificationNumber" class="form-control " />
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="mb-4">
+                        <label asp-for="PlaceOfIssuance"></label>
+                        <input type="text" asp-for="PlaceOfIssuance" class="form-control " />
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="mb-4">
+                        <label asp-for="PostalCode"></label>
+                        <input asp-for="PostalCode" class="form-control number" />
+                    </div>
+                </div>
+                <div class="col-12 col-lg-12">
+                    <div class="mb-4">
+                        <label asp-for="Address"></label>
+                        <textarea type="text" asp-for="Address" class="form-control "></textarea>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-12">
+                    <div class="mb-4">
+                        <label asp-for="Bio"></label>
+                        <textarea type="text" rows="6" asp-for="Bio" class="form-control "></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="mt-4">
+                        <img src="@SiteTools.MasterImagePath@SiteTools.DefaultImageName" class="w-50 h-50 rounded-2 mb-3" ImageFile="1" />
+                        <label for="uploadImage" class=" w-100">
+                            <button type="button" class="btn btn-info mt-2" id="uploadBtn">@Localizer["UploadImageForIdentificationFile"]</button>
+                        </label>
+                        <input class="d-none" type="file" id="uploadImage" ImageInput="1" accept="image/png, image/jpeg" asp-for="IdentificationFile" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="d-sm-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary mb-0 loading-support">@Localizer["Save"]</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="text-danger" asp-validation-summary="All"></div>
+            </div>
+        </div>
+    </div>
+</form>

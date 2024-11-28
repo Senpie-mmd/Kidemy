@@ -1,0 +1,116 @@
+﻿@using Kidemy.Application.ViewModels.Course.AdminSideCourse.CourseVideos
+@using Kidemy.Domain.Statics
+@using Kidemy.Web.Areas.Admin.Models
+@model AdminSideUpdateCourseVideoViewModel
+
+@{
+    ViewData["Title"] = Localizer["CreateNewCourse"];
+}
+
+<form asp-area="Admin" asp-controller="Course" asp-action="UpdateCourseVideo" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="CourseId" />
+    <input type="hidden" asp-for="CanChageIsFree" />
+    @* <input type="hidden" asp-for="VideoThumbnailImageFileName" /> *@
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card p-lg-5">
+                <div class="card-body">
+                    <div class="row">
+                        @await Component.InvokeAsync("Localized", Model)
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label class="form-label" asp-for="CourseVideoCategoryTitle"></label>
+                                <input list="videoCategories" type="text" asp-for="CourseVideoCategoryTitle" class="form-control" autocomplete="off">
+                                @if (Model?.VideoCategories?.Any() ?? false)
+                                {
+                                    <datalist id="videoCategories">
+                                        @foreach (var item in Model?.VideoCategories ?? new List<AdminSideCourseVideoCategoryViewModel>())
+                                        {
+                                            <option value="@item.Title"></option>
+                                        }
+                                    </datalist>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label type="text" class="form-label" asp-for="VideoLength"></label>
+                                <input asp-for="VideoLength" class="form-control" type="text" placeholder="00:00:00" />
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label type="text" class="form-label" asp-for="Priority"></label>
+                                <input asp-for="Priority" class="form-control" />
+                            </div>
+                        </div>
+
+                        @if (Model?.CanChageIsFree ?? false)
+                        {
+                            <div class="col-12 col-lg-3">
+                                <div class="mb-4 form-check padding-top-2-percent">
+                                    <input class="form-check-input" type="checkbox" asp-for="IsFree">
+                                    <label class="form-check-label" asp-for="IsFree"></label>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="col-12 col-lg-3" permission="PublishCourseVideo">
+                            <div class="mb-4 form-check padding-top-2-percent">
+                                <input class="form-check-input" type="checkbox" asp-for="IsPublished">
+                                <label class="form-check-label" asp-for="IsPublished"></label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-start">
+                                <input type="submit" value="@Localizer["Submit"]" class="btn btn-success" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div asp-validation-summary="All" class="text-danger mt-3"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4 mb-md-0">
+            @* <div class="card p-lg-4 mb-3">
+            <div class="card-body">
+            <div class="mt-4">
+            <h6 class="fs-6 mb-2">@Localizer["PleaseChooseVideoThumbnail"]</h6>
+            <img src="@SiteTools.CourseDetailsFiles.GetCourseDetailsFilesPath(Model.CourseId)@Model.VideoThumbnailImageFileName" class="w-100 rounded-2 mb-3" ImageFile="1" />
+            <label for="uploadImage" class=" w-100">
+            <button type="button" class="btn btn-info  w-100" id="uploadBtn">@Localizer["Upload"]</button>
+            </label>
+            <input class="d-none" type="file" id="uploadImage"
+            ImageInput="1" accept="image/png, image/jpeg" asp-for="VideoThumbnailImage" />
+            </div>
+            </div>
+            </div> *@
+
+            <div class="card p-lg-4 mb-3">
+                <div class="card-body">
+                    <div class="mt-4">
+                        <h6 class="fs-6 mb-2">@Localizer["UploadVideo"]</h6>
+                        <partial name="_Upload" model="@(new UploadModel{Index = 0,FileType = UploadFileType.Video, IsMultiple = false, MaxSizeInKB = 100_000_000, SaveLocation = SiteTools.CourseDetailsFiles.GetCourseDetailsFilesPath(Model?.CourseId?? 00), InputName = "VideoFileName",Files = new List<string>() {Model.VideoFileName}})" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-lg-4 mb-3">
+                <div class="card-body">
+                    <div class="mt-4">
+                        <h6 class="fs-6 mb-2">@Localizer["CourseAttachFile"]</h6>
+                        <partial name="_Upload" model="@(new UploadModel{Index = 1,FileType = UploadFileType.Archive, IsMultiple = false, MaxSizeInKB = 100_000_000, SaveLocation = SiteTools.CourseDetailsFiles.GetCourseDetailsFilesPath(Model?.CourseId?? 00), InputName = "AttachFileName",Files = new List<string>() {Model.AttachFileName}})" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

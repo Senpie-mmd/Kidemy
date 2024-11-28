@@ -1,0 +1,49 @@
+﻿@using Kidemy.Application.ViewModels.Course.ClientSideCourse.Categories
+@model List<ClientSideCourseCategoriesLinkInNavViewModel>
+
+
+@if (Model?.Any() ?? false)
+{
+    @foreach (var grand in Model ?? new List<ClientSideCourseCategoriesLinkInNavViewModel>())
+    {
+        if (grand.SubCategories?.Any() ?? false)
+        {
+            <li class="dropdown-submenu dropend">
+                <a class="dropdown-item dropdown-toggle" asp-area="" asp-controller="Courses" asp-action="CoursesList" asp-route-CategoryIds="@grand.Id">@grand.Title</a>
+                <ul class="dropdown-menu dropdown-menu-start" data-bs-popper="none">
+                    @foreach (var parent in grand.SubCategories ?? new List<ClientSideCourseCategoriesLinkInNavViewModel>())
+                    {
+                        if (parent.SubCategories?.Any() ?? false)
+                        {
+                            <li class="dropdown-submenu dropend">
+                                <a class="dropdown-item dropdown-toggle" asp-area="" asp-controller="Courses" asp-action="CoursesList" asp-route-CategoryIds="@parent.Id">@parent.Title</a>
+                                <ul class="dropdown-menu" data-bs-popper="none">
+                                    @foreach (var child in parent.SubCategories ?? new List<ClientSideCourseCategoriesLinkInNavViewModel>())
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" asp-area="" asp-controller="Courses" asp-action="CoursesList" asp-route-CategoryIds="@child.Id">@child.Title</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a class="dropdown-item" asp-area="" asp-controller="Courses" asp-action="CoursesList" asp-route-CategoryIds="@parent.Id">@parent.Title</a>
+                            </li>
+                        }
+                    }
+
+                </ul>
+            </li>
+        }
+        else
+        {
+            <li><a class="dropdown-item" asp-area="" asp-controller="Courses" asp-action="CoursesList" asp-route-CategoryIds="@grand.Id">@grand.Title</a></li>
+        }
+
+    }
+
+    <li><hr class="dropdown-divider"></li>
+}

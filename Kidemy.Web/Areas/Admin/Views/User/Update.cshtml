@@ -1,0 +1,140 @@
+﻿@using Kidemy.Application.ViewModels.Role;
+@using Kidemy.Application.ViewModels.User.AdminSide;
+@using Kidemy.Domain.Enums.User;
+@using Kidemy.Domain.Statics
+@using Kidemy.Application.ViewModels.User;
+@model AdminSideUpsertUserViewModel
+@{
+    ViewData["Title"] = "ویرایش کاربر";
+    var availableRoles = ViewData["AvailableRoles"] as List<AdminSideRoleViewModel>;
+}
+
+<form asp-area="Admin" asp-controller="User" asp-action="Update" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card p-lg-5">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <div class="mb-4">
+                                <label asp-for="FirstName"></label>
+                                <input type="text" asp-for="FirstName"
+                                       class="form-control " />
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div class="mb-4">
+                                <label asp-for="LastName"></label>
+                                <input type="text" asp-for="LastName"
+                                       class="form-control " />
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div class="mb-4">
+                                <label asp-for="Mobile"></label>
+                                <input type="text" asp-for="Mobile"
+                                       class="form-control " />
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div class="mb-4">
+                                <label asp-for="Email"></label>
+                                <input type="email" asp-for="Email" class="form-control " />
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div class="mb-4">
+                                <label asp-for="Password"></label>
+                                <input type="text" asp-for="Password" value=""
+                                       class="form-control " />
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <label asp-for="BirthDate"></label>
+                            <input asp-for="BirthDate" class="form-control flatpickr-input me-2 persianDate" autocomplete="off" placeholder="تاریخ تولد">
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <label asp-for="Gender"></label>
+                            <select asp-for="Gender" asp-items="@Html.GetEnumSelectList<Gender>()" class="form-control"></select>
+                            <span asp-validation-for="Gender" class="text-danger d-block"></span>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <div class="row">
+                                @if (!string.IsNullOrWhiteSpace(Model.Email))
+                                {
+                                    <div class="col-12 col-lg-3">
+                                        <div class="mb-4 form-check padding-top-2-percent">
+                                            <input class="form-check-input" type="checkbox" asp-for="IsEmailActive">
+                                            <label class="form-check-label" asp-for="IsEmailActive"></label>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="col-12 col-lg-3">
+                                    <div class="mb-4 form-check padding-top-2-percent">
+                                        <input class="form-check-input" type="checkbox" asp-for="IsMobileActive">
+                                        <label class="form-check-label" asp-for="IsMobileActive"></label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    @if (Model.Id != User.GetUserId())
+                                    {
+                                        <div class="mb-4 form-check padding-top-2-percent">
+                                            <input class="form-check-input" type="checkbox" asp-for="IsBan" id="isBan">
+                                            <label class="form-check-label" asp-for="IsBan"></label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <div class="row">
+                                <h5 class="mb-0">نقش ها</h5>
+                                <hr />
+                                @foreach (var role in availableRoles)
+                                {
+                                    var isChecked = Model.RoleIds?.Contains(role.Id) ?? false;
+
+                                    if (User.GetUserId() == Model.Id && Model.RoleIds is not null && Model.RoleIds.Contains(1) && role.Id == 1)
+                                    {
+                                        <input type="hidden" name="RoleIds" value="@role.Id" checked />
+                                        continue;
+                                    }
+
+                                    <div class="col-12 col-lg-3">
+                                        <div class="mb-4 form-check padding-top-2-percent">
+                                            <input class="form-check-input" id="role-@role.Id" type="checkbox" name="RoleIds" value="@role.Id" @(isChecked ? "checked" : "")>
+                                            <label class="form-check-label" for="role-@role.Id">@role.Title</label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-start">
+                            <button type="submit" class="btn btn-success">@Localizer["Save"]</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="text-danger" asp-validation-summary="All"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4 mb-md-0">
+            <div class="card p-lg-4">
+                <div class="card-body">
+                    <div class="mt-4">
+                        <h6 class="fs-6 mb-2">لطفا عکس کاربر را انتخاب کنید</h6>
+                        <img src="@(!string.IsNullOrWhiteSpace(Model.AvatarName) ? $"{SiteTools.UserImagePath}{Model.AvatarName}" : SiteTools.UserImagePath+SiteTools.DefaultImageName)" class="w-100 rounded-2 mb-3" ImageFile="1" />
+                        <label for="uploadImage" class=" w-100">
+                            <button type="button" class="btn btn-info  w-100" id="uploadBtn">@Localizer["Upload"]</button>
+                        </label>
+                        <input class="d-none" type="file" id="uploadImage" ImageInput="1" accept="image/png, image/jpeg" asp-for="AvatarFile" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

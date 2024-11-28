@@ -1,0 +1,70 @@
+@using Kidemy.Application.ViewModels.Survey;
+@using Kidemy.Application.ViewModels.Survey.SurveyModels;
+@model AdminSideUpsertSurveyViewModel
+@{
+    ViewData["Title"] = Localizer["UpdateSurvey"];
+}
+
+
+<div class="row" id="">
+    <div class="col-md-12">
+        <div class="card p-lg-3 mb-5">
+            <div class="card-header border-bottom">
+                <h4>@Localizer["UpdateSurvey"]</h4>
+            </div>
+            <form asp-action="Update" asp-controller="Survey" asp-area="Admin" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div class="card-body">
+                    <div class="row">
+                        @await Component.InvokeAsync("Localized", Model)
+
+                        <div class="col-12 col-lg-12">
+                            <div class="col-md-12 mb-4">
+                                <div class="form-group form-check">
+                                    <input type="checkbox" asp-for="IsPublished" class="form-check-input" />
+                                    <label asp-for="IsPublished" class="form-check-label">@Localizer["IsPublished"]</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-12">
+                            <div class="row">
+                                <div class="col-12 d-flex justify-content-start">
+                                    <button type="submit" class="btn btn-warning">@Localizer["Edit"]</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="text-danger" asp-validation-summary="All"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="surveyQuestionsListComponent">
+        @await Component.InvokeAsync("SurveyQuestionsList", new { id = Model.Id })
+    </div>
+</div>
+
+<script asp-append-version="true">
+
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            document.getElementById("survey-question-list").scrollIntoView({ behavior: 'smooth' });
+        }, 500)
+    });
+
+    async function refreshQuestions(){
+        var response = await fetch("@Url.Action("SurveyQuestionsListViewComponent", "Survey", new {Area = "Admin", Id = Model.Id})")
+
+        if(response.ok){
+            var result = await response.text();
+            document.getElementById("surveyQuestionsListComponent").innerHTML = result;
+        }
+        else{
+            console.log(response);
+        }
+    }
+
+</script>

@@ -1,0 +1,127 @@
+﻿@using Kidemy.Application.Convertors
+@using Kidemy.Application.ViewModels.Course.ClientSideCourse.CourseQuestion
+@using Kidemy.Domain.Statics
+@model ClientSideFilterCourseQuestionViewModel
+
+
+@{
+    ViewData["Title"] = Localizer["QuestionAnswer"];
+}
+
+
+<form asp-area="" asp-controller="Courses" asp-action="QuestionsList" id="filter-search" method="get">
+    <input type="hidden" asp-for="Page" />
+    <input type="hidden" asp-for="CourseSlug" />
+</form>
+<div class="d-flex justify-content-center">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-dark breadcrumb-dots mb-0">
+            <li class="breadcrumb-item"><a href="/">@Localizer["MainPage"]</a></li>
+            <li class="breadcrumb-item"><a asp-area="" asp-controller="Courses" asp-action="QuestionsList">@Localizer["QuestionAnswer"]</a></li>
+            @if (!string.IsNullOrEmpty(Model.CourseSlug))
+            {
+                <li class="breadcrumb-item active" aria-current="page">@Model.CourseTitle</li>
+            }
+        </ol>
+    </nav>
+</div>
+<section class="pb-0 py-lg-5">
+    <div class="container">
+        <div class="row justify-content-around">
+            <!-- Main content START -->
+            <div class="col-lg-8 col-12">
+                <div class="card shadow rounded-2 p-0">
+                    <!-- Tab contents START -->
+                    <div class="card-body p-4">
+                        <div class="tab-content pt-2" id="course-pills-tabContent">
+                            <div id="partialViewContainer" class="row ">
+
+                                <div class="col-12">
+                                    @if (!string.IsNullOrEmpty(Model.CourseSlug))
+                                    {
+                                        <h5 class="mb-4">@Model.CourseTitle</h5>
+                                    }
+                                    else
+                                    {
+                                        <h5 class="mb-4">@Localizer["Questions"]</h5>
+                                    }
+
+                                    <!-- Comment box -->
+                                    <div class="d-flex mb-4">
+                                        @if (!string.IsNullOrEmpty(Model.CourseSlug))
+                                        {
+                                            @if (User.Identity?.IsAuthenticated ?? false)
+                                            {
+                                                <partial name="_CreateQuestion" model="new ClientSideUpsertCourseQuestionViewModel(){CourseSlug = Model.CourseSlug}" />
+                                            }
+                                            else
+                                            {
+                                                <p class="alert alert-info">
+                                                    @Localizer["PleaseLoginToAskQeustionOnThisCourse"]
+                                                    <a asp-area="" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@TempData["returnUrl"]" class="alert-link">@Localizer["Login"]</a>
+                                                </p>
+                                            }
+                                        }
+
+                                    </div>
+
+                                    @if(Model.Entities != null && Model.Entities.Any())
+                                    {
+                                        @foreach (var item in Model.Entities)
+                                        {
+                                            <!-- Comment item START -->
+                                            <div class="border p-2 p-sm-2 rounded-3 mb-4 bg-light">
+                                                <ul class="list-unstyled mb-0">
+                                                    <li class="comment-item">
+                                                        <div class="d-flex mb-3">
+                                                            <!-- Avatar -->
+                                                            <div class="avatar avatar-lg flex-shrink-0">
+                                                                <a href="#"><img class="avatar-img rounded-circle" src=@($"{SiteTools.UserImagePath}{item.UserProfile}") alt="userProfile"></a>
+                                                            </div>
+                                                            <div class="ms-2">
+                                                                <!-- Comment by -->
+                                                                <div class="p-3 rounded">
+                                                                    <div class="d-flex justify-content-center">
+                                                                        <div class="me-2">
+                                                                            <h5 class="mb-1 text-justify question_title "> <a asp-area="" asp-controller="Courses" asp-action="QuestionAnswersList" asp-route-QuestionId="@item.Id"> @item.Title</a></h5>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div>
+                                                                        <span class="fw-normal">@item.CreateDate.ToUserDate()</span>
+                                                                        <span class="mx-2">|</span>
+                                                                        <span class="fw-normal">@item.CourseTitle</span>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p class="alert alert-info">
+                                            @Localizer["ThereIsNoQuestion"]
+                                        </p>
+                                    }
+
+                                   
+                                </div>
+                                <div class="col-12">
+                                    <partial name="_Paging" model="Model.GetCurrentPaging()" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+@section FooterReferences {
+    <script asp-append-version="true" src="~/assets/js/auto-textarea.js"></script>
+}

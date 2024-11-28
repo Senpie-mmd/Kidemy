@@ -1,0 +1,177 @@
+﻿@using Kidemy.Application.ViewModels.CourseRequest;
+@model FilterForAdminSideCourseRequestViewModel
+
+@{
+    ViewData["Title"] = Localizer["CourseRequestsList"];
+}
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["Search"]</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="CourseRequest" asp-action="List" method="post" id="filter-search" class="d-flex">
+                    <input type="hidden" asp-for="Page" />
+                    <div class="row w-100">
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="Title" class="form-label"></label>
+                            <input type="search" asp-for="Title" class="form-control me-2" placeholder="@Localizer["Title"]" aria-label="Search">
+                        </div>
+                        <div class="mb-3 col-6 col-md-6">
+                            <label class="form-label">@Localizer["Status"]</label>
+                            <select asp-for="IsConfirm" class="form-select me-2 ">
+                                <option value="">@Localizer["All"]</option>
+                                <option value="true">@Localizer["Confirmed"]</option>
+                                <option value="false">@Localizer["NotConfirmed"]</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-7 col-md-7">
+                            <button class="btn btn-outline-primary w-25" type="submit">@Localizer["Search"]</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div id="FilterUsers" class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["CourseRequestsList"]</h5>
+            </div>
+            @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                <div class="table-responsive mb-4 text-nowrap text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>@Localizer["Title"]</th>
+                                <th>@Localizer["Votes"]</th>
+                                <th>@Localizer["Status"]</th>
+                                <th>@Localizer["Operation"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in Model.Entities)
+                            {
+                                <tr>
+                                    <td>@Model.Counter</td>
+                                    <td>@item.Title</td>
+                                    <td>@item.VoteCount</td>
+                                    <td>
+                                        @if (item.IsConfirm == false)
+                                        {
+                                            <p class="text-danger">@Localizer["NotConfirmed"]</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-success">@Localizer["Confirmed"]</p>
+                                        }
+
+                                    </td>
+                                    <td>
+                                        @if (item.IsConfirm == false)
+                                        {
+                                            <a class="text-success pointer" href="javascript:void(0)" title="@Localizer["ConfirmCourseRequest"]" onclick="ConfirmCourseRequest(`@Url.Action("ConfirmCourseRequest", "CourseRequest" , new { area="Admin" , id=@item.Id })`)">
+                                                <i class='bx bx-check-shield'></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a class="text-danger pointer" href="javascript:void(0)" title="@Localizer["NotConfirmCourseRequest"]" onclick="NotConfirmCourseRequest(`@Url.Action("NotConfirmCourseRequest", "CourseRequest" , new { area="Admin" , id=@item.Id })`)">
+                                                <i class='bx bx-check-shield'></i>
+                                            </a>
+                                        }
+                                        <a class="text-info" onclick="showModal('@Url.Action("CourseRequestDetails","CourseRequest",new {area="Admin",id=item.Id})','@Localizer["CourseRequestDetails"]')" href="javascript:void(0)">
+                                            <i class="bx bx-book me-1"></i>
+                                        </a>
+
+                                    </td>
+                                </tr>
+
+                                Model.Counter++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+</div>
+
+@section FooterReferences {
+
+
+    <script>
+
+        async function ConfirmCourseRequest(url) {
+            Swal.fire({
+                html: `<b>${await jsLocalizer("ConfirmCourseRequest")}</b>`,
+                showDenyButton: true,
+                confirmButtonText: await jsLocalizer("Yes"),
+                denyButtonText: await jsLocalizer("No")
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var formData = {};
+                    addAntiforgeryToken(formData);
+
+                    $.ajax({
+                        type: 'post',
+                        url: url,
+                        data: formData,
+                        success: async function (response) {
+                            window.location.reload();
+                        },
+                        error: async function (response) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: await jsLocalizer("Error.e"),
+                                confirmButtonText: await jsLocalizer("Ok"),
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        async function NotConfirmCourseRequest(url) {
+            Swal.fire({
+                html: `<b>${await jsLocalizer("NotConfirmCourseRequest")}</b>`,
+                showDenyButton: true,
+                confirmButtonText: await jsLocalizer("Yes"),
+                denyButtonText: await jsLocalizer("No")
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var formData = {};
+                    addAntiforgeryToken(formData);
+
+                    $.ajax({
+                        type: 'post',
+                        url: url,
+                        data: formData,
+                        success: async function (response) {
+                            window.location.reload();
+                        },
+                        error: async function (response) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: await jsLocalizer("Error.e"),
+                                confirmButtonText: await jsLocalizer("Ok"),
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+    </script>
+
+}

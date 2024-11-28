@@ -1,0 +1,18 @@
+﻿@using Kidemy.Domain.Enums.User
+@using Kidemy.Domain.Statics
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "اطلاعات حساب کاربری من";
+    var isMaster = ViewData["IsMaster"] as bool?;
+}
+
+@await Component.InvokeAsync("VIPMembers", new { userId = @ViewData["UserId"] })
+
+@if (isMaster is not null && isMaster == true)
+{
+    @:@await Component.InvokeAsync("UserPanelMasterCourses")
+}
+@if (isMaster is not null && isMaster == false)
+{
+    @:@await Component.InvokeAsync("MercenaryCourses")
+}

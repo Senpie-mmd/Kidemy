@@ -1,0 +1,87 @@
+﻿@using Kidemy.Application.ViewModels.Course.AdminSideCourse.CourseVideos
+@using Kidemy.Application.ViewModels.Course;
+@using Kidemy.Domain.Enums.Course
+@using Kidemy.Domain.Statics
+@model AdminSideFilterCourseVideoViewModel
+
+  
+<div class="card h-100">
+    <div class="card-header d-inline-flex">
+        <h5>@Localizer["UnPublishedCourseVideos"]</h5>  
+    </div>
+   @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                <div class="table-responsive mb-4 text-nowrap text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>@Localizer["CourseName"]</th>
+                                <th>@Localizer["Title"]</th>
+                                <th>@Localizer["VideoLength"]</th> 
+                                <th>@Localizer["IsFree"]</th>
+                                <th>@Localizer["IsPublished"]</th>
+                                <th>@Localizer["Operation"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in Model?.Entities ?? new List<AdminSideCourseVideoViewModel>())
+                            {
+                                <tr>
+                                    <td>@Model?.Counter</td>
+                                    <td>@item.CourseTitle</td>
+                                    <td>@item.Title</td>
+                                    <td>@item.VideoLength</td> 
+                                    <td>
+                                        @if (item.IsFree)
+                                        {
+                                            <span class="text-success">
+                                                <i class='bx bx-check'></i>
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger">
+                                                <i class='bx bx-x'></i>
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.IsPublished)
+                                        {
+                                            <span class="text-success">
+                                                <i class='bx bx-check'></i>
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger">
+                                                <i class='bx bx-x'></i>
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <button type="button"
+                                            onclick="confirmPublish(this)"
+                                            data-id="@item.Id"
+                                            data-courseid="@item.CourseId"
+                                            data-publishUrl="@Url.Action("PublishCourseVideoAjax","Course",new {area="Admin"})"
+                                            class="btn text-info" title="@Localizer["Publish"]">
+                                            <i class='bx bx-check me-1'></i>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                Model.Counter++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+</div>
+

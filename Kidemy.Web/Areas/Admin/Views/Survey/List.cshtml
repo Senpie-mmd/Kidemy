@@ -1,0 +1,94 @@
+﻿@using Kidemy.Application.ViewModels.Survey;
+@using Kidemy.Application.ViewModels.Survey.SurveyModels;
+@model FilterSurveyViewModel
+@{
+    ViewData["Title"] = Localizer["SurveyList"];
+}
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["Filter"]</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="Survey" asp-action="List" method="get" id="filter-search" class="d-flex">
+                    <input type="hidden" asp-for="Page" />
+                    <div class="row w-100">
+
+                        <div class="mb-3 col-6 col-md-6">
+                            <label asp-for="Title" class="form-label"></label>
+                            <input type="search" asp-for="Title" class="form-control me-2" placeholder="@Localizer["Title"]" aria-label="Search">
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-6 col-md-6">
+                                <button class="btn btn-outline-primary w-25" type="submit">@Localizer["Search"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="FilterUsers" class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["SurveyList"]</h5>
+            </div>
+            @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                <div class="table-responsive mb-4 text-nowrap text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="col-5">@Localizer["Title"]</th>
+                                <th>@Localizer["IsPublished"]</th>
+                                <th>@Localizer["Operation"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in Model.Entities)
+                            {
+                                <tr>
+                                    <td class="td-break-text-500">@(string.IsNullOrEmpty(item.Title) ? "-" : Html.Raw(item.Title))</td>
+
+                                    @if (item.IsPublished)
+                                    {
+                                        <td class="text-success">
+                                            <i class="bx bx-check me-1"></i>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-danger">
+                                            <i class="bx bx-x me-1"></i>
+                                        </td>
+                                    }
+
+                                    <td>
+                                        <a permission="SurveyAnswersList" class="text-primary" asp-area="Admin" asp-controller="Survey" asp-action="SurveyAnswersList" asp-route-SurveyId="@item.Id" id="editBtn-@item.Id" title="@Localizer["AnswerList"]">
+                                            <i class="bx bx-comment me-1"></i>
+                                        </a>
+                                        <a permission="UpdateSurvey" class="text-warning" asp-area="Admin" asp-controller="Survey" asp-action="Update" asp-route-id="@item.Id" id="editBtn-@item.Id" title="@Localizer["Edit"]">
+                                            <i class="bx bx-edit-alt me-1"></i>
+                                        </a>
+                                        <a permission="DeleteSurvey" class="text-danger" href="javascript:void(0)" onclick="DeleteConfirm('@Url.Action("Delete", "Survey", new { area = "Admin", id = @item.Id })')" id="deleteBtn-@item.Id" title="@Localizer["Delete"]">
+                                            <i class="bx bx-trash me-1"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+
+</div>

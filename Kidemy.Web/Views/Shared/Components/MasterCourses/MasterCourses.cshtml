@@ -1,0 +1,17 @@
+﻿@using Kidemy.Application.ViewModels.Course.ClientSideCourse.Courses;
+@model ClientSideFilterCoursesViewModel
+
+@if(Model?.Entities?.Count > 0)
+{
+    <div class="row g-4 mt-4">
+        <h2 class="fs-4">@Localizer["MasterCoursesList"]</h2>
+        @foreach (var item in Model?.Entities ?? new List<ClientSideCourseViewModel>())
+        {
+            <div class="col-sm-6 col-xl-3">
+
+                <partial name="_CoursePartial" model="item" />
+
+            </div>
+        }
+    </div>
+}

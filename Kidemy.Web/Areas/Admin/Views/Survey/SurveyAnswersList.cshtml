@@ -1,0 +1,95 @@
+﻿@using Kidemy.Application.ViewModels.Survey;
+@using Kidemy.Application.ViewModels.Survey.SurveyAnswersModels;
+@using Kidemy.Application.ViewModels.Survey.SurveyModels;
+@model AdminSideFilterSurveyAnswerViewModel
+@{
+    ViewData["Title"] = Localizer["SurveyAnswersList"];
+}
+
+<div class="row">
+    <div class="col-md-3 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["Filter"]</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="Survey" asp-action="SurveyAnswersList" method="post" id="filter-search" class="d-flex" autocomplete="off">
+                    <input type="hidden" asp-for="Page" />
+                    <div class="row w-100">
+
+                        <div class="mb-3 col-12 col-md-12">
+                            <div class="form-group mb-4">
+                                <label asp-for="UserId" class="form-label"></label>
+                                <div class="input-group">
+                                    <input type="hidden" asp-for="UserId" id="User-Input" class="form-control" />
+                                    <span class="input-group-text text-primary " onclick="ShowSearchUserModal('User')"><i class="bx bx-search-alt-2"></i></span>
+                                    <input type="text" asp-for="TempUserName" class="form-control" id="User-Display" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 col-12 col-md-12">
+                            <label asp-for="FromDate" class="form-label"></label>
+                            <input type="text" asp-for="FromDate" class="form-control persianDate" placeholder="@Localizer["FromDate"]">
+                        </div>
+
+                        <div class="mb-3 col-12 col-md-12">
+                            <label asp-for="ToDate" class="form-label"></label>
+                            <input type="text" asp-for="ToDate" class="form-control persianDate" placeholder="@Localizer["ToDate"]">
+                        </div>
+                        <div class="mb-3 col-12 col-md-12">
+                            <button class="btn btn-outline-primary w-100" type="submit">@Localizer["Search"]</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="FilterUsers" class="col-md-9">
+        <div class="card">
+            <div class="card-header">
+                <h5>@Localizer["SurveyAnswersList"]</h5>
+            </div>
+            @if (Model != null && Model.Entities != null && Model.Entities.Any())
+            {
+                <div class="table-responsive mb-4 text-nowrap text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="col-5">@Localizer["UserFullName"]</th>
+                                <th>@Localizer["CreatedDate"]</th>
+                                <th>@Localizer["Operation"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in Model.Entities)
+                            {
+                                <tr>
+                                    <td><a class="text-primary" asp-route-id="@item.AnswererId" asp-action="Profile" asp-controller="User" asp-area="Admin">@item.AnswererFullName</a></td>
+                                    <td class="ltr">@item.CreatedOnUtc.ToUserShortDateTime()</td>
+                                    <td>
+                                        <a permission="SurveyAnswerDetails" class="text-primary" href="javascript:void(0)" onclick="showModal('@Url.Action("SurveyAnswerDetails", "Survey", new { area = "Admin", surveyId = item.SurveyId, answererId = item.AnswererId })','@Localizer["Details"]')" title="@Localizer["Details"]">
+                                            <i class="bx bx-detail me-1"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+            }
+            else
+            {
+                <partial name="_NotFoundPartial" />
+            }
+        </div>
+    </div>
+</div>
+@section FooterReferences
+    {
+    <script asp-append-version="true" src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.min.js"></script>
+    <script asp-append-version="true" src="~/admin/js/UserModal.js"></script>
+    <script asp-append-version="true" src="/admin/js/survey.js"></script>
+}

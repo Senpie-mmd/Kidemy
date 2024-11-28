@@ -1,0 +1,133 @@
+﻿@using Kidemy.Application.ViewModels.Consultation.ConsultationRequest
+@using Kidemy.Domain.Enums.Consultation
+@model ClientSideFilterConsultationRequestViewModel
+@{
+    ViewData["Title"] = Localizer["MyAppointmentsList"];
+}
+
+
+
+<form asp-area="UserPanel" asp-controller="Adviser" asp-action="List" method="get" id="filter-search" class="d-none">
+    <input type="hidden" asp-for="Page">
+</form>
+
+<div class="col-xl-12 col-lg-12 col-md-12">
+
+    <div class="card bg-transparent border rounded-3">
+        <!-- Card header START -->
+        @if (Model?.Entities?.Any() ?? false)
+        {
+            <div class="card-header bg-transparent border-bottom">
+                <h3 class="mb-0 fs-5 ff-vb">@Localizer["MyAppointmentsList"]</h3>
+            </div>
+            <div class="card-body">
+                <div class="row g-3 align-items-center justify-content-between mb-4">
+                </div>
+                <div class="table-responsive border-0">
+                    <table class="table table-dark-gray align-middle p-4 mb-0 table-hover text-center">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="border-0">@Localizer["AdviserName"]</th>
+                                <th scope="col" class="border-0">@Localizer["Topic"]</th>
+                                <th scope="col" class="border-0">@Localizer["Time"]</th>
+                                <th scope="col" class="border-0">@Localizer["Type"]</th>
+                                <th scope="col" class="border-0">@Localizer["Status"]</th>
+                                <th scope="col" class="border-0">@Localizer["FixedTime"]</th>
+                                <th scope="col" class="border-0 rounded-end">@Localizer["Operation"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Entities)
+                            {
+
+                                <tr>
+                                    <td>
+                                        <h6 class="mt-2 mt-lg-0 mb-0 fw-normal">@item.AdviserUserName</h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="mt-2 mt-lg-0 mb-0 fw-normal">@item.Topic</h6>
+                                    </td>
+                                    <td>
+                                        @if (item.DayOfWeek == DayOfWeek.Friday)
+                                        {
+                                            @Localizer["Friday"]
+                                        }
+                                        else if (item.DayOfWeek == DayOfWeek.Saturday)
+                                        {
+                                            @Localizer["Saturday"]
+                                        }
+                                        else if (item.DayOfWeek == DayOfWeek.Sunday)
+                                        {
+                                            @Localizer["Sunday"]
+                                        }
+                                        else if (item.DayOfWeek == DayOfWeek.Monday)
+                                        {
+                                            @Localizer["Monday"]
+                                        }
+                                        else if (item.DayOfWeek == DayOfWeek.Tuesday)
+                                        {
+                                            @Localizer["Tuesday"]
+                                        }
+                                        else if (item.DayOfWeek == DayOfWeek.Wednesday)
+                                        {
+                                            @Localizer["Wednesday"]
+                                        }
+                                        else if (item.DayOfWeek == DayOfWeek.Thursday)
+                                        {
+                                            @Localizer["Thursday"]
+                                        } - @Localizer["From"] @item.StartTime.Value.ToString("hh\\:mm")  @Localizer["To"] @item.EndTime.Value.ToString("hh\\:mm")
+                                    </td>
+                                    <td class="text-center text-sm-start">
+                                        <h6 class="mt-2 mt-lg-0 mb-0 fw-normal">@item.TypeTitle  - @((decimal.Parse(item.TypePrice.ToString())).ToString("#,0")) @Localizer["Toman"]<a href="#"></a></h6>
+                                    </td>
+                                    <td class="text-center text-sm-start">
+                                        <h6 class="mt-2 mt-lg-0 mb-0 fw-normal">@item.state.GetEnumName()<a href="#"></a></h6>
+                                    </td>
+                                    <td>
+
+                                        <h6 class="mt-2 mt-lg-0 mb-0 fw-normal">
+                                            @Localizer["DayAndHour"]
+                                            @if (item.FixedTime == null)
+                                            {
+                                                @Localizer["NotArrange"];
+                                            }
+                                            else
+                                            {
+                                                @item.FixedTime.Value.ToUserDate()  <space></space>  @item.FixedTime.Value.ToUserTimeHourMinute()
+                                            }
+                                        </h6>
+                                    </td>
+                                    <td>
+                                        @if (@item.state == ConsultationRequestState.WaitingForPayment)
+                                        {
+                                            <a class="btn btn-primary" asp-area="" asp-controller="Adviser" asp-action="GetConsultationRequest" asp-route-consultationRequestId="@item.Id">
+                                                @Localizer["Payment"]
+                                            </a>
+                                        }
+                                        @if (@item.state == ConsultationRequestState.WaitingForPayment || @item.state == ConsultationRequestState.WaitingForSetTime)
+                                        {
+                                            <a class="btn btn-danger" href="javascript:void(0)" onclick="cancle('@Url.Action("Cancele", "Adviser", new { area = "UserPanel", id = @item.Id })')" id="deleteBtn-@item.Id" title="@Localizer["Cancele"]">
+                                                @Localizer["Cancele"]
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <partial name="_UserPanelPaging" model="Model.GetCurrentPaging()" />
+        }
+        else
+        {
+            <partial name="_NotFoundPartial" />
+        }
+    </div>
+</div>
+
+@section FooterReferences {
+    <script asp-append-version="true" src="~/assets/js/cancele-consultation-request.js"></script>
+
+}
